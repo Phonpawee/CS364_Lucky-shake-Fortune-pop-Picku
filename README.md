@@ -38,7 +38,7 @@ git checkout feat/<branch ของตัวเอง>
 ## วิธีทำงานกับ Git
 1. **ทุกเช้า** ดึงงานล่าสุดจาก main มารวม: `git pull origin main`
 2. ทำงานใน branch ของตัวเองเท่านั้น **ห้าม push ตรงเข้า `main`**
-3. commit บ่อย ๆ พร้อมข้อความสั้น ๆ บอกว่าทำอะไร เช่น `F-02: ShakeDetector หน่วง 1 วินาที`
+3. commit บ่อย ๆ พร้อมข้อความสั้น ๆ **ภาษาอังกฤษ** บอกว่าทำอะไร เช่น `F-02: ShakeDetector หน่วง 1 วินาที`
 4. เมื่อเสร็จชิ้นงาน: `git push -u origin feat/<branch>` แล้วเปิด **Pull Request** ไปที่ `main`
    - ใส่ `Closes #<เลข issue>` ในคำอธิบาย PR และทำตามเช็กลิสต์ใน template
    - แป้งตรวจและ merge อย่างน้อยวันละครั้ง
