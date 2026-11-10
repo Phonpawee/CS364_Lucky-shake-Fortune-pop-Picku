@@ -77,6 +77,24 @@ public class DbHelper extends SQLiteOpenHelper {
                     + C_HIST_MODE + " TEXT NOT NULL, "
                     + C_HIST_CREATED_AT + " INTEGER NOT NULL)";
 
+    private static DbHelper instance;
+
+    /** One shared helper for the whole app (Android recommends a single instance). */
+    public static synchronized DbHelper getInstance(Context context) {
+        if (instance == null) {
+            instance = new DbHelper(context.getApplicationContext());
+        }
+        return instance;
+    }
+
+    /** For tests: closes the shared helper so the database file can be deleted. */
+    public static synchronized void closeInstance() {
+        if (instance != null) {
+            instance.close();
+            instance = null;
+        }
+    }
+
     public DbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
