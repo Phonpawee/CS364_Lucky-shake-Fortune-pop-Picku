@@ -1,8 +1,12 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<resources>
     <style name="Base.Theme.LuckyShake" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/app_primary</item>
+        <item name="colorOnPrimary">@color/app_on_primary</item>
+        <item name="colorSecondary">@color/app_accent</item>
+        <item name="colorSurface">@color/app_surface</item>
+        <item name="colorOnSurface">@color/app_on_surface</item>
+        <item name="android:colorBackground">@color/app_background</item>
+        <item name="colorOnBackground">@color/app_on_surface</item>
     </style>
 
     <style name="Theme.LuckyShake" parent="Base.Theme.LuckyShake" />

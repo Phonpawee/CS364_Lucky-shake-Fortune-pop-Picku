@@ -1,0 +1,21 @@
+<resources>
+    <style name="Widget.LuckyShake.Button.Primary" parent="Widget.Material3.Button">
+        <item name="backgroundTint">@color/lucky_shake_button_background</item>
+        <item name="android:textColor">@color/lucky_shake_button_text</item>
+        <item name="android:minHeight">@dimen/button_min_height</item>
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="cornerRadius">@dimen/corner_md</item>
+    </style>
+
+    <style name="Widget.LuckyShake.Card" parent="Widget.Material3.CardView.Outlined">
+        <item name="cardBackgroundColor">@color/app_surface</item>
+        <item name="cardCornerRadius">@dimen/corner_md</item>
+        <item name="strokeColor">@color/app_accent</item>
+    </style>
+
+    <style name="TextAppearance.LuckyShake.Heading" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:textColor">@color/app_on_surface</item>
+        <item name="android:textSize">@dimen/text_heading</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+</resources>

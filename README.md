@@ -100,3 +100,13 @@ ui/settings/ ตั้งค่า                                        (เ�
 
 ## รายงานบั๊ก
 เปิด Issue ด้วย template **Bug** ใส่ขั้นตอนที่ทำซ้ำได้ รุ่นเครื่อง/เวอร์ชัน Android และติดป้าย `blocks-demo` ถ้ากระทบเดโม (เจ้าของต้องแก้ภายในวันที่ถูกแจ้ง)
+
+
+## สไตล์กลางของแอป
+
+- ใช้ theme `Theme.LuckyShake` กับหน้าจอ XML Views สีใน `values/colors.xml` และ `values-night/colors.xml` ใช้ชื่อเดียวกันเพื่อให้ระบบเลือกตามโหมด
+- พื้นหน้าจอใช้ `@color/app_background` พื้นการ์ดใช้ `@color/app_surface` ข้อความบนทั้งสองพื้นใช้ `@color/app_on_surface` และใช้ `@color/app_accent` สำหรับรายละเอียดสีทอง
+- ปุ่ม `MaterialButton` ใช้ `style="@style/Widget.LuckyShake.Button.Primary"` การ์ด `MaterialCardView` ใช้ `style="@style/Widget.LuckyShake.Card"` และหัวข้อใช้ `android:textAppearance="@style/TextAppearance.LuckyShake.Heading"`
+- ใช้ `@dimen/spacing_md` และขนาดอื่นจาก `dimens.xml` ระยะและมุมใช้ `dp` ขนาดตัวอักษรใช้ `sp`
+- ใช้ `@drawable/ic_tube` และ `@drawable/ic_stick` เป็นภาพกระบอกและไม้เซียมซี ภาพวาดขึ้นสำหรับโปรเจกต์นี้และแยกไฟล์เพื่อขยับได้อิสระ
+- ตั้งชื่อสี ขนาด และ drawable แบบ `lower_snake_case` โดยใช้ `app_` สำหรับสีของแอป และ `ic_` สำหรับภาพไอคอน ตั้งชื่อสไตล์ตามรูปแบบ `Widget.LuckyShake.*` หรือ `TextAppearance.LuckyShake.*`
