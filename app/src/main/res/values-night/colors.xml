@@ -8,4 +8,5 @@
     <color name="app_on_surface">#F8E8D3</color>
     <color name="app_header">#721D16</color>
     <color name="app_heading">#FFA698</color>
+    <color name="app_link">#FFA698</color>
 </resources>
