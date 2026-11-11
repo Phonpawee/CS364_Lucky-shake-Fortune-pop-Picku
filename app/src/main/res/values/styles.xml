@@ -14,7 +14,7 @@
     </style>
 
     <style name="TextAppearance.LuckyShake.Heading" parent="TextAppearance.Material3.TitleLarge">
-        <item name="android:textColor">@color/app_on_surface</item>
+        <item name="android:textColor">@color/app_heading</item>
         <item name="android:textSize">@dimen/text_heading</item>
         <item name="android:textStyle">bold</item>
     </style>

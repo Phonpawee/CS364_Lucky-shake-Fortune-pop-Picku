@@ -105,7 +105,7 @@ ui/settings/ ตั้งค่า                                        (เ�
 ## สไตล์กลางของแอป
 
 - ใช้ theme `Theme.LuckyShake` กับหน้าจอ XML Views สีใน `values/colors.xml` และ `values-night/colors.xml` ใช้ชื่อเดียวกันเพื่อให้ระบบเลือกตามโหมด
-- พื้นหน้าจอใช้ `@color/app_background` พื้นการ์ดใช้ `@color/app_surface` ข้อความบนทั้งสองพื้นใช้ `@color/app_on_surface` และใช้ `@color/app_accent` สำหรับรายละเอียดสีทอง
+- พื้นหน้าจอใช้ `@color/app_background` พื้นการ์ดใช้ `@color/app_surface` ข้อความบนทั้งสองพื้นใช้ `@color/app_on_surface` ใช้ `@color/app_accent` สำหรับขอบและรายละเอียดสีทอง ส่วนแถบหัวใช้ `@color/app_header` คู่กับข้อความสี `@color/app_on_primary`
 - ปุ่ม `MaterialButton` ใช้ `style="@style/Widget.LuckyShake.Button.Primary"` การ์ด `MaterialCardView` ใช้ `style="@style/Widget.LuckyShake.Card"` และหัวข้อใช้ `android:textAppearance="@style/TextAppearance.LuckyShake.Heading"`
 - ใช้ `@dimen/spacing_md` และขนาดอื่นจาก `dimens.xml` ระยะและมุมใช้ `dp` ขนาดตัวอักษรใช้ `sp`
 - ใช้ `@drawable/ic_tube` และ `@drawable/ic_stick` เป็นภาพกระบอกและไม้เซียมซี ภาพวาดขึ้นสำหรับโปรเจกต์นี้และแยกไฟล์เพื่อขยับได้อิสระ
