@@ -1,0 +1,27 @@
+<resources>
+    <!-- Menu list screen (issue #22) -->
+    <string name="menu_list_title_main">My dishes</string>
+    <string name="menu_list_label_set">Menu set</string>
+    <string name="menu_list_hint_search">Search dishes</string>
+    <string name="menu_list_btn_add">Add dish</string>
+    <string name="menu_list_btn_delete">Delete</string>
+    <string name="menu_list_msg_empty_set">This set has no dishes yet. Add the first one!</string>
+    <string name="menu_list_msg_empty_search">No dishes found.</string>
+    <string name="menu_list_msg_empty_no_set">There is no menu set yet.</string>
+    <string name="menu_list_title_delete">Delete this dish?</string>
+    <string name="menu_list_msg_delete_confirm">“%1$s” will be removed. Your past history is kept.</string>
+    <string name="menu_list_msg_deleted">Dish deleted</string>
+    <string name="menu_list_error_delete_failed">Could not delete the dish</string>
+    <string name="menu_list_msg_form_todo">The add/edit form is coming soon</string>
+    <string name="menu_list_label_delete_item">Delete %1$s</string>
+
+    <!-- Dish types and tags (shared with the form and the filters) -->
+    <string name="menu_label_type_rice">Rice</string>
+    <string name="menu_label_type_noodle">Noodles</string>
+    <string name="menu_label_type_dessert">Dessert</string>
+    <string name="menu_label_type_drink">Drink</string>
+    <string name="menu_label_type_other">Other</string>
+    <string name="menu_label_tag_spicy">Spicy</string>
+    <string name="menu_label_tag_fried">Fried</string>
+    <string name="menu_label_tag_veggie">Vegetarian</string>
+</resources>
