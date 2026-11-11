@@ -13,13 +13,14 @@ public class StubShakeDetector implements ShakeDetector {
     }
 
     private final Clock clock;
-    private OnShakeListener listener;
-    private boolean running;
-    private int sensitivity = GameConfig.DEFAULT_SENSITIVITY;
-    private long lastShakeAt = Long.MIN_VALUE;
+    private volatile OnShakeListener listener;
+    private volatile boolean running;
+    private volatile int sensitivity = GameConfig.DEFAULT_SENSITIVITY;
+    private long lastShakeAt = Long.MIN_VALUE; // guarded by this
 
+    /** Uses a monotonic clock, so changing the phone's time does not break the debounce. */
     public StubShakeDetector() {
-        this(System::currentTimeMillis);
+        this(() -> System.nanoTime() / 1_000_000L);
     }
 
     public StubShakeDetector(Clock clock) {
@@ -55,16 +56,24 @@ public class StubShakeDetector implements ShakeDetector {
         return sensitivity;
     }
 
+    /**
+     * Fires the listener if running and the debounce time has passed. The check and the
+     * timestamp update happen together, so two calls at the same moment fire only once.
+     * The listener runs on the calling thread; call this from the main thread.
+     */
     @Override
     public void simulateShake() {
-        if (!running || listener == null) {
+        OnShakeListener target = listener;
+        if (!running || target == null) {
             return;
         }
-        long now = clock.nowMillis();
-        if (lastShakeAt != Long.MIN_VALUE && now - lastShakeAt < GameConfig.SHAKE_DEBOUNCE_MS) {
-            return;
+        synchronized (this) {
+            long now = clock.nowMillis();
+            if (lastShakeAt != Long.MIN_VALUE && now - lastShakeAt < GameConfig.SHAKE_DEBOUNCE_MS) {
+                return;
+            }
+            lastShakeAt = now;
         }
-        lastShakeAt = now;
-        listener.onShake();
+        target.onShake();
     }
 }
