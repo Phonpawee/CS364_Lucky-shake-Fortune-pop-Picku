@@ -64,4 +64,24 @@ public class StubShakeDetectorTest {
         detector.setSensitivity(99);
         assertEquals(GameConfig.MAX_SENSITIVITY, detector.getSensitivity());
     }
+
+    @Test
+    public void setOnShakeListener_null_stopsFiring() {
+        detector.start();
+        detector.setOnShakeListener(null);
+        detector.simulateShake();
+        assertEquals(0, shakes);
+    }
+
+    @Test
+    public void listener_canCallStopInsideCallback() {
+        detector.setOnShakeListener(() -> {
+            shakes++;
+            detector.stop();
+        });
+        detector.start();
+        detector.simulateShake();
+        assertEquals(1, shakes);
+        assertFalse(detector.isRunning());
+    }
 }

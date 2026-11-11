@@ -13,10 +13,11 @@ public class StubShakeDetector implements ShakeDetector {
     }
 
     private final Clock clock;
-    private volatile OnShakeListener listener;
-    private volatile boolean running;
-    private volatile int sensitivity = GameConfig.DEFAULT_SENSITIVITY;
-    private long lastShakeAt = Long.MIN_VALUE; // guarded by this
+    // All state below is guarded by "this".
+    private OnShakeListener listener;
+    private boolean running;
+    private int sensitivity = GameConfig.DEFAULT_SENSITIVITY;
+    private long lastShakeAt = Long.MIN_VALUE;
 
     /** Uses a monotonic clock, so changing the phone's time does not break the debounce. */
     public StubShakeDetector() {
@@ -28,52 +29,51 @@ public class StubShakeDetector implements ShakeDetector {
     }
 
     @Override
-    public void start() {
+    public synchronized void start() {
         running = true;
     }
 
     @Override
-    public void stop() {
+    public synchronized void stop() {
         running = false;
     }
 
     @Override
-    public boolean isRunning() {
+    public synchronized boolean isRunning() {
         return running;
     }
 
     @Override
-    public void setOnShakeListener(OnShakeListener listener) {
+    public synchronized void setOnShakeListener(OnShakeListener listener) {
         this.listener = listener;
     }
 
     @Override
-    public void setSensitivity(int sensitivity) {
+    public synchronized void setSensitivity(int sensitivity) {
         this.sensitivity = GameConfig.clampSensitivity(sensitivity);
     }
 
-    public int getSensitivity() {
+    public synchronized int getSensitivity() {
         return sensitivity;
     }
 
     /**
-     * Fires the listener if running and the debounce time has passed. The check and the
-     * timestamp update happen together, so two calls at the same moment fire only once.
-     * The listener runs on the calling thread; call this from the main thread.
+     * Fires the listener if running and the debounce time has passed.
+     * The whole call holds the lock, so stop() or setOnShakeListener(null) from another
+     * thread cannot slip in between the check and the callback, and two calls at the same
+     * moment fire only once. The listener runs on the calling thread; call this from the
+     * main thread. The listener may call stop() or other methods here (the lock is reentrant).
      */
     @Override
-    public void simulateShake() {
-        OnShakeListener target = listener;
-        if (!running || target == null) {
+    public synchronized void simulateShake() {
+        if (!running || listener == null) {
             return;
         }
-        synchronized (this) {
-            long now = clock.nowMillis();
-            if (lastShakeAt != Long.MIN_VALUE && now - lastShakeAt < GameConfig.SHAKE_DEBOUNCE_MS) {
-                return;
-            }
-            lastShakeAt = now;
+        long now = clock.nowMillis();
+        if (lastShakeAt != Long.MIN_VALUE && now - lastShakeAt < GameConfig.SHAKE_DEBOUNCE_MS) {
+            return;
         }
-        target.onShake();
+        lastShakeAt = now;
+        listener.onShake();
     }
 }
