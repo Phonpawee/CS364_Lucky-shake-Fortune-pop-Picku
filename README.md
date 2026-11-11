@@ -61,7 +61,9 @@ cd CS364_Lucky-shake-Fortune-pop-Picku
 - ถ้านำโค้ดหรือแนวคิดจาก repo หรือบทความอื่นมาใช้ ให้จดที่มาและ license
 
 ### กติกาตั้งชื่อ key ใน strings.xml (เพลงปรับได้ภายใน 10 พ.ย.)
-`<หน้าจอ>_<ชนิด>_<ความหมาย>` เช่น `home_btn_draw`, `result_label_quota`, `menu_form_error_name_empty`
+ตั้งชื่อ key ตามรูปแบบ `<หน้าจอ>_<ชนิด>_<ความหมาย>` โดยชนิดที่ใช้ร่วมกันคือ `btn`, `label`, `title`, `msg`, `error` และ `hint` เช่น `home_btn_draw`, `result_label_menu`, `menu_form_error_name_empty`
+
+เพิ่มข้อความใน `app/src/main/res/values/strings.xml` (ภาษาอังกฤษ ค่าเริ่มต้น) และ `app/src/main/res/values-th/strings.xml` (ภาษาไทย) โดยใช้ key เดียวกันทั้งสองไฟล์ ตัวอย่างข้อความที่มีตัวแปรใช้ format args เช่น `<string name="result_label_menu">Menu for today: %1$s</string>` และแสดงผลด้วย `getString(R.string.result_label_menu, menuName)` ห้ามต่อข้อความด้วย `+` เอง
 
 ## โครงโฟลเดอร์ที่แนะนำ (package `com.cs364.luckyshake`)
 ```

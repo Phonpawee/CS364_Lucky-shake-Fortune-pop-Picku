@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">LuckyShake</string>
+    <string name="home_title_main">เซียมซีกินอะไรดี</string>
+    <string name="home_btn_draw">เสี่ยงเซียมซี</string>
+    <string name="home_btn_filter">กรองเมนู</string>
+    <string name="result_title_fortune">คำทำนายของคุณ</string>
+    <string name="result_label_menu">เมนูวันนี้: %1$s</string>
+    <string name="result_msg_disclaimer">เพื่อความบันเทิงเท่านั้น</string>
+    <string name="menu_form_hint_name">ใส่ชื่อเมนู</string>
+    <string name="menu_form_error_name_empty">กรุณาใส่ชื่อเมนูก่อนดำเนินการต่อ</string>
+    <string name="group_title_food_type">เลือกกลุ่มอาหาร</string>
+    <string name="settings_title_language">ภาษา</string>
+    <string name="common_btn_cancel">ยกเลิก</string>
+    <string name="common_btn_save">บันทึก</string>
+</resources>
