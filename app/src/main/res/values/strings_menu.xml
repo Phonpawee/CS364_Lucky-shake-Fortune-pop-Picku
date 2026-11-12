@@ -18,6 +18,10 @@
     <string name="menu_form_label_type">Type</string>
     <string name="menu_form_label_tags">Tags</string>
     <string name="menu_form_msg_saved">Dish saved</string>
+    <string name="menu_form_title_discard">Discard changes?</string>
+    <string name="menu_form_msg_discard">Your changes have not been saved.</string>
+    <string name="menu_form_btn_keep">Keep editing</string>
+    <string name="menu_form_btn_discard">Discard</string>
     <string name="menu_form_error_save_failed">Could not save the dish</string>
     <string name="menu_list_label_delete_item">Delete %1$s</string>
 

@@ -11,6 +11,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -20,6 +21,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.data.Menu;
 import com.cs364.luckyshake.data.MenuRepository;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -34,7 +36,8 @@ import java.util.List;
  * <p>Hooks left for other issues:
  * <ul>
  *   <li>#24: {@link #validateForm()} (empty / duplicate name) — currently accepts everything.</li>
- *   <li>#14: {@link #hasUnsavedChanges()} — call it when the user presses Back.</li>
+ *   <li>#14: Back and Cancel ask before discarding ({@link #requestExit()}); swap in the
+ *       shared confirmation dialog there if the team wants one.</li>
  * </ul>
  */
 public class MenuFormActivity extends AppCompatActivity {
@@ -139,10 +142,14 @@ public class MenuFormActivity extends AppCompatActivity {
             initialTags = savedInstanceState.getInt(STATE_INITIAL_TAGS, 0);
         }
 
-        findViewById(R.id.menu_form_cancel).setOnClickListener(v -> {
-            setResult(RESULT_CANCELED);
-            finish();
+        // Back and Cancel share one exit path, so unsaved changes are never dropped silently.
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                requestExit();
+            }
         });
+        findViewById(R.id.menu_form_cancel).setOnClickListener(v -> requestExit());
         saveButton.setOnClickListener(v -> save());
     }
 
@@ -159,6 +166,27 @@ public class MenuFormActivity extends AppCompatActivity {
         return !currentName().equals(initialName)
                 || currentTypeIndex() != initialType
                 || currentTags() != initialTags;
+    }
+
+    /**
+     * Leaves the form. Asks first when there are unsaved changes; with nothing to lose it
+     * closes at once. Local dialog for now: #14 may swap it for the shared confirmation dialog.
+     */
+    private void requestExit() {
+        if (!hasUnsavedChanges()) {
+            setResult(RESULT_CANCELED);
+            finish();
+            return;
+        }
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.menu_form_title_discard)
+                .setMessage(R.string.menu_form_msg_discard)
+                .setNegativeButton(R.string.menu_form_btn_keep, null)
+                .setPositiveButton(R.string.menu_form_btn_discard, (dialog, which) -> {
+                    setResult(RESULT_CANCELED);
+                    finish();
+                })
+                .show();
     }
 
     /**
