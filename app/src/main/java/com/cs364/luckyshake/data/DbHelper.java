@@ -1,4 +1,5 @@
 package com.cs364.luckyshake.data;
+import com.cs364.luckyshake.logic.GameConfig;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,7 +14,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final int DB_VERSION = 1;
 
     // Keep in sync with the default weight in GameConfig (issue #1).
-    public static final int DEFAULT_WEIGHT = 5;
+    public static final int DEFAULT_WEIGHT = GameConfig.DEFAULT_WEIGHT;
 
     // Table: menu_set
     public static final String T_SET = "menu_set";
