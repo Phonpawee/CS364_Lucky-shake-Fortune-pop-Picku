@@ -12,7 +12,17 @@
     <string name="menu_list_msg_delete_confirm">“%1$s” จะถูกลบ ประวัติเดิมของคุณยังอยู่</string>
     <string name="menu_list_msg_deleted">ลบเมนูแล้ว</string>
     <string name="menu_list_error_delete_failed">ลบเมนูไม่สำเร็จ</string>
-    <string name="menu_list_msg_form_todo">ฟอร์มเพิ่ม/แก้ไขจะเปิดให้ใช้เร็ว ๆ นี้</string>
+    <!-- ฟอร์มเพิ่ม/แก้ไขเมนู (issue #23) -->
+    <string name="menu_form_title_add">เพิ่มเมนู</string>
+    <string name="menu_form_title_edit">แก้ไขเมนู</string>
+    <string name="menu_form_label_type">ประเภท</string>
+    <string name="menu_form_label_tags">แท็ก</string>
+    <string name="menu_form_msg_saved">บันทึกเมนูแล้ว</string>
+    <string name="menu_form_title_discard">ทิ้งการแก้ไขหรือไม่?</string>
+    <string name="menu_form_msg_discard">ข้อมูลที่แก้ยังไม่ได้บันทึก</string>
+    <string name="menu_form_btn_keep">แก้ไขต่อ</string>
+    <string name="menu_form_btn_discard">ทิ้ง</string>
+    <string name="menu_form_error_save_failed">บันทึกเมนูไม่สำเร็จ</string>
     <string name="menu_list_label_delete_item">ลบ %1$s</string>
 
     <!-- ประเภทและแท็กของเมนู (ใช้ร่วมกับฟอร์มและตัวกรอง) -->

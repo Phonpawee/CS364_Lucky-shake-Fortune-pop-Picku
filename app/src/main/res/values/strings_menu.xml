@@ -12,7 +12,17 @@
     <string name="menu_list_msg_delete_confirm">“%1$s” will be removed. Your past history is kept.</string>
     <string name="menu_list_msg_deleted">Dish deleted</string>
     <string name="menu_list_error_delete_failed">Could not delete the dish</string>
-    <string name="menu_list_msg_form_todo">The add/edit form is coming soon</string>
+    <!-- Add/edit form (issue #23) -->
+    <string name="menu_form_title_add">Add dish</string>
+    <string name="menu_form_title_edit">Edit dish</string>
+    <string name="menu_form_label_type">Type</string>
+    <string name="menu_form_label_tags">Tags</string>
+    <string name="menu_form_msg_saved">Dish saved</string>
+    <string name="menu_form_title_discard">Discard changes?</string>
+    <string name="menu_form_msg_discard">Your changes have not been saved.</string>
+    <string name="menu_form_btn_keep">Keep editing</string>
+    <string name="menu_form_btn_discard">Discard</string>
+    <string name="menu_form_error_save_failed">Could not save the dish</string>
     <string name="menu_list_label_delete_item">Delete %1$s</string>
 
     <!-- Dish types and tags (shared with the form and the filters) -->
