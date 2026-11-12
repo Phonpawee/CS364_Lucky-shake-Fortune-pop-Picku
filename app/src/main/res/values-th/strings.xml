@@ -17,8 +17,7 @@
     <string name="group_setup_title">ตัดสินใจกลุ่ม</string>
     <string name="group_setup_msg_instructions">ทุกคนผลัดกันเสนอ แล้วเขย่าสุ่มผู้ชนะ จะไม่โชว์ว่าใครเสนออะไรจนกว่าจะเขย่า</string>
     <string name="group_setup_label_participants">จำนวนคน</string>
-    <string name="group_setup_label_range">จำกัด %1$d–%2$d คน</string>
-    <string name="group_setup_label_count">%1$d คน</string>
+    <string name="group_setup_label_count">%1$d</string>
     <string name="group_setup_btn_decrement">-</string>
     <string name="group_setup_btn_increment">+</string>
     <string name="group_setup_desc_decrement">ลดจำนวนคน</string>

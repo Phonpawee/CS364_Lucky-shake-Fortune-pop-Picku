@@ -17,8 +17,7 @@
     <string name="group_setup_title">Group decision</string>
     <string name="group_setup_msg_instructions">Everyone takes turns to propose, then shake to draw the winner. No one sees who proposed what until the shake.</string>
     <string name="group_setup_label_participants">Number of participants</string>
-    <string name="group_setup_label_range">Limited to %1$d–%2$d players</string>
-    <string name="group_setup_label_count">%1$d players</string>
+    <string name="group_setup_label_count">%1$d</string>
     <string name="group_setup_btn_decrement">-</string>
     <string name="group_setup_btn_increment">+</string>
     <string name="group_setup_desc_decrement">Decrease participants</string>

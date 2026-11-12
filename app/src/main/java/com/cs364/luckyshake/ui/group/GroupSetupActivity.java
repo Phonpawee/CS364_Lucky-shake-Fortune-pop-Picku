@@ -15,7 +15,6 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.cs364.luckyshake.R;
-import com.cs364.luckyshake.logic.GameConfig;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.snackbar.Snackbar;
@@ -28,7 +27,6 @@ public class GroupSetupActivity extends AppCompatActivity {
 
     private GroupViewModel viewModel;
     private View root;
-    private TextView rangeLabel;
     private TextView countText;
     private MaterialButton btnDecrement;
     private MaterialButton btnIncrement;
@@ -58,16 +56,12 @@ public class GroupSetupActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(GroupViewModel.class);
 
-        rangeLabel = findViewById(R.id.group_setup_label_range);
         countText = findViewById(R.id.group_setup_text_count);
         btnDecrement = findViewById(R.id.group_setup_btn_decrement);
         btnIncrement = findViewById(R.id.group_setup_btn_increment);
         toggleGroupMethod = findViewById(R.id.group_setup_toggle_group_method);
         textMethodHint = findViewById(R.id.text_method_hint);
         btnStart = findViewById(R.id.group_setup_btn_start);
-
-        rangeLabel.setText(getString(R.string.group_setup_label_range,
-                GameConfig.MIN_GROUP_PLAYERS, GameConfig.MAX_GROUP_PLAYERS));
 
         btnDecrement.setOnClickListener(v -> viewModel.decrementParticipantCount());
         btnIncrement.setOnClickListener(v -> viewModel.incrementParticipantCount());
