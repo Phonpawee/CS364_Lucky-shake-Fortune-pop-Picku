@@ -12,4 +12,22 @@
     <string name="settings_title_language">Language</string>
     <string name="common_btn_cancel">Cancel</string>
     <string name="common_btn_save">Save</string>
+
+    <!-- Group Setup Screen  -->
+    <string name="group_setup_title">Group decision</string>
+    <string name="group_setup_msg_instructions">Everyone takes turns to propose, then shake to draw the winner. No one sees who proposed what until the shake.</string>
+    <string name="group_setup_label_participants">Number of participants</string>
+    <string name="group_setup_label_range">Limited to %1$d–%2$d players</string>
+    <string name="group_setup_label_count">%1$d players</string>
+    <string name="group_setup_btn_decrement">-</string>
+    <string name="group_setup_btn_increment">+</string>
+    <string name="group_setup_desc_decrement">Decrease participants</string>
+    <string name="group_setup_desc_increment">Increase participants</string>
+    <string name="group_setup_label_method">Proposal method</string>
+    <string name="group_setup_label_method_food_type">Pick food group</string>
+    <string name="group_setup_label_method_restaurant_name">Enter restaurants</string>
+    <string name="group_setup_msg_method_food_type">Each person picks one food group, e.g. BBQ, shabu or noodles. Groups picked by more people have a better chance to win.</string>
+    <string name="group_setup_msg_method_restaurant">Each person types up to 3 restaurants. Restaurants suggested by more people have a better chance to win.</string>
+    <string name="group_setup_btn_start">Start</string>
+    <string name="group_setup_msg_started">Round started! Proposal phase coming soon.</string>
 </resources>

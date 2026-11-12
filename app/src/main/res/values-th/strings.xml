@@ -12,4 +12,22 @@
     <string name="settings_title_language">ภาษา</string>
     <string name="common_btn_cancel">ยกเลิก</string>
     <string name="common_btn_save">บันทึก</string>
+
+    <!-- Group Setup Screen  -->
+    <string name="group_setup_title">ตัดสินใจกลุ่ม</string>
+    <string name="group_setup_msg_instructions">ทุกคนผลัดกันเสนอ แล้วเขย่าสุ่มผู้ชนะ จะไม่โชว์ว่าใครเสนออะไรจนกว่าจะเขย่า</string>
+    <string name="group_setup_label_participants">จำนวนคน</string>
+    <string name="group_setup_label_range">จำกัด %1$d–%2$d คน</string>
+    <string name="group_setup_label_count">%1$d คน</string>
+    <string name="group_setup_btn_decrement">-</string>
+    <string name="group_setup_btn_increment">+</string>
+    <string name="group_setup_desc_decrement">ลดจำนวนคน</string>
+    <string name="group_setup_desc_increment">เพิ่มจำนวนคน</string>
+    <string name="group_setup_label_method">วิธีเสนอ</string>
+    <string name="group_setup_label_method_food_type">เลือกกลุ่มอาหาร</string>
+    <string name="group_setup_label_method_restaurant_name">ใส่ชื่อร้าน</string>
+    <string name="group_setup_msg_method_food_type">แต่ละคนเลือกกลุ่มอาหารที่อยากกิน 1 กลุ่ม เช่น ปิ้งย่าง ชาบู ก๋วยเตี๋ยว กลุ่มที่มีคนเลือกซ้ำจะมีโอกาสชนะมากขึ้น</string>
+    <string name="group_setup_msg_method_restaurant">แต่ละคนพิมพ์ชื่อร้านที่อยากกินได้สูงสุด 3 ร้าน ร้านที่มีคนเสนอซ้ำจะมีโอกาสชนะมากขึ้น</string>
+    <string name="group_setup_btn_start">เริ่ม</string>
+    <string name="group_setup_msg_started">เริ่มรอบการเสนอแล้ว (กำลังพัฒนาหน้าถัดไป)</string>
 </resources>

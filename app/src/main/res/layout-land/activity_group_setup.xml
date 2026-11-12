@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/group_setup_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/app_background"
+    tools:context=".ui.group.GroupSetupActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_md">
+
+        <!-- Title Header -->
+        <TextView
+            android:id="@+id/group_setup_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/group_setup_title"
+            android:textAppearance="@style/TextAppearance.LuckyShake.Heading"
+            android:layout_marginBottom="@dimen/spacing_sm" />
+
+        <!-- Instructions Card -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.LuckyShake.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_md">
+
+            <TextView
+                android:id="@+id/group_setup_instructions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/spacing_sm"
+                android:text="@string/group_setup_msg_instructions"
+                android:textColor="@color/app_on_surface"
+                android:textSize="@dimen/text_body" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Two Columns Container -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Column 1: Participants Counter -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.LuckyShake.Card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/spacing_sm">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_md">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/group_setup_label_participants"
+                        android:textColor="@color/app_on_surface"
+                        android:textSize="@dimen/text_body"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/group_setup_label_range"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_sm"
+                        android:textColor="@color/app_on_surface"
+                        android:textSize="14sp"
+                        tools:text="จำกัด 2–8 คน" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/group_setup_btn_decrement"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="48dp"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/group_setup_desc_decrement"
+                            android:text="@string/group_setup_btn_decrement"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/group_setup_text_count"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:textColor="@color/app_on_surface"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            tools:text="2 คน" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/group_setup_btn_increment"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="48dp"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="@string/group_setup_desc_increment"
+                            android:text="@string/group_setup_btn_increment"
+                            android:textSize="18sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Column 2: Proposal Method -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.LuckyShake.Card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/spacing_sm">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_md">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_sm"
+                        android:text="@string/group_setup_label_method"
+                        android:textColor="@color/app_on_surface"
+                        android:textSize="@dimen/text_body"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/group_setup_toggle_group_method"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:selectionRequired="true"
+                        app:singleSelection="true">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/group_setup_btn_method_food_type"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/group_setup_label_method_food_type" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/group_setup_btn_method_restaurant_name"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/group_setup_label_method_restaurant_name" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                    <TextView
+                        android:id="@+id/text_method_hint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_sm"
+                        android:textColor="@color/app_on_surface"
+                        android:textSize="14sp"
+                        tools:text="แต่ละคนเลือกกลุ่มอาหารที่อยากกิน 1 กลุ่ม..." />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- Start Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/group_setup_btn_start"
+            style="@style/Widget.LuckyShake.Button.Primary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:text="@string/group_setup_btn_start" />
+    </LinearLayout>
+</ScrollView>
