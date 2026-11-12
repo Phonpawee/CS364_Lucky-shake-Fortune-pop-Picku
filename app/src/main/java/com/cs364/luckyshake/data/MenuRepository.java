@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import com.cs364.luckyshake.logic.GameConfig;
 
@@ -178,24 +179,38 @@ public class MenuRepository {
 
     /**
      * True if another menu in the same set already has this name (Thai or English,
-     * ignoring upper/lower case). Used by form validation.
+     * ignoring upper/lower case, including accented letters such as "Eclair" with an accent).
+     * Used by form validation.
+     *
+     * <p>The comparison is done in Java: SQLite's built-in LOWER() only folds ASCII letters,
+     * and the app does not load the ICU extension.
      *
      * @param excludeId id of the menu being edited (0 when adding a new one)
      */
     public boolean nameExists(long setId, String name, long excludeId) {
-        String n = name == null ? "" : name.trim();
-        if (n.isEmpty()) {
+        String wanted = foldName(name);
+        if (wanted.isEmpty()) {
             return false;
         }
-        String sql = "SELECT 1 FROM " + DbHelper.T_MENU
-                + " WHERE " + DbHelper.C_MENU_SET_ID + " = ? AND " + DbHelper.C_MENU_ID + " != ?"
-                + " AND (LOWER(" + DbHelper.C_MENU_NAME_TH + ") = LOWER(?)"
-                + " OR (" + DbHelper.C_MENU_NAME_EN + " != '' AND LOWER(" + DbHelper.C_MENU_NAME_EN + ") = LOWER(?)))"
-                + " LIMIT 1";
+        String sql = "SELECT " + DbHelper.C_MENU_NAME_TH + ", " + DbHelper.C_MENU_NAME_EN
+                + " FROM " + DbHelper.T_MENU
+                + " WHERE " + DbHelper.C_MENU_SET_ID + " = ? AND " + DbHelper.C_MENU_ID + " != ?";
         try (Cursor c = helper.getReadableDatabase().rawQuery(sql,
-                new String[]{String.valueOf(setId), String.valueOf(excludeId), n, n})) {
-            return c.moveToFirst();
+                new String[]{String.valueOf(setId), String.valueOf(excludeId)})) {
+            while (c.moveToNext()) {
+                String nameEn = foldName(c.getString(1));
+                if (wanted.equals(foldName(c.getString(0)))
+                        || (!nameEn.isEmpty() && wanted.equals(nameEn))) {
+                    return true;
+                }
+            }
+            return false;
         }
+    }
+
+    /** Trims and lower-cases for name comparison; Locale.ROOT so the result never depends on the device language. */
+    private static String foldName(String name) {
+        return name == null ? "" : name.trim().toLowerCase(Locale.ROOT);
     }
 
     // --------------------------------------------------------------- weights
