@@ -1,5 +1,6 @@
 package com.cs364.luckyshake.ui.menu;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -11,6 +12,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -48,6 +51,15 @@ public class MenuListActivity extends AppCompatActivity {
 
     private List<MenuSet> sets = new ArrayList<>();
     private long currentSetId = -1;
+
+    /** Opens the add/edit form (#23); the list is refreshed when a dish was saved. */
+    private final ActivityResultLauncher<Intent> formLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    refreshList();
+                    Snackbar.make(root, R.string.menu_form_msg_saved, Snackbar.LENGTH_SHORT).show();
+                }
+            });
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -217,13 +229,14 @@ public class MenuListActivity extends AppCompatActivity {
                 .show();
     }
 
-    /**
-     * Opens the add (menu == null) or edit form.
-     * TODO(#23): launch MenuFormActivity with an ActivityResultLauncher and pass the menu id;
-     * refresh the list when it returns RESULT_OK. Until then this only shows a message.
-     */
+    /** Opens the add (menu == null) or edit form (issue #23). */
     private void openMenuForm(@Nullable Menu menu) {
-        Snackbar.make(root, R.string.menu_list_msg_form_todo, Snackbar.LENGTH_SHORT).show();
+        if (menu == null && currentSetId < 0) {
+            // A new dish needs a set to live in.
+            Snackbar.make(root, R.string.menu_list_msg_empty_no_set, Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+        formLauncher.launch(MenuFormActivity.newIntent(this, currentSetId, menu));
     }
 
     private boolean isThai() {
