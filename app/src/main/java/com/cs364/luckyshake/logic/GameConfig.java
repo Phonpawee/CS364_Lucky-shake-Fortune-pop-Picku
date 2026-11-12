@@ -61,4 +61,8 @@ public final class GameConfig {
     public static int clampWeight(int weight) {
         return Math.max(MIN_WEIGHT, Math.min(MAX_WEIGHT, weight));
     }
+
+    // -------------------------------------------------------------- group
+    public static final int MIN_GROUP_PLAYERS = 2;
+    public static final int MAX_GROUP_PLAYERS = 8;
 }
