@@ -1,12 +1,14 @@
 package com.cs364.luckyshake.sensor;
 
+import android.content.Context;
+
 /**
  * Detects a shake of the phone. One shake calls the listener once.
  * Do not change these signatures without telling the team (see README).
  *
  * Usage in an Activity/Fragment:
  * <pre>
- * detector = ShakeDetector.create();
+ * detector = ShakeDetector.create(this);
  * detector.setOnShakeListener(() -> draw());
  * // onResume: detector.start();   onPause: detector.stop();
  * </pre>
@@ -43,10 +45,11 @@ public interface ShakeDetector {
     void simulateShake();
 
     /**
-     * The detector the app should use. Returns the stub until issue #2 is merged;
-     * the real one will need a Context, so this method will then take one.
+     * The detector the app should use: the real accelerometer one.
+     * Pass the Activity (or any Context); only the SensorManager is kept, not the Context.
+     * On a phone without an accelerometer it still works, but only simulateShake() fires.
      */
-    static ShakeDetector create() {
-        return new StubShakeDetector();
+    static ShakeDetector create(Context context) {
+        return new AccelerometerShakeDetector(context);
     }
 }
