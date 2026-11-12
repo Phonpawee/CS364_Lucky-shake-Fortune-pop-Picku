@@ -9,14 +9,16 @@ import android.database.sqlite.SQLiteDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.cs364.luckyshake.logic.GameConfig;
+
 /**
  * Reads and writes menu sets and menus. Calls are synchronous: the data is tiny,
  * so calling from the main thread is fine for this project.
  */
 public class MenuRepository {
     // Keep in sync with GameConfig (issue #1).
-    public static final int MIN_WEIGHT = 1;
-    public static final int MAX_WEIGHT = 10;
+    public static final int MIN_WEIGHT = GameConfig.MIN_WEIGHT;
+    public static final int MAX_WEIGHT = GameConfig.MAX_WEIGHT;
 
     private static final String BY_ID = DbHelper.C_MENU_ID + " = ?";
 
