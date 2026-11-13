@@ -3,6 +3,8 @@ package com.cs364.luckyshake.ui.menu;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -23,6 +25,7 @@ import com.cs364.luckyshake.data.Menu;
 import com.cs364.luckyshake.data.MenuRepository;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +38,8 @@ import java.util.List;
  *
  * <p>Hooks left for other issues:
  * <ul>
- *   <li>#24: {@link #validateForm()} (empty / duplicate name) — currently accepts everything.</li>
+ *   <li>#24 (done): {@link #validateForm()} checks the name (empty, too long, duplicate in the
+ *       same set) and shows the error on the name field.</li>
  *   <li>#14: Back and Cancel ask before discarding ({@link #requestExit()}); swap in the
  *       shared confirmation dialog there if the team wants one.</li>
  * </ul>
@@ -43,6 +47,9 @@ import java.util.List;
 public class MenuFormActivity extends AppCompatActivity {
     public static final String EXTRA_MENU_ID = "extra_menu_id";
     public static final String EXTRA_SET_ID = "extra_set_id";
+
+    /** Keep in sync with android:maxLength on the name field in activity_menu_form.xml. */
+    static final int MAX_NAME_LENGTH = 60;
 
     private static final String STATE_INITIAL_NAME = "state_initial_name";
     private static final String STATE_INITIAL_TYPE = "state_initial_type";
@@ -55,6 +62,7 @@ public class MenuFormActivity extends AppCompatActivity {
 
     private MenuRepository menus;
     private View root;
+    private TextInputLayout nameLayout;
     private EditText nameInput;
     private Spinner typeSpinner;
     private CheckBox tagSpicy;
@@ -99,6 +107,7 @@ public class MenuFormActivity extends AppCompatActivity {
         });
 
         menus = new MenuRepository(this);
+        nameLayout = findViewById(R.id.menu_form_name_layout);
         nameInput = findViewById(R.id.menu_form_name);
         typeSpinner = findViewById(R.id.menu_form_type);
         tagSpicy = findViewById(R.id.menu_form_tag_spicy);
@@ -141,6 +150,22 @@ public class MenuFormActivity extends AppCompatActivity {
             initialType = savedInstanceState.getInt(STATE_INITIAL_TYPE, 0);
             initialTags = savedInstanceState.getInt(STATE_INITIAL_TAGS, 0);
         }
+
+        // Clear the error as soon as the user edits the name again.
+        nameInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence text, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence text, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable text) {
+                nameLayout.setError(null);
+            }
+        });
 
         // Back and Cancel share one exit path, so unsaved changes are never dropped silently.
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -190,10 +215,25 @@ public class MenuFormActivity extends AppCompatActivity {
     }
 
     /**
-     * Hook for #24: check the form (empty name, duplicate name via
-     * MenuRepository.nameExists) and show the errors. Return false to stop the save.
+     * Checks the name (issue #24): not empty after trimming, at most {@link #MAX_NAME_LENGTH}
+     * characters, and not already used by another dish in the same set (case-insensitive).
+     * Shows the message on the name field and returns false when something is wrong.
      */
     private boolean validateForm() {
+        String name = currentName();
+        String error = null;
+        if (name.isEmpty()) {
+            error = getString(R.string.menu_form_error_name_empty);
+        } else if (name.length() > MAX_NAME_LENGTH) {
+            error = getString(R.string.menu_form_error_name_too_long, MAX_NAME_LENGTH);
+        } else if (menus.nameExists(setId, name, editing == null ? 0 : editing.id)) {
+            error = getString(R.string.menu_form_error_name_duplicate);
+        }
+        nameLayout.setError(error);
+        if (error != null) {
+            nameInput.requestFocus();
+            return false;
+        }
         return true;
     }
 
