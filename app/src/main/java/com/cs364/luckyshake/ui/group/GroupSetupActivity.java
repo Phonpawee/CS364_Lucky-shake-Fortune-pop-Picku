@@ -123,6 +123,7 @@ public class GroupSetupActivity extends AppCompatActivity {
                 Snackbar.make(root, R.string.group_setup_msg_started, Snackbar.LENGTH_SHORT).show();
                 // TODO(#35): Navigate to food category picker screen once implemented.
             }
+            viewModel.resetSession();
         }
     }
 }

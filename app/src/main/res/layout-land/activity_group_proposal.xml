@@ -54,6 +54,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_sm"
+                    android:labelFor="@+id/group_proposal_edit_restaurant_1"
                     android:text="@string/group_proposal_hint_restaurant_1"
                     android:textColor="@color/app_on_surface" />
 
@@ -87,6 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_sm"
+                    android:labelFor="@+id/group_proposal_edit_restaurant_2"
                     android:text="@string/group_proposal_hint_restaurant_2"
                     android:textColor="@color/app_on_surface" />
 
@@ -120,6 +122,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_sm"
+                    android:labelFor="@+id/group_proposal_edit_restaurant_3"
                     android:text="@string/group_proposal_hint_restaurant_3"
                     android:textColor="@color/app_on_surface" />
 
