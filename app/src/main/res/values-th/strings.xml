@@ -42,4 +42,33 @@
     <string name="group_proposal_error_restaurant_empty">กรุณาใส่ชื่อร้านอย่างน้อย 1 ร้าน</string>
     <string name="group_proposal_msg_pass_phone">ส่งมือถือให้คนถัดไป</string>
     <string name="group_proposal_msg_all_done">ทุกคนเสนอครบแล้ว</string>
+
+    <!-- Fortune Provider (#27) -->
+    <string name="fortune_msg_level_1_1">วันนี้อาจมีเรื่องเล็ก ๆ มาทำให้ยิ้ม ขอให้อร่อยกับ %1$s</string>
+    <string name="fortune_msg_level_1_2">เมนูเรียบง่ายก็เติมช่วงเวลาดี ๆ ได้ ลอง %1$s ดูนะ</string>
+    <string name="fortune_msg_level_1_3">วันนี้ค่อย ๆ ใช้เวลาและหาโอกาสอร่อยกับ %1$s</string>
+
+    <string name="fortune_msg_level_2_1">บทสนทนาดี ๆ อาจทำให้วันนี้อบอุ่นขึ้น ลองแบ่ง %1$s กับใครสักคน</string>
+    <string name="fortune_msg_level_2_2">เปลี่ยนบรรยากาศสักนิดอาจทำให้สดชื่น ลองเลือก %1$s ดู</string>
+    <string name="fortune_msg_level_2_3">ของโปรดที่คุ้นเคยอาจเหมาะกับวันนี้ที่สุด: %1$s</string>
+
+    <string name="fortune_msg_level_3_1">ช่วงเวลาดี ๆ อาจอยู่ใกล้กว่าที่คิด ขอให้อร่อยกับ %1$s</string>
+    <string name="fortune_msg_level_3_2">วันนี้แผนต่าง ๆ อาจราบรื่น แวะพักมาอร่อยกับ %1$s กัน</string>
+    <string name="fortune_msg_level_3_3">มื้ออร่อยกับคนถูกใจอยู่ใกล้แค่เอื้อม ลองแบ่ง %1$s กัน</string>
+
+    <string name="fortune_msg_level_4_1">วันนี้อาจมีช่วงเวลาสดใสรออยู่ ให้ %1$s เป็นมื้อพิเศษของวัน</string>
+    <string name="fortune_msg_level_4_2">วันนี้ยังมีพื้นที่ให้ความสุขเพิ่มขึ้น ฉลองด้วย %1$s กัน</string>
+    <string name="fortune_msg_level_4_3">ความทรงจำดี ๆ อาจเริ่มจากการเลือกมื้ออร่อย: %1$s</string>
+
+    <!-- Food type names for group proposals -->
+    <string name="food_type_rice">ข้าว / อาหารตามสั่ง</string>
+    <string name="food_type_noodles">ก๋วยเตี๋ยว</string>
+    <string name="food_type_grill">ปิ้งย่าง / หมูกระทะ</string>
+    <string name="food_type_hotpot">ชาบู / สุกี้</string>
+    <string name="food_type_japanese">อาหารญี่ปุ่น</string>
+    <string name="food_type_korean">อาหารเกาหลี</string>
+    <string name="food_type_isan">อาหารอีสาน</string>
+    <string name="food_type_fast_food">ฟาสต์ฟู้ด</string>
+    <string name="food_type_dessert_cafe">ของหวาน / คาเฟ่</string>
+    <string name="food_type_healthy_vegetarian">อาหารสุขภาพ / เจ</string>
 </resources>
