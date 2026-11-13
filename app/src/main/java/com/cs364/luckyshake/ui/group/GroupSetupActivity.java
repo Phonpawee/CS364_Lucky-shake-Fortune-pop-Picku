@@ -15,6 +15,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.cs364.luckyshake.R;
+import com.cs364.luckyshake.logic.GameConfig;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.snackbar.Snackbar;
@@ -113,9 +114,15 @@ public class GroupSetupActivity extends AppCompatActivity {
 
     private void handleStartRound() {
         if (viewModel.startGroupSession()) {
-            Snackbar.make(root, R.string.group_setup_msg_started, Snackbar.LENGTH_SHORT).show();
-            // TODO(#35/#36): Navigate to proposal collection screen once implemented.
-            // Reset back to SETUP for now so another test round can be configured.
+            ProposalMethod method = viewModel.getProposalMethod().getValue();
+            if (method == ProposalMethod.RESTAURANT_NAME) {
+                Integer count = viewModel.getParticipantCount().getValue();
+                int pCount = count != null ? count : GameConfig.MIN_GROUP_PLAYERS;
+                startActivity(GroupProposalActivity.newIntent(this, pCount, method));
+            } else {
+                Snackbar.make(root, R.string.group_setup_msg_started, Snackbar.LENGTH_SHORT).show();
+                // TODO(#35): Navigate to food category picker screen once implemented.
+            }
             viewModel.resetSession();
         }
     }

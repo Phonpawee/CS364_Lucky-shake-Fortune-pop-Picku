@@ -28,5 +28,18 @@
     <string name="group_setup_msg_method_food_type">แต่ละคนเลือกกลุ่มอาหารที่อยากกิน 1 กลุ่ม เช่น ปิ้งย่าง ชาบู ก๋วยเตี๋ยว กลุ่มที่มีคนเลือกซ้ำจะมีโอกาสชนะมากขึ้น</string>
     <string name="group_setup_msg_method_restaurant">แต่ละคนพิมพ์ชื่อร้านที่อยากกินได้สูงสุด 3 ร้าน ร้านที่มีคนเสนอซ้ำจะมีโอกาสชนะมากขึ้น</string>
     <string name="group_setup_btn_start">เริ่ม</string>
-    <string name="group_setup_msg_started">เริ่มรอบการเสนอแล้ว (กำลังพัฒนาหน้าถัดไป)</string>
+    <string name="group_setup_msg_started">โหมดเลือกกลุ่มอาหารกำลังพัฒนา</string>
+
+    <!-- Group Proposal Screen (#36) -->
+    <string name="group_proposal_title_turn">ถึงตาคนที่ %1$d จาก %2$d</string>
+    <string name="group_proposal_msg_restaurant_hint">ส่งมือถือให้คนนี้ ตอบเงียบ ๆ อย่าให้คนอื่นเห็น</string>
+    <string name="group_proposal_hint_restaurant_1">ร้านที่ 1</string>
+    <string name="group_proposal_hint_restaurant_2">ร้านที่ 2 (ไม่บังคับ)</string>
+    <string name="group_proposal_hint_restaurant_3">ร้านที่ 3 (ไม่บังคับ)</string>
+    <string name="group_proposal_hint_restaurant_example">เช่น ร้านลุงชัย</string>
+    <string name="group_proposal_btn_skip">ข้ามตา</string>
+    <string name="group_proposal_btn_confirm">ยืนยัน</string>
+    <string name="group_proposal_error_restaurant_empty">กรุณาใส่ชื่อร้านอย่างน้อย 1 ร้าน</string>
+    <string name="group_proposal_msg_pass_phone">ส่งมือถือให้คนถัดไป</string>
+    <string name="group_proposal_msg_all_done">ทุกคนเสนอครบแล้ว</string>
 </resources>

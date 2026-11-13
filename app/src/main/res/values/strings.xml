@@ -28,5 +28,18 @@
     <string name="group_setup_msg_method_food_type">Each person picks one food group, e.g. BBQ, shabu or noodles. Groups picked by more people have a better chance to win.</string>
     <string name="group_setup_msg_method_restaurant">Each person types up to 3 restaurants. Restaurants suggested by more people have a better chance to win.</string>
     <string name="group_setup_btn_start">Start</string>
-    <string name="group_setup_msg_started">Round started! Proposal phase coming soon.</string>
+    <string name="group_setup_msg_started">Food category mode is coming soon.</string>
+
+    <!-- Group Proposal Screen (#36) -->
+    <string name="group_proposal_title_turn">Person %1$d of %2$d</string>
+    <string name="group_proposal_msg_restaurant_hint">Hand the phone to this person. Answer quietly so no one else sees.</string>
+    <string name="group_proposal_hint_restaurant_1">Restaurant 1</string>
+    <string name="group_proposal_hint_restaurant_2">Restaurant 2 (optional)</string>
+    <string name="group_proposal_hint_restaurant_3">Restaurant 3 (optional)</string>
+    <string name="group_proposal_hint_restaurant_example">e.g. Uncle Chai’s</string>
+    <string name="group_proposal_btn_skip">Skip</string>
+    <string name="group_proposal_btn_confirm">Confirm</string>
+    <string name="group_proposal_error_restaurant_empty">Enter at least one restaurant</string>
+    <string name="group_proposal_msg_pass_phone">Pass the phone to the next person</string>
+    <string name="group_proposal_msg_all_done">Everyone has proposed</string>
 </resources>

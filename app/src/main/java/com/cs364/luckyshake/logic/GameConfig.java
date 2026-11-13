@@ -65,4 +65,6 @@ public final class GameConfig {
     // -------------------------------------------------------------- group
     public static final int MIN_GROUP_PLAYERS = 2;
     public static final int MAX_GROUP_PLAYERS = 8;
+    public static final int MAX_RESTAURANTS_PER_PLAYER = 3;
+    public static final int MAX_RESTAURANT_NAME_LENGTH = 40;
 }
