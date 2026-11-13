@@ -18,9 +18,11 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -130,6 +132,10 @@ public class MenuListActivity extends AppCompatActivity {
         });
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
+        DividerItemDecoration divider =
+                new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider_menu_item));
+        recycler.addItemDecoration(divider);
 
         setSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
