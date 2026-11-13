@@ -8,16 +8,8 @@
     android:orientation="vertical"
     tools:context=".ui.menu.MenuListActivity">
 
-    <TextView
-        android:id="@+id/menu_list_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/spacing_md"
-        android:layout_marginTop="@dimen/spacing_sm"
-        android:text="@string/menu_list_title_main"
-        android:textAppearance="@style/TextAppearance.LuckyShake.Heading" />
-
-    <!-- Landscape: set card, search and "add dish" share one row to save height. -->
+    <!-- Landscape row 1: the title and the set card. The card takes all the width the title
+         leaves, so the set picker always has room, also at large font sizes. -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,12 +18,19 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/menu_list_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/spacing_md"
+            android:text="@string/menu_list_title_main"
+            android:textAppearance="@style/TextAppearance.LuckyShake.Heading" />
+
         <com.google.android.material.card.MaterialCardView
             style="@style/Widget.LuckyShake.Card"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/spacing_sm"
-            android:layout_weight="3">
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -58,7 +57,8 @@
                     android:layout_marginEnd="@dimen/spacing_sm"
                     android:layout_weight="1"
                     android:contentDescription="@string/menu_list_label_set"
-                    android:minHeight="@dimen/button_min_height" />
+                    android:minHeight="@dimen/button_min_height"
+                    android:minWidth="96dp" />
 
                 <ImageButton
                     android:id="@+id/menu_sets_btn_add"
@@ -91,13 +91,23 @@
                     app:tint="?attr/colorOnSurface" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+    <!-- Landscape row 2: search and "add dish". -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/spacing_md"
+        android:layout_marginTop="@dimen/spacing_sm"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/spacing_sm"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:hint="@string/menu_list_hint_search">
 
             <com.google.android.material.textfield.TextInputEditText
