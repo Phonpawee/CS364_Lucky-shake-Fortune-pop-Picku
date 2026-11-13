@@ -12,13 +12,15 @@
         android:layout_height="wrap_content"
         android:hint="@string/menu_sets_hint_name">
 
+        <!-- No android:maxLength here: it would silently cut a long paste to 60 characters.
+             validateSetName() rejects names over 60 and shows the "too long" message instead. -->
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/menu_sets_name_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
             android:inputType="textCapSentences"
-            android:maxLength="60"
             android:maxLines="1" />
     </com.google.android.material.textfield.TextInputLayout>
 </FrameLayout>

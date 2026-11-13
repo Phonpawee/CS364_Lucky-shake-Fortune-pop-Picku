@@ -46,6 +46,10 @@ import java.util.Locale;
 public class MenuListActivity extends AppCompatActivity {
     private static final String STATE_SET_ID = "state_set_id";
     private static final int MAX_SET_NAME_LENGTH = 60;
+    // The add/rename dialog is rebuilt after a rotation from these three values.
+    private static final String STATE_DIALOG_OPEN = "state_set_dialog_open";
+    private static final String STATE_DIALOG_SET_ID = "state_set_dialog_set_id";
+    private static final String STATE_DIALOG_TEXT = "state_set_dialog_text";
 
     private MenuRepository menus;
     private MenuListAdapter adapter;
@@ -59,6 +63,13 @@ public class MenuListActivity extends AppCompatActivity {
 
     private List<MenuSet> sets = new ArrayList<>();
     private long currentSetId = -1;
+
+    /** The add/rename dialog while it is on screen (null otherwise), so it can be saved. */
+    @Nullable
+    private AlertDialog setNameDialog;
+    @Nullable
+    private EditText setNameInput;
+    private long setNameDialogSetId;   // 0 = adding a new set, otherwise the set being renamed
 
     /** Opens the add/edit form (#23); the list is refreshed when a dish was saved. */
     private final ActivityResultLauncher<Intent> formLauncher = registerForActivityResult(
@@ -95,6 +106,15 @@ public class MenuListActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             currentSetId = savedInstanceState.getLong(STATE_SET_ID, -1);
+            if (savedInstanceState.getBoolean(STATE_DIALOG_OPEN, false)) {
+                // A rotation closed the name dialog: open it again with what was typed.
+                long dialogSetId = savedInstanceState.getLong(STATE_DIALOG_SET_ID, 0);
+                String typed = savedInstanceState.getString(STATE_DIALOG_TEXT, "");
+                MenuSet renaming = dialogSetId > 0 ? menus.getSet(dialogSetId) : null;
+                if (dialogSetId == 0 || renaming != null) {
+                    root.post(() -> showSetNameDialog(renaming, typed));
+                }
+            }
         }
 
         adapter = new MenuListAdapter(isThai(), new MenuListAdapter.Listener() {
@@ -172,6 +192,11 @@ public class MenuListActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(STATE_SET_ID, currentSetId);
+        if (setNameDialog != null && setNameInput != null) {
+            outState.putBoolean(STATE_DIALOG_OPEN, true);
+            outState.putLong(STATE_DIALOG_SET_ID, setNameDialogSetId);
+            outState.putString(STATE_DIALOG_TEXT, setNameInput.getText().toString());
+        }
     }
 
     /** Fills the set picker and keeps the current set selected when it still exists. */
@@ -266,6 +291,11 @@ public class MenuListActivity extends AppCompatActivity {
      * one. Errors are shown inside the dialog, which stays open until the name is valid.
      */
     private void showSetNameDialog(@Nullable MenuSet editing) {
+        showSetNameDialog(editing, null);
+    }
+
+    /** @param initialText what to put in the field (after a rotation), or null for the default */
+    private void showSetNameDialog(@Nullable MenuSet editing, @Nullable String initialText) {
         View content = getLayoutInflater().inflate(R.layout.dialog_menu_set_name, null);
         TextInputLayout nameLayout = content.findViewById(R.id.menu_sets_name_layout);
         EditText nameInput = content.findViewById(R.id.menu_sets_name_input);
@@ -273,7 +303,10 @@ public class MenuListActivity extends AppCompatActivity {
         // Like the dish form: edit the name that is shown on screen.
         boolean editsEnglish = editing != null && !isThai()
                 && editing.nameEn != null && !editing.nameEn.isEmpty();
-        if (editing != null) {
+        if (initialText != null) {
+            nameInput.setText(initialText);
+            nameInput.setSelection(nameInput.length());
+        } else if (editing != null) {
             nameInput.setText(editsEnglish ? editing.nameEn : editing.nameTh);
             nameInput.setSelection(nameInput.length());
         }
@@ -299,6 +332,13 @@ public class MenuListActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.common_btn_save, null)   // real handler below
                 .create();
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        setNameDialog = dialog;
+        setNameInput = nameInput;
+        setNameDialogSetId = editing == null ? 0 : editing.id;
+        dialog.setOnDismissListener(d -> {
+            setNameDialog = null;
+            setNameInput = null;
+        });
         dialog.setOnShowListener(d -> dialog.getButton(AlertDialog.BUTTON_POSITIVE)
                 .setOnClickListener(v -> {
                     String name = nameInput.getText().toString().trim();
