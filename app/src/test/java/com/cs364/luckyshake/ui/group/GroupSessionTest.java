@@ -9,6 +9,10 @@ import com.cs364.luckyshake.logic.GameConfig;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Pure Java unit test for {@link GroupSession}.
  * Does not depend on Android framework classes (no Looper or LiveData required).
@@ -36,13 +40,11 @@ public class GroupSessionTest {
         assertTrue(session.incrementParticipantCount());
         assertEquals(3, session.getParticipantCount());
 
-        // Fill up to max
         for (int i = 3; i < GameConfig.MAX_GROUP_PLAYERS; i++) {
             assertTrue(session.incrementParticipantCount());
         }
         assertEquals(GameConfig.MAX_GROUP_PLAYERS, session.getParticipantCount());
 
-        // Beyond max must return false and stay at max
         assertFalse(session.incrementParticipantCount());
         assertEquals(GameConfig.MAX_GROUP_PLAYERS, session.getParticipantCount());
     }
@@ -56,7 +58,6 @@ public class GroupSessionTest {
         assertTrue(session.decrementParticipantCount());
         assertEquals(GameConfig.MIN_GROUP_PLAYERS, session.getParticipantCount());
 
-        // Below min must return false and stay at min
         assertFalse(session.decrementParticipantCount());
         assertEquals(GameConfig.MIN_GROUP_PLAYERS, session.getParticipantCount());
     }
@@ -99,9 +100,54 @@ public class GroupSessionTest {
     public void testStartSessionOnlyAllowedInSetupPhase() {
         session.startSession();
         assertEquals(GroupPhase.COLLECT, session.getPhase());
-
-        // Trying to start again while in COLLECT phase must return false
         assertFalse(session.startSession());
+    }
+
+    @Test
+    public void testSettingsLockedAfterStartSession() {
+        session.setParticipantCount(3);
+        session.setProposalMethod(ProposalMethod.FOOD_TYPE);
+        session.startSession();
+
+        // Attempts to modify settings in COLLECT phase should be ignored / return false
+        session.setParticipantCount(5);
+        assertEquals(3, session.getParticipantCount());
+
+        assertFalse(session.incrementParticipantCount());
+        assertEquals(3, session.getParticipantCount());
+
+        assertFalse(session.decrementParticipantCount());
+        assertEquals(3, session.getParticipantCount());
+
+        session.setProposalMethod(ProposalMethod.RESTAURANT_NAME);
+        assertEquals(ProposalMethod.FOOD_TYPE, session.getProposalMethod());
+    }
+
+    @Test
+    public void testSubmitProposalAdvancesTurnAndFinalizes() {
+        session.setParticipantCount(2);
+        session.startSession();
+
+        assertFalse(session.isLastTurn());
+
+        List<String> player1Proposals = Arrays.asList("Ramen", "Sushi");
+        assertTrue(session.submitProposal(player1Proposals));
+
+        assertEquals(1, session.getCurrentTurnIndex());
+        assertEquals(GroupPhase.COLLECT, session.getPhase());
+        assertTrue(session.isLastTurn());
+        assertEquals(player1Proposals, session.getProposals().get(0));
+
+        List<String> player2Proposals = Collections.singletonList("Burger");
+        assertTrue(session.submitProposal(player2Proposals));
+
+        // On last turn, phase becomes FINAL and turn index stays at 1 (participantCount - 1)
+        assertEquals(GroupPhase.FINAL, session.getPhase());
+        assertEquals(1, session.getCurrentTurnIndex());
+        assertEquals(player2Proposals, session.getProposals().get(1));
+
+        // Submitting while in FINAL phase must return false
+        assertFalse(session.submitProposal(Collections.singletonList("Pizza")));
     }
 
     @Test

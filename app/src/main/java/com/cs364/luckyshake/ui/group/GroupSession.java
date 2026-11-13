@@ -31,11 +31,17 @@ public class GroupSession {
     }
 
     public void setParticipantCount(int count) {
+        if (phase != GroupPhase.SETUP) {
+            return;
+        }
         this.participantCount = Math.max(GameConfig.MIN_GROUP_PLAYERS,
                 Math.min(GameConfig.MAX_GROUP_PLAYERS, count));
     }
 
     public boolean incrementParticipantCount() {
+        if (phase != GroupPhase.SETUP) {
+            return false;
+        }
         if (participantCount < GameConfig.MAX_GROUP_PLAYERS) {
             participantCount++;
             return true;
@@ -44,6 +50,9 @@ public class GroupSession {
     }
 
     public boolean decrementParticipantCount() {
+        if (phase != GroupPhase.SETUP) {
+            return false;
+        }
         if (participantCount > GameConfig.MIN_GROUP_PLAYERS) {
             participantCount--;
             return true;
@@ -56,6 +65,9 @@ public class GroupSession {
     }
 
     public void setProposalMethod(ProposalMethod proposalMethod) {
+        if (phase != GroupPhase.SETUP) {
+            return;
+        }
         if (proposalMethod != null) {
             this.proposalMethod = proposalMethod;
         }
@@ -72,6 +84,13 @@ public class GroupSession {
         return currentTurnIndex + 1;
     }
 
+    /**
+     * Checks if the current turn is the last participant's turn.
+     */
+    public boolean isLastTurn() {
+        return currentTurnIndex == participantCount - 1;
+    }
+
     public GroupPhase getPhase() {
         return phase;
     }
@@ -84,6 +103,27 @@ public class GroupSession {
 
     public List<List<String>> getProposals() {
         return Collections.unmodifiableList(proposals);
+    }
+
+    /**
+     * Submits a list of proposal choices for the current turn.
+     * Advances currentTurnIndex, or switches phase to FINAL if this is the last participant.
+     */
+    public boolean submitProposal(List<String> items) {
+        if (phase != GroupPhase.COLLECT) {
+            return false;
+        }
+        List<String> submitted = items != null ? new ArrayList<>(items) : new ArrayList<>();
+        if (currentTurnIndex >= 0 && currentTurnIndex < proposals.size()) {
+            proposals.set(currentTurnIndex, submitted);
+        }
+
+        if (isLastTurn()) {
+            phase = GroupPhase.FINAL;
+        } else {
+            currentTurnIndex++;
+        }
+        return true;
     }
 
     /**
