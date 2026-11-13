@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/menu_list_root"
     android:layout_width="match_parent"
@@ -7,7 +8,8 @@
     android:orientation="vertical"
     tools:context=".ui.menu.MenuListActivity">
 
-    <!-- Landscape: the set management buttons (issue #25) share the title row to save height. -->
+    <!-- Landscape row 1: the title and the set card. The card takes all the width the title
+         leaves, so the set picker always has room, also at large font sizes. -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,35 +20,80 @@
 
         <TextView
             android:id="@+id/menu_list_title"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/spacing_md"
             android:text="@string/menu_list_title_main"
             android:textAppearance="@style/TextAppearance.LuckyShake.Heading" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/menu_sets_btn_add"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.LuckyShake.Card"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/menu_sets_btn_add" />
+            android:layout_weight="1">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/menu_sets_btn_rename"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/menu_sets_btn_rename" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/spacing_md"
+                android:paddingEnd="@dimen/spacing_sm"
+                android:paddingVertical="@dimen/spacing_sm">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/menu_sets_btn_delete"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/menu_sets_btn_delete" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/spacing_sm"
+                    android:alpha="0.75"
+                    android:text="@string/menu_list_label_set"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="14sp" />
+
+                <Spinner
+                    android:id="@+id/menu_list_set_spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/spacing_sm"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/menu_list_label_set"
+                    android:minHeight="@dimen/button_min_height"
+                    android:minWidth="96dp" />
+
+                <ImageButton
+                    android:id="@+id/menu_sets_btn_add"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/menu_sets_btn_add"
+                    android:src="@drawable/ic_add"
+                    android:tooltipText="@string/menu_sets_btn_add"
+                    app:tint="?attr/colorOnSurface" />
+
+                <ImageButton
+                    android:id="@+id/menu_sets_btn_rename"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/menu_sets_btn_rename"
+                    android:src="@drawable/ic_edit"
+                    android:tooltipText="@string/menu_sets_btn_rename"
+                    app:tint="?attr/colorOnSurface" />
+
+                <ImageButton
+                    android:id="@+id/menu_sets_btn_delete"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/menu_sets_btn_delete"
+                    android:src="@drawable/ic_delete"
+                    android:tooltipText="@string/menu_sets_btn_delete"
+                    app:tint="?attr/colorOnSurface" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
-    <!-- Landscape: set picker, search and add button share one row. -->
+    <!-- Landscape row 2: search and "add dish". -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,21 +102,12 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <Spinner
-            android:id="@+id/menu_list_set_spinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/spacing_sm"
-            android:layout_weight="1"
-            android:contentDescription="@string/menu_list_label_set"
-            android:minHeight="@dimen/button_min_height" />
-
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/spacing_sm"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:hint="@string/menu_list_hint_search">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -86,47 +124,57 @@
             style="@style/Widget.LuckyShake.Button.Primary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="56dp"
             android:text="@string/menu_list_btn_add" />
     </LinearLayout>
 
-    <FrameLayout
+    <!-- Dishes of the selected set: one card, thin lines between the rows. -->
+    <com.google.android.material.card.MaterialCardView
+        style="@style/Widget.LuckyShake.Card"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/spacing_md"
         android:layout_marginTop="@dimen/spacing_sm"
+        android:layout_marginBottom="@dimen/spacing_md"
         android:layout_weight="1">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/menu_list_recycler"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:paddingBottom="@dimen/spacing_md" />
+            android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/menu_list_empty_group"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:padding="@dimen/spacing_md"
-            android:visibility="gone">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/menu_list_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingVertical="@dimen/spacing_sm" />
 
-            <TextView
-                android:id="@+id/menu_list_empty_text"
+            <LinearLayout
+                android:id="@+id/menu_list_empty_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="@dimen/text_body" />
+                android:layout_gravity="center"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_md"
+                android:visibility="gone">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/menu_list_empty_add_button"
-                style="@style/Widget.LuckyShake.Button.Primary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_sm"
-                android:text="@string/menu_list_btn_add" />
-        </LinearLayout>
-    </FrameLayout>
+                <TextView
+                    android:id="@+id/menu_list_empty_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="@dimen/text_body" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/menu_list_empty_add_button"
+                    style="@style/Widget.LuckyShake.Button.Primary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:text="@string/menu_list_btn_add" />
+            </LinearLayout>
+        </FrameLayout>
+    </com.google.android.material.card.MaterialCardView>
 </LinearLayout>
