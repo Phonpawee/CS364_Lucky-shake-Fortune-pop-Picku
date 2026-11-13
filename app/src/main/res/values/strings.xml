@@ -42,4 +42,33 @@
     <string name="group_proposal_error_restaurant_empty">Enter at least one restaurant</string>
     <string name="group_proposal_msg_pass_phone">Pass the phone to the next person</string>
     <string name="group_proposal_msg_all_done">Everyone has proposed</string>
+
+    <!-- Fortune Provider (#27) -->
+    <string name="fortune_msg_level_1_1">A little surprise may brighten your day. Enjoy %1$s.</string>
+    <string name="fortune_msg_level_1_2">A simple choice can bring a pleasant moment. Try %1$s.</string>
+    <string name="fortune_msg_level_1_3">Take it easy today and make time for %1$s.</string>
+
+    <string name="fortune_msg_level_2_1">A good conversation may make today warmer. Share %1$s with someone.</string>
+    <string name="fortune_msg_level_2_2">A change of pace may feel refreshing. Give %1$s a try.</string>
+    <string name="fortune_msg_level_2_3">A familiar favorite may be just right today: %1$s.</string>
+
+    <string name="fortune_msg_level_3_1">A cheerful moment may be closer than you think. Enjoy %1$s.</string>
+    <string name="fortune_msg_level_3_2">Your plans may go smoothly. Take a happy break with %1$s.</string>
+    <string name="fortune_msg_level_3_3">Good company and a tasty meal are within reach. Share %1$s.</string>
+
+    <string name="fortune_msg_level_4_1">A bright moment is waiting for you. Let %1$s be today\'s highlight.</string>
+    <string name="fortune_msg_level_4_2">There is room for extra joy today. Celebrate with %1$s.</string>
+    <string name="fortune_msg_level_4_3">A lovely memory could start with one good choice: %1$s.</string>
+
+    <!-- Food type names for group proposals -->
+    <string name="food_type_rice">Rice &amp; made-to-order</string>
+    <string name="food_type_noodles">Noodles</string>
+    <string name="food_type_grill">Grill &amp; Thai barbecue</string>
+    <string name="food_type_hotpot">Shabu &amp; sukiyaki</string>
+    <string name="food_type_japanese">Japanese</string>
+    <string name="food_type_korean">Korean</string>
+    <string name="food_type_isan">Isan</string>
+    <string name="food_type_fast_food">Fast food</string>
+    <string name="food_type_dessert_cafe">Dessert &amp; café</string>
+    <string name="food_type_healthy_vegetarian">Healthy &amp; vegetarian</string>
 </resources>
