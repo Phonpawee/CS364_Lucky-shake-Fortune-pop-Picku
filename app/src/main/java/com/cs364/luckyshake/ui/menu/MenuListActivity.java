@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -28,16 +30,26 @@ import com.cs364.luckyshake.data.MenuRepository;
 import com.cs364.luckyshake.data.MenuSet;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Issue #22: shows the dishes of the selected menu set. The user can switch the set,
  * search by name, and delete a dish after a confirmation.
+ *
+ * <p>Issue #25: the same screen also manages the sets themselves: add, rename and delete
+ * (with a warning that the dishes inside are deleted too; the last set cannot be deleted).
  */
 public class MenuListActivity extends AppCompatActivity {
     private static final String STATE_SET_ID = "state_set_id";
+    private static final int MAX_SET_NAME_LENGTH = 60;
+    // The add/rename dialog is rebuilt after a rotation from these three values.
+    private static final String STATE_DIALOG_OPEN = "state_set_dialog_open";
+    private static final String STATE_DIALOG_SET_ID = "state_set_dialog_set_id";
+    private static final String STATE_DIALOG_TEXT = "state_set_dialog_text";
 
     private MenuRepository menus;
     private MenuListAdapter adapter;
@@ -51,6 +63,13 @@ public class MenuListActivity extends AppCompatActivity {
 
     private List<MenuSet> sets = new ArrayList<>();
     private long currentSetId = -1;
+
+    /** The add/rename dialog while it is on screen (null otherwise), so it can be saved. */
+    @Nullable
+    private AlertDialog setNameDialog;
+    @Nullable
+    private EditText setNameInput;
+    private long setNameDialogSetId;   // 0 = adding a new set, otherwise the set being renamed
 
     /** Opens the add/edit form (#23); the list is refreshed when a dish was saved. */
     private final ActivityResultLauncher<Intent> formLauncher = registerForActivityResult(
@@ -87,6 +106,15 @@ public class MenuListActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             currentSetId = savedInstanceState.getLong(STATE_SET_ID, -1);
+            if (savedInstanceState.getBoolean(STATE_DIALOG_OPEN, false)) {
+                // A rotation closed the name dialog: open it again with what was typed.
+                long dialogSetId = savedInstanceState.getLong(STATE_DIALOG_SET_ID, 0);
+                String typed = savedInstanceState.getString(STATE_DIALOG_TEXT, "");
+                MenuSet renaming = dialogSetId > 0 ? menus.getSet(dialogSetId) : null;
+                if (dialogSetId == 0 || renaming != null) {
+                    root.post(() -> showSetNameDialog(renaming, typed));
+                }
+            }
         }
 
         adapter = new MenuListAdapter(isThai(), new MenuListAdapter.Listener() {
@@ -139,6 +167,17 @@ public class MenuListActivity extends AppCompatActivity {
         View.OnClickListener addListener = v -> openMenuForm(null);
         findViewById(R.id.menu_list_add_button).setOnClickListener(addListener);
         emptyAddButton.setOnClickListener(addListener);
+
+        findViewById(R.id.menu_sets_btn_add).setOnClickListener(v -> showSetNameDialog(null));
+        findViewById(R.id.menu_sets_btn_rename).setOnClickListener(v -> {
+            MenuSet set = currentSet();
+            if (set == null) {
+                Snackbar.make(root, R.string.menu_list_msg_empty_no_set, Snackbar.LENGTH_SHORT).show();
+            } else {
+                showSetNameDialog(set);
+            }
+        });
+        findViewById(R.id.menu_sets_btn_delete).setOnClickListener(v -> confirmDeleteSet());
     }
 
     @Override
@@ -153,6 +192,11 @@ public class MenuListActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(STATE_SET_ID, currentSetId);
+        if (setNameDialog != null && setNameInput != null) {
+            outState.putBoolean(STATE_DIALOG_OPEN, true);
+            outState.putLong(STATE_DIALOG_SET_ID, setNameDialogSetId);
+            outState.putString(STATE_DIALOG_TEXT, setNameInput.getText().toString());
+        }
     }
 
     /** Fills the set picker and keeps the current set selected when it still exists. */
@@ -227,6 +271,181 @@ public class MenuListActivity extends AppCompatActivity {
                     }
                 })
                 .show();
+    }
+
+    // ------------------------------------------------------------------ sets (#25)
+
+    /** The set that is selected right now, or null when there is none. */
+    @Nullable
+    private MenuSet currentSet() {
+        for (MenuSet s : sets) {
+            if (s.id == currentSetId) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Asks for a set name. {@code editing == null} adds a new set, otherwise it renames that
+     * one. Errors are shown inside the dialog, which stays open until the name is valid.
+     */
+    private void showSetNameDialog(@Nullable MenuSet editing) {
+        showSetNameDialog(editing, null);
+    }
+
+    /** @param initialText what to put in the field (after a rotation), or null for the default */
+    private void showSetNameDialog(@Nullable MenuSet editing, @Nullable String initialText) {
+        View content = getLayoutInflater().inflate(R.layout.dialog_menu_set_name, null);
+        TextInputLayout nameLayout = content.findViewById(R.id.menu_sets_name_layout);
+        EditText nameInput = content.findViewById(R.id.menu_sets_name_input);
+
+        // Like the dish form: edit the name that is shown on screen.
+        boolean editsEnglish = editing != null && !isThai()
+                && editing.nameEn != null && !editing.nameEn.isEmpty();
+        if (initialText != null) {
+            nameInput.setText(initialText);
+            nameInput.setSelection(nameInput.length());
+        } else if (editing != null) {
+            nameInput.setText(editsEnglish ? editing.nameEn : editing.nameTh);
+            nameInput.setSelection(nameInput.length());
+        }
+        nameInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                nameLayout.setError(null);
+            }
+        });
+
+        AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                .setTitle(editing == null ? R.string.menu_sets_title_add : R.string.menu_sets_title_rename)
+                .setView(content)
+                .setNegativeButton(R.string.common_btn_cancel, null)
+                .setPositiveButton(R.string.common_btn_save, null)   // real handler below
+                .create();
+        dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        setNameDialog = dialog;
+        setNameInput = nameInput;
+        setNameDialogSetId = editing == null ? 0 : editing.id;
+        dialog.setOnDismissListener(d -> {
+            setNameDialog = null;
+            setNameInput = null;
+        });
+        dialog.setOnShowListener(d -> dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener(v -> {
+                    String name = nameInput.getText().toString().trim();
+                    String error = validateSetName(name, editing == null ? 0 : editing.id);
+                    nameLayout.setError(error);
+                    if (error != null) {
+                        nameInput.requestFocus();
+                        return;
+                    }
+                    if (editing == null) {
+                        addSet(name);
+                    } else {
+                        renameSet(editing, name, editsEnglish);
+                    }
+                    dialog.dismiss();
+                }));
+        dialog.show();
+    }
+
+    /** Returns an error message for the set name, or null when it is fine. */
+    @Nullable
+    private String validateSetName(String name, long excludeId) {
+        if (name.isEmpty()) {
+            return getString(R.string.menu_sets_error_name_empty);
+        }
+        if (name.length() > MAX_SET_NAME_LENGTH) {
+            return getString(R.string.menu_sets_error_name_too_long, MAX_SET_NAME_LENGTH);
+        }
+        String wanted = foldName(name);
+        for (MenuSet s : sets) {
+            if (s.id == excludeId) {
+                continue;
+            }
+            String en = foldName(s.nameEn);
+            if (wanted.equals(foldName(s.nameTh)) || (!en.isEmpty() && wanted.equals(en))) {
+                return getString(R.string.menu_sets_error_name_duplicate);
+            }
+        }
+        return null;
+    }
+
+    /** Same comparison rule as MenuRepository.nameExists: trimmed, case-insensitive. */
+    private static String foldName(@Nullable String name) {
+        return name == null ? "" : name.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private void addSet(String name) {
+        long id = menus.addSet(name, "");
+        if (id <= 0) {
+            Snackbar.make(root, R.string.menu_sets_error_save_failed, Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+        currentSetId = id;          // jump to the new set
+        searchInput.setText("");    // an old search would hide the (empty) new set
+        reloadSets();
+        refreshList();
+        Snackbar.make(root, R.string.menu_sets_msg_added, Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void renameSet(MenuSet set, String name, boolean editsEnglish) {
+        String th = editsEnglish ? set.nameTh : name;
+        String en = editsEnglish ? name : (set.nameEn == null ? "" : set.nameEn);
+        if (menus.renameSet(set.id, th, en)) {
+            reloadSets();
+            refreshList();
+            Snackbar.make(root, R.string.menu_sets_msg_renamed, Snackbar.LENGTH_SHORT).show();
+        } else {
+            Snackbar.make(root, R.string.menu_sets_error_save_failed, Snackbar.LENGTH_SHORT).show();
+        }
+    }
+
+    /** Warns how many dishes will go with the set; the last set can never be deleted. */
+    private void confirmDeleteSet() {
+        MenuSet set = currentSet();
+        if (set == null) {
+            Snackbar.make(root, R.string.menu_list_msg_empty_no_set, Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+        if (menus.countSets() <= 1) {
+            Snackbar.make(root, R.string.menu_sets_error_last_set, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+        int count = menus.countMenus(set.id, null);
+        String name = set.getName(isThai());
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.menu_sets_title_delete)
+                .setMessage(getResources().getQuantityString(
+                        R.plurals.menu_sets_msg_delete_confirm, count, name, count))
+                .setNegativeButton(R.string.common_btn_cancel, null)
+                .setPositiveButton(R.string.menu_list_btn_delete, (d, which) -> deleteSet(set))
+                .show();
+    }
+
+    private void deleteSet(MenuSet set) {
+        if (menus.countSets() <= 1) {   // re-check: the data may have changed
+            Snackbar.make(root, R.string.menu_sets_error_last_set, Snackbar.LENGTH_LONG).show();
+            return;
+        }
+        // The dishes inside are removed by ON DELETE CASCADE; history is kept.
+        if (menus.deleteSet(set.id)) {
+            currentSetId = -1;      // reloadSets() then picks the first remaining set
+            reloadSets();
+            refreshList();
+            Snackbar.make(root, R.string.menu_sets_msg_deleted, Snackbar.LENGTH_SHORT).show();
+        } else {
+            Snackbar.make(root, R.string.menu_sets_error_delete_failed, Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     /** Opens the add (menu == null) or edit form (issue #23). */
