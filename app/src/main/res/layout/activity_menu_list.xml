@@ -41,6 +41,38 @@
             android:text="@string/menu_list_btn_add" />
     </LinearLayout>
 
+    <!-- Set management (issue #25) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/spacing_md"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/menu_sets_btn_add"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/menu_sets_btn_add" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/menu_sets_btn_rename"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/menu_sets_btn_rename" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/menu_sets_btn_delete"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/menu_sets_btn_delete" />
+    </LinearLayout>
+
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
