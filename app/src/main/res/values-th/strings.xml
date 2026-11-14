@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">LuckyShake</string>
     <string name="home_title_main">เซียมซีกินอะไรดี</string>
-    <string name="home_btn_draw">เสี่ยงเซียมซี</string>
+    <string name="home_btn_draw">สุ่มเลย</string>
     <string name="home_btn_filter">กรองเมนู</string>
     <string name="result_title_fortune">คำทำนายของคุณ</string>
     <string name="result_label_menu">เมนูวันนี้: %1$s</string>
@@ -71,4 +71,15 @@
     <string name="food_type_fast_food">ฟาสต์ฟู้ด</string>
     <string name="food_type_dessert_cafe">ของหวาน / คาเฟ่</string>
     <string name="food_type_healthy_vegetarian">อาหารสุขภาพ / เจ</string>
+    <string name="home_label_set">ชุดเมนู</string>
+    <string name="home_label_filters">ตัวกรอง: ไม่มี</string>
+    <string name="home_label_tube">กระบอกเซียมซี</string>
+    <string name="home_btn_simulate">จำลองการเขย่า</string>
+    <string name="home_label_rice">เมนูข้าว</string>
+    <string name="home_label_noodles">เมนูเส้น</string>
+    <string name="home_label_basil">ข้าวกะเพราไก่</string>
+    <string name="home_label_omelette">ข้าวไข่เจียว</string>
+    <string name="home_label_boat_noodles">ก๋วยเตี๋ยวเรือ</string>
+    <string name="home_label_pad_thai">ผัดไทย</string>
+    <string name="result_btn_home">กลับหน้าหลัก</string>
 </resources>

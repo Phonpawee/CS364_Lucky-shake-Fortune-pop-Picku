@@ -22,6 +22,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.result.ResultActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.menu.MenuListActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
