@@ -6,7 +6,6 @@ import java.util.List;
 /**
  * Random draw used by the Home/Result screens and by group mode.
  * Do not change these signatures without telling the team (see README).
- *
  * เรียกใช้ผ่าน {@link #create()} ซึ่งจะคืน {@link WeightedDrawEngine}
  */
 public interface DrawEngine {

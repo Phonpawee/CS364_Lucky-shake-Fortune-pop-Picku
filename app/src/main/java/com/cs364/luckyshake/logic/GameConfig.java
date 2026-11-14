@@ -13,6 +13,18 @@ public final class GameConfig {
     /** How many times the user may ask for a new menu per draw. */
     public static final int MAX_REDRAWS = 3;
 
+    /** ช่วงที่หน้าตั้งค่าให้เลือกโควตาขอใหม่ได้ (Spinner 1–5) */
+    public static final int MIN_REDRAW_LIMIT = 1;
+    public static final int MAX_REDRAW_LIMIT = 5;
+
+    /** Clamps a re-draw quota to MIN_REDRAW_LIMIT..MAX_REDRAW_LIMIT. */
+    public static int clampRedrawLimit(int limit) {
+        return Math.max(MIN_REDRAW_LIMIT, Math.min(MAX_REDRAW_LIMIT, limit));
+    }
+
+    /** ถ้าเมนูที่สุ่มได้มีน้อยกว่านี้ ผลจะมีสถานะ DrawStatus.FEW_ITEMS (เตือน ไม่ใช่ error) */
+    public static final int FEW_ITEMS_THRESHOLD = 3;
+
     // ------------------------------------------------------- fortune level
     // Level ids returned by DrawEngine.pickLevel(). They are also indexes into LEVEL_WEIGHTS.
     public static final int LEVEL_GREAT = 0;    // ดีมาก
