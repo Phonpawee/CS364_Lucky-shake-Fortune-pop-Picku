@@ -24,8 +24,6 @@ public final class FontSizeHelper {
                 PrefKeys.PREFS_NAME, Context.MODE_PRIVATE);
 
         int level = preferences.getInt(PrefKeys.FONT_SIZE, 5);
-        level = Math.max(1, Math.min(level, 10));
-
         float scale = 0.8f + (level - 1) * 0.05f;
         float scaledDensity = context.getResources()
                 .getConfiguration().fontScale
