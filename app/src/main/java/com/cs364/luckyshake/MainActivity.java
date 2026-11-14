@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         stick = findViewById(R.id.home_image_stick);
         drawButton = findViewById(R.id.home_btn_draw);
         drawButton.setOnClickListener(view -> draw());
+        tube.setOnClickListener(view -> draw());
+        tube.setFocusable(true);
     }
 
     @Override
@@ -95,14 +97,20 @@ public class MainActivity extends AppCompatActivity {
                 ? RICE_MENUS : NOODLE_MENUS;
         int menu = drawEngine.weightedPick(menus, Arrays.asList(1.0, 1.0));
         drawButton.setEnabled(false);
+        tube.setEnabled(false);
         setPicker.setEnabled(false);
 
-        ObjectAnimator shake = ObjectAnimator.ofFloat(tube, View.ROTATION,
-                0f, -13f, 13f, -10f, 10f, -5f, 0f);
-        shake.setDuration(430);
+        float density = getResources().getDisplayMetrics().density;
+        AnimatorSet shake = new AnimatorSet();
+        shake.playTogether(
+                ObjectAnimator.ofFloat(tube, View.ROTATION,
+                        0f, -18f, 18f, -16f, 16f, -10f, 10f, 0f),
+                ObjectAnimator.ofFloat(tube, View.TRANSLATION_X,
+                        0f, -14f * density, 14f * density, -12f * density,
+                        12f * density, -6f * density, 6f * density, 0f));
+        shake.setDuration(620);
         shake.setInterpolator(new LinearInterpolator());
 
-        float density = getResources().getDisplayMetrics().density;
         AnimatorSet pop = new AnimatorSet();
         pop.playTogether(
                 ObjectAnimator.ofFloat(stick, View.TRANSLATION_X, 0f, 30f * density, 77f * density),
@@ -131,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
     private void resetDrawAnimation() {
         drawAnimation = null;
         tube.setRotation(0f);
+        tube.setTranslationX(0f);
+        tube.setEnabled(true);
         stick.setVisibility(View.INVISIBLE);
         stick.setTranslationX(0f);
         stick.setTranslationY(0f);
