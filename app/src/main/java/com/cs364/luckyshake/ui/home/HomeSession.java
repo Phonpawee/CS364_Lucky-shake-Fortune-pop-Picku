@@ -34,7 +34,7 @@ public class HomeSession {
 
     private long setId = NO_SET;
     private MenuFilter filter = MenuFilter.none();
-    /** id ที่ออกล่าสุด เรียงจากใหม่ไปเก่า เก็บไม่เกิน GameConfig.RECENT_COUNT ตัว */
+    /** id ที่ออกล่าสุด เรียงจากใหม่ไปเก่า (ซ้ำได้) เก็บไม่เกิน GameConfig.RECENT_COUNT ตัว */
     private final List<Long> recentIds = new ArrayList<>();
     private DrawState state = DrawState.IDLE;
 
@@ -136,7 +136,8 @@ public class HomeSession {
     }
 
     private void rememberRecent(long id) {
-        recentIds.remove(id); // id เป็น long จึงเรียก remove(Object) ลบตามค่า ไม่ใช่ remove(int index)
+        // ไม่ตัดตัวซ้ำ: recentIds คือ "RECENT_COUNT ครั้งล่าสุด" ถ้าออก A, B, B ต้องได้ [B, B]
+        // เพื่อให้ A หลุดจากช่วงลดโอกาสตามจริง
         recentIds.add(0, id);
         while (recentIds.size() > GameConfig.RECENT_COUNT) {
             recentIds.remove(recentIds.size() - 1);

@@ -156,6 +156,20 @@ public class HomeSessionTest {
         assertEquals(shown.subList(0, GameConfig.RECENT_COUNT), s.getRecentIds());
     }
 
+    @Test
+    public void recentIds_keepRepeats_soOlderIdLeavesWindow() {
+        HomeSession s = newSession(3);
+        sets.put(3L, new ArrayList<>(List.of(menu(30, 0))));
+        sets.put(4L, new ArrayList<>(List.of(menu(40, 0))));
+
+        s.setSetId(3);
+        s.draw();           // A
+        s.setSetId(4);
+        s.draw();           // B
+        s.draw();           // B
+        assertEquals(List.of(40L, 40L), s.getRecentIds());
+    }
+
     // ---------------------------------------------------------------- accept
 
     @Test
