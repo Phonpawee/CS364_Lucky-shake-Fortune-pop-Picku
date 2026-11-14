@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">LuckyShake</string>
     <string name="home_title_main">Lucky Shake</string>
-    <string name="home_btn_draw">Draw a fortune</string>
+    <string name="home_btn_draw">Draw now</string>
     <string name="home_btn_filter">Filter menus</string>
     <string name="result_title_fortune">Your fortune</string>
     <string name="result_label_menu">Menu for today: %1$s</string>
@@ -71,6 +71,16 @@
     <string name="food_type_fast_food">Fast food</string>
     <string name="food_type_dessert_cafe">Dessert &amp; café</string>
     <string name="food_type_healthy_vegetarian">Healthy &amp; vegetarian</string>
+    <string name="home_label_set">Menu set</string>
+    <string name="home_label_filters">Filters: none</string>
+    <string name="home_label_tube">Shake the fortune tube</string>
+    <string name="home_label_rice">Rice dishes</string>
+    <string name="home_label_noodles">Noodles</string>
+    <string name="home_label_basil">Basil chicken with rice</string>
+    <string name="home_label_omelette">Omelette with rice</string>
+    <string name="home_label_boat_noodles">Boat noodles</string>
+    <string name="home_label_pad_thai">Pad Thai</string>
+    <string name="result_btn_home">Back to Home</string>
 
     <!-- Meal reminders -->
     <string name="reminder_title_notification">Meal reminder</string>
