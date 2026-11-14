@@ -31,13 +31,20 @@ public class ReminderReceiver extends BroadcastReceiver {
                 ReminderScheduler.EXTRA_REMINDER_ID, -1);
         int hour = intent.getIntExtra(ReminderScheduler.EXTRA_HOUR, -1);
         int minute = intent.getIntExtra(ReminderScheduler.EXTRA_MINUTE, -1);
+        long generation = intent.getLongExtra(
+                ReminderScheduler.EXTRA_GENERATION, -1L);
         long menuSetId = intent.getLongExtra(
                 ReminderScheduler.EXTRA_MENU_SET_ID, -1L);
         String menuSetName = intent.getStringExtra(
                 ReminderScheduler.EXTRA_MENU_SET_NAME);
 
-        if (reminderId < 0 || hour < 0 || minute < 0
+        if (reminderId < 0 || hour < 0 || minute < 0 || generation < 0
                 || menuSetId < 0 || menuSetName == null) {
+            return;
+        }
+
+        if (!ReminderScheduler.isCurrentGenerationEnabled(
+                context, reminderId, generation)) {
             return;
         }
 
@@ -49,6 +56,8 @@ public class ReminderReceiver extends BroadcastReceiver {
                 == PackageManager.PERMISSION_GRANTED;
 
         if (hasPermission) {
+            ReminderScheduler.runIfCurrentGenerationEnabled(
+                    context, reminderId, generation, () -> {
             Intent openAppIntent = new Intent(context, MenuListActivity.class);
             openAppIntent.setFlags(
                     Intent.FLAG_ACTIVITY_NEW_TASK
@@ -83,11 +92,12 @@ public class ReminderReceiver extends BroadcastReceiver {
             } catch (SecurityException ignored) {
                 // Permission may have been revoked while the alarm was firing.
             }
+                    });
         }
 
         // ตั้งเตือนรอบถัดไปของมื้อเดิม
-        ReminderScheduler.scheduleDaily(
-                context, reminderId, hour, minute, menuSetId, menuSetName);
+        ReminderScheduler.rescheduleDailyIfCurrent(
+                context, reminderId, hour, minute, menuSetId, menuSetName, generation);
     }
 
     private void createNotificationChannel(Context context) {
