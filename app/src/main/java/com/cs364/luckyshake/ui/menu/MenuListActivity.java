@@ -46,6 +46,8 @@ import java.util.Locale;
  * (with a warning that the dishes inside are deleted too; the last set cannot be deleted).
  */
 public class MenuListActivity extends AppCompatActivity {
+    public static final String EXTRA_SET_ID = "extra_set_id";
+
     private static final String STATE_SET_ID = "state_set_id";
     private static final int MAX_SET_NAME_LENGTH = 60;
     // The add/rename dialog is rebuilt after a rotation from these three values.
@@ -117,6 +119,8 @@ public class MenuListActivity extends AppCompatActivity {
                     root.post(() -> showSetNameDialog(renaming, typed));
                 }
             }
+        } else {
+            currentSetId = getIntent().getLongExtra(EXTRA_SET_ID, -1L);
         }
 
         adapter = new MenuListAdapter(isThai(), new MenuListAdapter.Listener() {
