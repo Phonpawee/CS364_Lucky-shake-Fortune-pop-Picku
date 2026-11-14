@@ -32,6 +32,9 @@ import com.cs364.luckyshake.ui.result.ResultActivity;
 import java.util.Arrays;
 import java.util.List;
 
+import com.cs364.luckyshake.ui.settings.SettingsActivity;
+import com.cs364.luckyshake.ui.settings.FontSizeHelper;
+
 public class MainActivity extends AppCompatActivity {
     private ActivityResultLauncher<String> notificationPermissionLauncher;
 
@@ -94,11 +97,15 @@ public class MainActivity extends AppCompatActivity {
 
         Button permissionButton = findViewById(R.id.reminder_permission_button);
         permissionButton.setOnClickListener(v -> requestNotificationPermission());
+
+        findViewById(R.id.home_btn_settings).setOnClickListener(v ->
+                startActivity(new Intent(this, SettingsActivity.class)));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        FontSizeHelper.apply(this, findViewById(R.id.main));
         openingResult = false;
         shakeDetector.start();
     }

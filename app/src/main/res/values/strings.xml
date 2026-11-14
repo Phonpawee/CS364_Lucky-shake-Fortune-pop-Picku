@@ -93,4 +93,21 @@
     <string name="reminder_msg_permission_granted">Notification permission granted.</string>
     <string name="reminder_msg_permission_not_required">This Android version does not require notification permission.</string>
 
+    <string name="settings_title">Settings</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_font_size">Text size</string>
+    <string name="settings_reroll_quota">Reroll limit</string>
+    <string name="settings_language_thai">ไทย</string>
+    <string name="settings_language_english">English</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_theme_system">Follow system</string>
+    <string-array name="settings_reroll_quota_options">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
 </resources>

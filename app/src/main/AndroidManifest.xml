@@ -46,6 +46,9 @@
         <receiver
             android:name=".reminder.ReminderReceiver"
             android:exported="false" />
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:exported="false" />
 
     </application>
 
