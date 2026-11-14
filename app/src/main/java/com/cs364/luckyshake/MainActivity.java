@@ -4,15 +4,23 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -25,6 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    private ActivityResultLauncher<String> notificationPermissionLauncher;
 
     // Temporary menu sets for F-01, until the Home screen is wired to MenuRepository.
     private static final List<Integer> RICE_MENUS =
@@ -44,6 +53,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        notificationPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                granted -> {
+                    if (!granted) {
+                        Toast.makeText(
+                                this,
+                                R.string.reminder_msg_permission_denied,
+                                Toast.LENGTH_LONG
+                        ).show();
+                    }
+                }
+        );
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -68,6 +91,9 @@ public class MainActivity extends AppCompatActivity {
         drawButton.setOnClickListener(view -> draw());
         tube.setOnClickListener(view -> draw());
         tube.setFocusable(true);
+
+        Button permissionButton = findViewById(R.id.reminder_permission_button);
+        permissionButton.setOnClickListener(v -> requestNotificationPermission());
     }
 
     @Override
@@ -154,5 +180,15 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ResultActivity.class);
         intent.putExtra(ResultActivity.EXTRA_MENU_NAME, menu);
         startActivity(intent);
+    }
+
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && ContextCompat.checkSelfPermission(
+                        this, Manifest.permission.POST_NOTIFICATIONS)
+                        != PackageManager.PERMISSION_GRANTED) {
+            notificationPermissionLauncher.launch(
+                    Manifest.permission.POST_NOTIFICATIONS);
+        }
     }
 }

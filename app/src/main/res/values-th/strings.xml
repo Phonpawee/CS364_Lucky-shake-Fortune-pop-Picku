@@ -81,4 +81,16 @@
     <string name="home_label_boat_noodles">ก๋วยเตี๋ยวเรือ</string>
     <string name="home_label_pad_thai">ผัดไทย</string>
     <string name="result_btn_home">กลับหน้าหลัก</string>
+
+    <!-- Meal reminders -->
+    <string name="reminder_title_notification">เตือนมื้ออาหาร</string>
+    <string name="reminder_msg_notification_body">ถึงเวลาเลือกเมนูจากชุด %1$s แล้ว</string>
+    <string name="reminder_label_channel_name">การเตือนมื้ออาหาร</string>
+    <string name="reminder_msg_channel_description">แจ้งเตือนให้เลือกเมนูอาหาร</string>
+    <string name="reminder_msg_permission_denied">ปิดการแจ้งเตือนไว้ เปิดสิทธิ์ในการตั้งค่าเครื่องเพื่อรับการเตือนมื้ออาหาร</string>
+
+    <string name="reminder_btn_allow_notifications">อนุญาตการแจ้งเตือน</string>
+    <string name="reminder_msg_permission_granted">อนุญาตการแจ้งเตือนแล้ว</string>
+    <string name="reminder_msg_permission_not_required">Android เวอร์ชันนี้ไม่ต้องขอสิทธิ์แจ้งเตือน</string>
+
 </resources>
