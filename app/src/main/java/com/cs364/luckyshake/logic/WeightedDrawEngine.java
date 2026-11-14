@@ -7,17 +7,17 @@ import java.util.Random;
 import java.util.Set;
 
 /**
- * The real DrawEngine (issue #3).
+ * DrawEngine ตัวจริง (อิชชู #3)
  *
  * <ul>
- *   <li>{@link #pick}: effective weight = candidate.weight × (id in the last
- *       {@link GameConfig#RECENT_COUNT} draws ? {@link GameConfig#RECENT_PENALTY} : 1),
- *       then a cumulative-sum weighted pick.</li>
- *   <li>{@link #pickLevel}: weighted pick over {@link GameConfig#levelWeights()}.</li>
- *   <li>{@link #weightedPick}: generic weighted pick for any list (group mode).</li>
+ *   <li>{@link #pick}: น้ำหนักจริง = candidate.weight × (id อยู่ใน
+ *       {@link GameConfig#RECENT_COUNT} ครั้งล่าสุด ? {@link GameConfig#RECENT_PENALTY} : 1)
+ *       แล้วสุ่มแบบสะสมน้ำหนัก (cumulative sum)</li>
+ *   <li>{@link #pickLevel}: สุ่มระดับดวงตาม {@link GameConfig#levelWeights()}</li>
+ *   <li>{@link #weightedPick}: สุ่มถ่วงน้ำหนักแบบทั่วไป ใช้กับ list ใดก็ได้ (โหมดกลุ่ม)</li>
  * </ul>
  *
- * Inject a seeded {@link Random} to get repeatable results in tests.
+ * ส่ง {@link Random} ที่กำหนด seed เข้ามาได้ เพื่อให้ผลการทดสอบซ้ำได้ทุกครั้ง
  */
 public class WeightedDrawEngine implements DrawEngine {
     private final Random random;
@@ -26,7 +26,7 @@ public class WeightedDrawEngine implements DrawEngine {
         this(new Random());
     }
 
-    /** Pass a seeded Random to get the same results every run (tests). */
+    /** ส่ง Random ที่กำหนด seed เข้ามา เพื่อให้ได้ผลเหมือนเดิมทุกครั้ง (ใช้ในเทสต์) */
     public WeightedDrawEngine(Random random) {
         if (random == null) {
             throw new IllegalArgumentException("random must not be null");
@@ -43,6 +43,7 @@ public class WeightedDrawEngine implements DrawEngine {
             return pool.get(0);
         }
 
+        // นับเฉพาะ RECENT_COUNT ตัวแรก (recentIds เรียงจากใหม่สุดไปเก่าสุด)
         Set<Long> recent = new HashSet<>();
         if (recentIds != null) {
             int n = Math.min(GameConfig.RECENT_COUNT, recentIds.size());
@@ -52,6 +53,7 @@ public class WeightedDrawEngine implements DrawEngine {
             }
         }
 
+        // เมนูที่เพิ่งออกจะถูกคูณน้ำหนักด้วย RECENT_PENALTY
         List<Double> weights = new ArrayList<>(pool.size());
         for (Candidate c : pool) {
             double w = Math.max(0, c.weight);
@@ -76,11 +78,11 @@ public class WeightedDrawEngine implements DrawEngine {
     }
 
     /**
-     * Cumulative-sum weighted pick. Items with weight 0 are never chosen, unless every
-     * weight is 0, in which case every item has the same chance.
+     * สุ่มถ่วงน้ำหนักด้วยวิธีสะสมน้ำหนัก ตัวที่น้ำหนักเป็น 0 จะไม่ถูกเลือก
+     * ยกเว้นกรณีที่น้ำหนักเป็น 0 ทุกตัว จะสุ่มโดยทุกตัวมีโอกาสเท่ากัน
      *
-     * @throws IllegalArgumentException if the lists are null/empty, have different sizes,
-     *                                  or a weight is null, negative, NaN or infinite
+     * @throws IllegalArgumentException ถ้า list เป็น null/ว่าง, ขนาดไม่เท่ากัน
+     *                                  หรือมีน้ำหนักที่เป็น null, ติดลบ, NaN หรืออนันต์
      */
     @Override
     public <T> T weightedPick(List<T> items, List<Double> weights) {
@@ -105,7 +107,7 @@ public class WeightedDrawEngine implements DrawEngine {
             return items.get(random.nextInt(items.size()));
         }
 
-        double r = random.nextDouble() * total; // [0, total)
+        double r = random.nextDouble() * total; // อยู่ในช่วง [0, total)
         double cumulative = 0;
         int lastPositive = -1;
         for (int i = 0; i < items.size(); i++) {
@@ -117,7 +119,7 @@ public class WeightedDrawEngine implements DrawEngine {
                 return items.get(i);
             }
         }
-        // Only reached through floating-point rounding; fall back to the last weighted item.
+        // มาถึงตรงนี้ได้เฉพาะกรณีปัดเศษทศนิยมเท่านั้น ให้คืนตัวสุดท้ายที่มีน้ำหนัก
         return items.get(lastPositive);
     }
 }

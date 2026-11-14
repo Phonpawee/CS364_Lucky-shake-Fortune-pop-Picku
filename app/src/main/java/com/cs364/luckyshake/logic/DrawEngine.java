@@ -7,7 +7,7 @@ import java.util.List;
  * Random draw used by the Home/Result screens and by group mode.
  * Do not change these signatures without telling the team (see README).
  *
- * Get an instance with {@link #create()}; it returns {@link WeightedDrawEngine}.
+ * เรียกใช้ผ่าน {@link #create()} ซึ่งจะคืน {@link WeightedDrawEngine}
  */
 public interface DrawEngine {
 
@@ -23,11 +23,11 @@ public interface DrawEngine {
     Candidate pick(List<Candidate> pool, List<Long> recentIds);
 
     /**
-     * Same as {@link #pick(List, List)}, used for a re-draw: when the pool has more than one
-     * item, the candidate whose id is {@code excludeId} (the one just shown) is never returned.
-     * When the pool has one item, that item is returned even if it is excluded.
+     * เหมือน {@link #pick(List, List)} แต่ใช้ตอน "ขอใหม่": ถ้า pool มีมากกว่า 1 ตัว
+     * จะไม่คืนตัวที่มี id เป็น {@code excludeId} (ตัวที่เพิ่งแสดง) เด็ดขาด
+     * ถ้า pool มีตัวเดียว จะคืนตัวนั้นแม้จะถูกยกเว้นก็ตาม
      *
-     * @param excludeId id that must not be returned; null means no exclusion
+     * @param excludeId id ที่ห้ามคืน; ถ้าเป็น null คือไม่ยกเว้นตัวไหน
      */
     default Candidate pick(List<Candidate> pool, List<Long> recentIds, Long excludeId) {
         if (pool == null || pool.isEmpty()) {

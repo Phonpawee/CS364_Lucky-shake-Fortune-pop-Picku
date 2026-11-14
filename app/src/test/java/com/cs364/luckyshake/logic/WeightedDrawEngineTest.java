@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 public class WeightedDrawEngineTest {
     private static final int RUNS = 1000;
-    /** Allowed difference between observed and expected share: ±5 percentage points. */
+    /** ค่าคลาดเคลื่อนที่ยอมรับได้ระหว่างสัดส่วนที่สุ่มได้กับที่คาดไว้: ±5 จุดเปอร์เซ็นต์ */
     private static final double TOLERANCE = 0.05;
 
     private final DrawEngine engine = new WeightedDrawEngine(new Random(42));
@@ -61,7 +61,7 @@ public class WeightedDrawEngineTest {
 
     @Test
     public void pick_recentItems_getPenalty() {
-        // Weights 5,5,5; ids 1 and 2 are recent -> 1.5, 1.5, 5 (total 8).
+        // น้ำหนัก 5,5,5; id 1 และ 2 เพิ่งออก -> 1.5, 1.5, 5 (รวม 8)
         List<Candidate> pool = Arrays.asList(
                 new Candidate(1, 5), new Candidate(2, 5), new Candidate(3, 5));
         Map<Long, Integer> counts = countPicks(engine, pool, Arrays.asList(1L, 2L), null);
@@ -72,12 +72,12 @@ public class WeightedDrawEngineTest {
 
     @Test
     public void pick_onlyLastRecentCountIdsArePenalized() {
-        // recentIds is newest first; id 3 is the 3rd entry, older than RECENT_COUNT (2).
+        // recentIds เรียงใหม่สุดก่อน; id 3 อยู่ลำดับที่ 3 ซึ่งเก่ากว่า RECENT_COUNT (2)
         assertEquals(2, GameConfig.RECENT_COUNT);
         List<Candidate> pool = Arrays.asList(
                 new Candidate(1, 5), new Candidate(2, 5), new Candidate(3, 5));
         Map<Long, Integer> counts = countPicks(engine, pool, Arrays.asList(1L, 2L, 3L), null);
-        assertShare("id 3 (not penalized)", 5.0 / 8, counts.get(3L));
+        assertShare("id 3 (ไม่ถูกลดโอกาส)", 5.0 / 8, counts.get(3L));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class WeightedDrawEngineTest {
         int fresh = countPicks(engine, pool, NO_RECENT, null).get(1L);
         int penalized = countPicks(engine, pool, Collections.singletonList(1L), null).get(1L);
         assertTrue(penalized < fresh);
-        // 5×0.3 / (5×0.3 + 5) ≈ 0.23
+        // 5×0.3 / (5×0.3 + 5) ≈ 0.23 (โอกาสลดลงตามตัวคูณ)
         assertShare("penalized id 1", 1.5 / 6.5, penalized);
     }
 
