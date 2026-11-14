@@ -1,9 +1,13 @@
 package com.cs364.luckyshake;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -31,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
     private final DrawEngine drawEngine = DrawEngine.create();
     private ShakeDetector shakeDetector;
     private Spinner setPicker;
+    private View drawButton;
+    private View tube;
+    private View stick;
+    private AnimatorSet drawAnimation;
     private boolean openingResult;
 
     @Override
@@ -54,12 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
         shakeDetector = ShakeDetector.create(this);
         shakeDetector.setOnShakeListener(this::draw);
-        findViewById(R.id.home_btn_draw).setOnClickListener(view -> draw());
-        View simulate = findViewById(R.id.home_btn_simulate);
-        if ((getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0) {
-            simulate.setVisibility(View.VISIBLE);
-            simulate.setOnClickListener(view -> shakeDetector.simulateShake());
-        }
+        tube = findViewById(R.id.home_image_tube);
+        stick = findViewById(R.id.home_image_stick);
+        drawButton = findViewById(R.id.home_btn_draw);
+        drawButton.setOnClickListener(view -> draw());
     }
 
     @Override
@@ -72,17 +78,68 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         shakeDetector.stop();
+        if (drawAnimation != null) {
+            drawAnimation.removeAllListeners();
+            drawAnimation.cancel();
+            resetDrawAnimation();
+        }
         super.onPause();
     }
 
     private void draw() {
-        if (openingResult) {
+        if (openingResult || drawAnimation != null) {
             return;
         }
 
         List<Integer> menus = setPicker.getSelectedItemPosition() == 0
                 ? RICE_MENUS : NOODLE_MENUS;
         int menu = drawEngine.weightedPick(menus, Arrays.asList(1.0, 1.0));
+        drawButton.setEnabled(false);
+        setPicker.setEnabled(false);
+
+        ObjectAnimator shake = ObjectAnimator.ofFloat(tube, View.ROTATION,
+                0f, -13f, 13f, -10f, 10f, -5f, 0f);
+        shake.setDuration(430);
+        shake.setInterpolator(new LinearInterpolator());
+
+        float density = getResources().getDisplayMetrics().density;
+        AnimatorSet pop = new AnimatorSet();
+        pop.playTogether(
+                ObjectAnimator.ofFloat(stick, View.TRANSLATION_X, 0f, 30f * density, 77f * density),
+                ObjectAnimator.ofFloat(stick, View.TRANSLATION_Y, 0f, -63f * density, 94f * density),
+                ObjectAnimator.ofFloat(stick, View.ROTATION, 0f, 30f, 65f));
+        pop.setDuration(620);
+        pop.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                stick.setVisibility(View.VISIBLE);
+            }
+        });
+
+        drawAnimation = new AnimatorSet();
+        drawAnimation.playSequentially(shake, pop);
+        drawAnimation.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                resetDrawAnimation();
+                showResult(menu);
+            }
+        });
+        drawAnimation.start();
+    }
+
+    private void resetDrawAnimation() {
+        drawAnimation = null;
+        tube.setRotation(0f);
+        stick.setVisibility(View.INVISIBLE);
+        stick.setTranslationX(0f);
+        stick.setTranslationY(0f);
+        stick.setRotation(0f);
+        drawButton.setEnabled(true);
+        setPicker.setEnabled(true);
+    }
+
+    private void showResult(int menu) {
         openingResult = true;
         Intent intent = new Intent(this, ResultActivity.class);
         intent.putExtra(ResultActivity.EXTRA_MENU_NAME, menu);

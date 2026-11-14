@@ -55,13 +55,24 @@
             android:id="@+id/home_image_tube"
             android:layout_width="180dp"
             android:layout_height="180dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="68dp"
             android:contentDescription="@string/home_label_tube"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/ic_tube"
             app:layout_constraintTop_toBottomOf="@id/home_label_filters"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/home_image_stick"
+            android:layout_width="20dp"
+            android:layout_height="72dp"
+            android:layout_marginTop="10dp"
+            android:importantForAccessibility="no"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_stick"
+            app:layout_constraintTop_toTopOf="@id/home_image_tube"
+            app:layout_constraintStart_toStartOf="@id/home_image_tube"
+            app:layout_constraintEnd_toEndOf="@id/home_image_tube" />
         <com.google.android.material.button.MaterialButton
             android:id="@+id/home_btn_draw"
             android:layout_width="wrap_content"
@@ -72,17 +83,5 @@
             app:layout_constraintTop_toBottomOf="@id/home_image_tube"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/home_btn_simulate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            style="@style/Widget.LuckyShake.Button.Primary"
-            android:text="@string/home_btn_simulate"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/home_btn_draw"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
