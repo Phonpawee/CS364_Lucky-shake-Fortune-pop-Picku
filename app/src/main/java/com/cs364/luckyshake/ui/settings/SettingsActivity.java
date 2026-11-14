@@ -60,6 +60,7 @@ public class SettingsActivity extends AppCompatActivity {
                 findViewById(R.id.rerollQuotaSpinner);
 
         restoreSelections(languageGroup, themeGroup, fontSizeGroup);
+        FontSizeHelper.apply(this, root);
 
         int sensitivity = clamp(
                 preferences.getInt(PrefKeys.SHAKE_SENSITIVITY, 5), 1, 10);
