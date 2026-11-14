@@ -29,13 +29,14 @@ public class WeightedDrawEngineTest {
         for (Candidate c : pool) counts.put(c.id, 0);
         for (int i = 0; i < RUNS; i++) {
             Candidate c = excludeId == null ? e.pick(pool, recent) : e.pick(pool, recent, excludeId);
-            counts.put(c.id, counts.get(c.id) + 1);
+            counts.merge(c.id, 1, Integer::sum);
         }
         return counts;
     }
 
-    private static void assertShare(String label, double expected, int count) {
-        double actual = count / (double) RUNS;
+    /** count เป็น null ได้ (ถือว่าเป็น 0) จึงส่ง counts.get(...) เข้ามาตรง ๆ ได้ */
+    private static void assertShare(String label, double expected, Integer count) {
+        double actual = (count == null ? 0 : count) / (double) RUNS;
         assertTrue(label + ": expected " + expected + " but was " + actual,
                 Math.abs(actual - expected) <= TOLERANCE);
     }
@@ -83,9 +84,9 @@ public class WeightedDrawEngineTest {
     @Test
     public void pick_recentItemChanceDropsByPenalty() {
         List<Candidate> pool = Arrays.asList(new Candidate(1, 5), new Candidate(2, 5));
-        int fresh = countPicks(engine, pool, NO_RECENT, null).get(1L);
-        int penalized = countPicks(engine, pool, Collections.singletonList(1L), null).get(1L);
-        assertTrue(penalized < fresh);
+        Integer fresh = countPicks(engine, pool, NO_RECENT, null).get(1L);
+        Integer penalized = countPicks(engine, pool, Collections.singletonList(1L), null).get(1L);
+        assertTrue(penalized != null && fresh != null && penalized < fresh);
         // 5×0.3 / (5×0.3 + 5) ≈ 0.23 (โอกาสลดลงตามตัวคูณ)
         assertShare("penalized id 1", 1.5 / 6.5, penalized);
     }
@@ -106,7 +107,7 @@ public class WeightedDrawEngineTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void pick_emptyPool_throws() {
-        engine.pick(Collections.<Candidate>emptyList(), NO_RECENT);
+        engine.pick(Collections.emptyList(), NO_RECENT);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -138,7 +139,7 @@ public class WeightedDrawEngineTest {
         List<Candidate> pool = Arrays.asList(
                 new Candidate(1, 5), new Candidate(2, 2), new Candidate(3, 8));
         Map<Long, Integer> counts = countPicks(engine, pool, NO_RECENT, 1L);
-        assertEquals(0, (int) counts.get(1L));
+        assertEquals(Integer.valueOf(0), counts.get(1L));
         assertShare("id 2", 0.2, counts.get(2L));
         assertShare("id 3", 0.8, counts.get(3L));
     }
@@ -176,7 +177,7 @@ public class WeightedDrawEngineTest {
             counts.merge(engine.weightedPick(items, weights), 1, Integer::sum);
         }
         for (int i = 0; i < items.size(); i++) {
-            assertShare(items.get(i), weights.get(i) / 10.0, counts.getOrDefault(items.get(i), 0));
+            assertShare(items.get(i), weights.get(i) / 10.0, counts.get(items.get(i)));
         }
     }
 
@@ -213,7 +214,7 @@ public class WeightedDrawEngineTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void weightedPick_emptyItems_throws() {
-        engine.weightedPick(Collections.emptyList(), Collections.<Double>emptyList());
+        engine.weightedPick(Collections.emptyList(), Collections.emptyList());
     }
 
     @Test(expected = IllegalArgumentException.class)
