@@ -100,6 +100,18 @@ public class DrawRoundTest {
         }
     }
 
+    /** FEW_ITEMS นับจากจำนวนเมนูที่ผ่านตัวกรอง ไม่ใช่ตัวเลือกที่เหลือหลังตัดเมนูเดิม จึงไม่เปลี่ยนไปมาระหว่างรอบ */
+    @Test
+    public void redraw_exactlyThreeItems_staysOk() {
+        DrawRound round = newRound(3);
+        List<Candidate> three = FIVE.subList(0, 3);
+        assertEquals(DrawStatus.OK, round.draw(3, three, NO_RECENT).status);
+        for (int i = 0; i < 3; i++) {
+            DrawResult r = round.redraw(3, three, NO_RECENT);
+            assertEquals(DrawStatus.OK, r.status);
+        }
+    }
+
     @Test
     public void redraw_whenQuotaEmpty_returnsQuotaEmptyWithSameResult() {
         DrawRound round = newRound(1);

@@ -23,7 +23,7 @@ public final class RedrawQuota {
 
     /** จำนวนครั้งที่ยังขอใหม่ได้ ไม่ติดลบ */
     public int remaining() {
-        return max - used;
+        return Math.max(0, max - used);
     }
 
     public boolean isEmpty() {
@@ -53,11 +53,11 @@ public final class RedrawQuota {
     }
 
     /**
-     * เปลี่ยนค่าสูงสุด เช่น เมื่อผู้ใช้แก้ค่าในหน้าตั้งค่า ถ้าใช้ไปเกินค่าใหม่แล้ว โควตาจะเหลือ 0
+     * เปลี่ยนค่าสูงสุด เช่น เมื่อผู้ใช้แก้ค่าในหน้าตั้งค่า จำนวนที่ใช้ไปแล้วในรอบนี้ไม่เปลี่ยน
+     * ถ้าใช้ไปเกินค่าใหม่แล้ว โควตาจะเหลือ 0 จนกว่าจะ reset
      */
     public void setMax(int max) {
         this.max = GameConfig.clampRedrawLimit(max);
-        used = Math.min(used, this.max);
     }
 
     @NonNull

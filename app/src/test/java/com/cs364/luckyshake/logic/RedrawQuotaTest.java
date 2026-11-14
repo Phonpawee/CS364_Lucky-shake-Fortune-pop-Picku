@@ -51,14 +51,15 @@ public class RedrawQuotaTest {
     }
 
     @Test
-    public void setMax_lowerThanUsed_leavesZero() {
+    public void setMax_lowerThanUsed_leavesZeroAndKeepsUsage() {
         RedrawQuota quota = new RedrawQuota(5);
         quota.consume();
         quota.consume();
         quota.consume();
         quota.setMax(2);
         assertEquals(0, quota.remaining());
+        assertFalse(quota.consume());
         quota.setMax(4);
-        assertEquals(2, quota.remaining());
+        assertEquals(1, quota.remaining());
     }
 }
