@@ -47,13 +47,13 @@ public class SettingsActivity extends AppCompatActivity {
             themeGroup.check(R.id.themeSystem);
         }
 
-        int fontSize = clamp(
-                preferences.getInt(PrefKeys.FONT_SIZE, 5), 1, 10);
+        int fontSize = Math.max(
+                1, Math.min(preferences.getInt(PrefKeys.FONT_SIZE, 5), 10));
         fontSizeSeekBar.setMax(9);
         fontSizeSeekBar.setProgress(fontSize - 1);
 
-        int quota = clamp(
-                preferences.getInt(PrefKeys.REROLL_QUOTA, 1), 1, 5);
+        int quota = Math.max(
+                1, Math.min(preferences.getInt(PrefKeys.REROLL_QUOTA, 1), 5));
         rerollQuotaSpinner.setSelection(quota - 1);
 
         // ภาษา
@@ -128,9 +128,5 @@ public class SettingsActivity extends AppCompatActivity {
                     public void onNothingSelected(AdapterView<?> parent) {
                     }
                 });
-    }
-
-    private int clamp(int value, int min, int max) {
-        return Math.max(min, Math.min(value, max));
     }
 }
