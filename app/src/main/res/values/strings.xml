@@ -71,4 +71,16 @@
     <string name="food_type_fast_food">Fast food</string>
     <string name="food_type_dessert_cafe">Dessert &amp; café</string>
     <string name="food_type_healthy_vegetarian">Healthy &amp; vegetarian</string>
+
+    <!-- Meal reminders -->
+    <string name="reminder_title_notification">Meal reminder</string>
+    <string name="reminder_msg_notification_body">Time to choose a meal from %1$s.</string>
+    <string name="reminder_label_channel_name">Meal reminders</string>
+    <string name="reminder_msg_channel_description">Reminders to choose a meal.</string>
+    <string name="reminder_msg_permission_denied">Notifications are disabled. Enable them in system settings to receive meal reminders.</string>
+
+    <string name="reminder_btn_allow_notifications">Allow notifications</string>
+    <string name="reminder_msg_permission_granted">Notification permission granted.</string>
+    <string name="reminder_msg_permission_not_required">This Android version does not require notification permission.</string>
+
 </resources>
