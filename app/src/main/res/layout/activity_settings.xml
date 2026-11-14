@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/settings_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:id="@+id/settings_root">
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,107 +16,184 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/settings_title"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="@dimen/text_heading"
+            android:textAppearance="@style/TextAppearance.LuckyShake.Heading"
             android:layout_marginBottom="@dimen/spacing_md" />
 
-        <TextView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/settings_language"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="@dimen/text_body" />
+            android:layout_marginBottom="@dimen/spacing_md"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="@dimen/corner_md"
+            app:strokeColor="?attr/colorOutline">
 
-        <RadioGroup
-            android:id="@+id/languageGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="@dimen/spacing_md">
-
-            <RadioButton
-                android:id="@+id/languageThai"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/settings_language_thai"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="@dimen/text_body" />
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_md">
 
-            <RadioButton
-                android:id="@+id/languageEnglish"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_language"
+                    android:textColor="?attr/colorOnSurface" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/languageGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_md"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    app:checkedButton="@id/languageThai">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/languageThai"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/settings_language_thai" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/languageEnglish"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/settings_language_english" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_theme"
+                    android:textColor="?attr/colorOnSurface" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/themeGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_md"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    app:checkedButton="@id/themeSystem">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/themeLight"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/settings_theme_light" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/themeDark"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/settings_theme_dark" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/themeSystem"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/settings_theme_system" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_font_size"
+                    android:textColor="?attr/colorOnSurface" />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+                    android:id="@+id/fontSizeGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+                    app:checkedButton="@id/fontSizeNormal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/fontSizeSmall"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/settings_font_size_small" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/fontSizeNormal"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/settings_font_size_normal" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/fontSizeLarge"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/settings_font_size_large" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/fontSizeExtraLarge"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/settings_font_size_extra_large" />
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="?attr/colorSurface"
+            app:cardCornerRadius="@dimen/corner_md"
+            app:strokeColor="?attr/colorOutline">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/settings_language_english"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="@dimen/text_body" />
-        </RadioGroup>
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_md">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_theme"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="@dimen/text_body" />
+                <TextView
+                    android:id="@+id/shakeSensitivityLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_shake_sensitivity"
+                    android:textColor="?attr/colorOnSurface" />
 
-        <RadioGroup
-            android:id="@+id/themeGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="@dimen/spacing_md">
+                <SeekBar
+                    android:id="@+id/shakeSensitivitySeekBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:max="9"
+                    android:contentDescription="@string/settings_shake_sensitivity" />
 
-            <RadioButton
-                android:id="@+id/themeLight"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_theme_light"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="@dimen/text_body" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/settings_reroll_quota"
+                    android:textColor="?attr/colorOnSurface" />
 
-            <RadioButton
-                android:id="@+id/themeDark"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_theme_dark"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="@dimen/text_body" />
-
-            <RadioButton
-                android:id="@+id/themeSystem"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/settings_theme_system"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="@dimen/text_body" />
-        </RadioGroup>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_font_size"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="@dimen/text_body" />
-
-        <SeekBar
-            android:id="@+id/fontSizeSeekBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="9"
-            android:layout_marginBottom="@dimen/spacing_md" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/settings_reroll_quota"
-            android:textColor="?attr/colorOnSurface"
-            android:textSize="@dimen/text_body" />
-
-        <Spinner
-            android:id="@+id/rerollQuotaSpinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:entries="@array/settings_reroll_quota_options"
-            android:spinnerMode="dropdown" />
-
+                <Spinner
+                    android:id="@+id/rerollQuotaSpinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/settings_reroll_quota_options"
+                    android:spinnerMode="dropdown" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 </ScrollView>

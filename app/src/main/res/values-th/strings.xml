@@ -110,4 +110,13 @@
         <item>4</item>
         <item>5</item>
     </string-array>
+
+    <!-- ไทย -->
+    <string name="settings_shake_sensitivity">ความไวการเขย่า</string>
+    <string name="settings_font_size_small">A-</string>
+    <string name="settings_font_size_normal">A</string>
+    <string name="settings_font_size_large">A+</string>
+    <string name="settings_font_size_extra_large">A++</string>
+
+    <string name="settings_label_shake_sensitivity">ความไวในการเขย่า</string>
 </resources>
