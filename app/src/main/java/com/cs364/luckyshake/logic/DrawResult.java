@@ -1,5 +1,7 @@
 package com.cs364.luckyshake.logic;
 
+import androidx.annotation.NonNull;
+
 /**
  * ผลของ {@link DrawRound#draw}/{@link DrawRound#redraw}: รหัสผลคู่กับเมนูที่สุ่มได้
  *
@@ -32,6 +34,7 @@ public final class DrawResult {
         return candidate != null;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "DrawResult{status=" + status + ", candidate=" + candidate

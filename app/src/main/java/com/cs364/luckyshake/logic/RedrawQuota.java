@@ -1,5 +1,7 @@
 package com.cs364.luckyshake.logic;
 
+import androidx.annotation.NonNull;
+
 /**
  * นับโควตาขอเซียมซีใหม่ต่อรอบ
  *
@@ -58,6 +60,7 @@ public final class RedrawQuota {
         used = Math.min(used, this.max);
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "RedrawQuota{remaining=" + remaining() + "/" + max + "}";
