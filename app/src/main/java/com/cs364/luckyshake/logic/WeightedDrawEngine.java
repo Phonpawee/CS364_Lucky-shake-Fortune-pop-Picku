@@ -93,25 +93,32 @@ public class WeightedDrawEngine implements DrawEngine {
             throw new IllegalArgumentException("weights must have the same size as items");
         }
 
-        double total = 0;
+        double max = 0;
         for (Double w : weights) {
             if (w == null || w.isNaN() || w.isInfinite() || w < 0) {
                 throw new IllegalArgumentException("weights must be finite and non-negative: " + w);
             }
-            total += w;
+            max = Math.max(max, w);
         }
         if (items.size() == 1) {
             return items.get(0);
         }
-        if (total <= 0) {
+        if (max <= 0) {
             return items.get(random.nextInt(items.size()));
+        }
+
+        // หารน้ำหนักทุกตัวด้วยค่าสูงสุดก่อนรวม ให้แต่ละตัวอยู่ในช่วง [0, 1]
+        // ผลรวมจึงไม่เกินจำนวน item และไม่ล้นเป็นอนันต์ (เช่น Double.MAX_VALUE หลายตัว)
+        double total = 0;
+        for (Double w : weights) {
+            total += w / max;
         }
 
         double r = random.nextDouble() * total; // อยู่ในช่วง [0, total)
         double cumulative = 0;
         int lastPositive = -1;
         for (int i = 0; i < items.size(); i++) {
-            double w = weights.get(i);
+            double w = weights.get(i) / max;
             if (w <= 0) continue;
             lastPositive = i;
             cumulative += w;

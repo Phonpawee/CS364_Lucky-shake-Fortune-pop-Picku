@@ -196,6 +196,18 @@ public class WeightedDrawEngineTest {
     }
 
     @Test
+    public void weightedPick_hugeEqualWeights_noOverflow_splitsEvenly() {
+        List<String> items = Arrays.asList("A", "B");
+        List<Double> weights = Arrays.asList(Double.MAX_VALUE, Double.MAX_VALUE);
+        Map<String, Integer> counts = new HashMap<>();
+        for (int i = 0; i < RUNS; i++) {
+            counts.merge(engine.weightedPick(items, weights), 1, Integer::sum);
+        }
+        assertShare("A", 0.5, counts.get("A"));
+        assertShare("B", 0.5, counts.get("B"));
+    }
+
+    @Test
     public void weightedPick_singleItem_returnsIt() {
         assertEquals("x", engine.weightedPick(Collections.singletonList("x"),
                 Collections.singletonList(3.0)));
