@@ -15,7 +15,7 @@ public class StubDrawEngineTest {
 
     @Test
     public void create_returnsAnEngine() {
-        assertTrue(DrawEngine.create() instanceof DrawEngine);
+        assertTrue(DrawEngine.create() != null);
     }
 
     @Test
