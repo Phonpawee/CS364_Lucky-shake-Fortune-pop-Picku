@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     private View drawButton;
     private View tube;
     private static final String STATE_PENDING_DRAW = "pending_draw";
+    private View stick;
     private long pendingMenuId;
     private AnimatorSet drawAnimation;
     private boolean openingResult;
@@ -125,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         shakeDetector = ShakeDetector.create(this);
         shakeDetector.setOnShakeListener(this::draw);
         tube = findViewById(R.id.home_image_tube);
+        stick = findViewById(R.id.home_image_stick);
         if (savedInstanceState != null) {
             pendingMenuId = savedInstanceState.getLong(STATE_PENDING_DRAW);
         }
@@ -206,15 +209,35 @@ public class MainActivity extends AppCompatActivity {
         setFilterControlsEnabled(false);
 
         float density = getResources().getDisplayMetrics().density;
-        drawAnimation = new AnimatorSet();
-        drawAnimation.playTogether(
+        AnimatorSet shake = new AnimatorSet();
+        shake.playTogether(
                 ObjectAnimator.ofFloat(tube, View.ROTATION,
                         0f, -18f, 18f, -16f, 16f, -10f, 10f, 0f),
                 ObjectAnimator.ofFloat(tube, View.TRANSLATION_X,
                         0f, -14f * density, 14f * density, -12f * density,
                         12f * density, -6f * density, 6f * density, 0f));
-        drawAnimation.setDuration(1000);
-        drawAnimation.setInterpolator(new LinearInterpolator());
+        shake.setDuration(1000);
+        shake.setInterpolator(new LinearInterpolator());
+
+        AnimatorSet launchStick = new AnimatorSet();
+        launchStick.playTogether(
+                ObjectAnimator.ofFloat(stick, View.TRANSLATION_Y, 0f, -74f * density),
+                ObjectAnimator.ofFloat(stick, View.TRANSLATION_X, 0f, 22f * density),
+                ObjectAnimator.ofFloat(stick, View.ROTATION, 0f, -28f),
+                ObjectAnimator.ofFloat(stick, View.SCALE_Y, 0.12f, 1f));
+        launchStick.setDuration(320);
+        launchStick.setInterpolator(new DecelerateInterpolator());
+        launchStick.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                stick.setPivotY(0f);
+                stick.setScaleY(0.12f);
+                stick.setVisibility(View.VISIBLE);
+            }
+        });
+
+        drawAnimation = new AnimatorSet();
+        drawAnimation.playSequentially(shake, launchStick);
         drawAnimation.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
@@ -236,6 +259,11 @@ public class MainActivity extends AppCompatActivity {
         tube.setRotation(0f);
         tube.setTranslationX(0f);
         tube.setEnabled(true);
+        stick.setVisibility(View.INVISIBLE);
+        stick.setTranslationX(0f);
+        stick.setTranslationY(0f);
+        stick.setRotation(0f);
+        stick.setScaleY(1f);
         drawButton.setEnabled(true);
         setPicker.setEnabled(true);
         setFilterControlsEnabled(true);
