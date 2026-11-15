@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.data.PrefKeys;
+import com.cs364.luckyshake.logic.GameConfig;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -68,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
         shakeSensitivitySeekBar.setProgress(sensitivity - 1);
 
         int quota = clamp(
-                preferences.getInt(PrefKeys.REROLL_QUOTA, 1), 1, 5);
+                preferences.getInt(PrefKeys.REROLL_QUOTA, GameConfig.MAX_REDRAWS), 1, 5);
         rerollQuotaSpinner.setSelection(quota - 1);
 
         languageGroup.addOnButtonCheckedListener(
@@ -179,7 +180,11 @@ public class SettingsActivity extends AppCompatActivity {
             MaterialButtonToggleGroup languageGroup,
             MaterialButtonToggleGroup themeGroup,
             MaterialButtonToggleGroup fontSizeGroup) {
-        String language = preferences.getString(PrefKeys.LANGUAGE, "en");
+        // ยังไม่เคยเลือกภาษา: แสดงตามภาษาที่แอปใช้อยู่ (ตามเครื่อง)
+        String language = preferences.getString(PrefKeys.LANGUAGE, null);
+        if (language == null) {
+            language = getResources().getConfiguration().getLocales().get(0).getLanguage();
+        }
         languageGroup.check("th".equals(language)
                 ? R.id.languageThai
                 : R.id.languageEnglish);
