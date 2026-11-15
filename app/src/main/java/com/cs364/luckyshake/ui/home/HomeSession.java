@@ -1,5 +1,6 @@
 package com.cs364.luckyshake.ui.home;
 
+import com.cs364.luckyshake.data.HistoryEntry;
 import com.cs364.luckyshake.data.Menu;
 import com.cs364.luckyshake.data.MenuFilter;
 import com.cs364.luckyshake.logic.Candidate;
@@ -35,11 +36,21 @@ public class HomeSession {
         void record(long menuId, WeightPolicy.Event event);
     }
 
+    /**
+     * ที่บันทึกประวัติ (อิชชู #24) ใน ViewModel คือ HistoryRepository.add ในเทสต์ใช้ของปลอมได้
+     * entry ที่ส่งมามีชื่อเมนูไทย/อังกฤษติดไปด้วย ลบเมนูทีหลังประวัติก็ยังอ่านชื่อได้
+     */
+    public interface HistoryRecorder {
+        void add(HistoryEntry entry);
+    }
+
     private static final WeightRecorder NO_RECORDER = (menuId, event) -> { };
+    private static final HistoryRecorder NO_HISTORY = entry -> { };
 
     private final DrawRound round;
     private final MenuSource source;
     private final WeightRecorder weights;
+    private final HistoryRecorder history;
 
     private long setId = NO_SET;
     private MenuFilter filter = MenuFilter.none();
@@ -53,12 +64,22 @@ public class HomeSession {
 
     /** @param weights ถูกเรียกเมื่อยอมรับ (+1) หรือขอใหม่แล้วได้เมนูใหม่ (−1 ให้เมนูที่ถูกปฏิเสธ) */
     public HomeSession(DrawRound round, MenuSource source, WeightRecorder weights) {
-        if (round == null || source == null || weights == null) {
-            throw new IllegalArgumentException("round, source and weights must not be null");
+        this(round, source, weights, NO_HISTORY);
+    }
+
+    /**
+     * @param history ถูกเรียกพร้อมกับ weights: ยอมรับ → {@link HistoryEntry#STATUS_ACCEPTED}
+     *                ขอใหม่แล้วได้เมนูใหม่ → {@link HistoryEntry#STATUS_REDRAWN} ของเมนูที่ถูกปฏิเสธ
+     */
+    public HomeSession(DrawRound round, MenuSource source, WeightRecorder weights,
+                       HistoryRecorder history) {
+        if (round == null || source == null || weights == null || history == null) {
+            throw new IllegalArgumentException("round, source, weights and history must not be null");
         }
         this.round = round;
         this.source = source;
         this.weights = weights;
+        this.history = history;
     }
 
     // ------------------------------------------------------------ settings
@@ -116,12 +137,14 @@ public class HomeSession {
      */
     public DrawState redraw() {
         // state.menu ยังแสดงอยู่ได้แม้สถานะเป็น NO_MATCH (ขอใหม่ครั้งก่อนกรองหมด)
-        Menu rejected = state.accepted ? null : state.menu;
+        DrawState shown = state;
+        Menu rejected = shown.accepted ? null : shown.menu;
         Pool pool = loadPool();
         DrawResult r = round.redraw(pool.all.size(), pool.candidates, recentIds);
-        DrawState next = apply(r, pool, !state.accepted);
+        DrawState next = apply(r, pool, !shown.accepted);
         if (rejected != null && r.hasResult() && r.status != DrawStatus.QUOTA_EMPTY) {
             weights.record(rejected.id, WeightPolicy.Event.REDRAW);
+            history.add(toEntry(shown, HistoryEntry.STATUS_REDRAWN));
         }
         return next;
     }
@@ -139,11 +162,36 @@ public class HomeSession {
         state = state.asAccepted();
         if (state.menu != null) {
             weights.record(state.menu.id, WeightPolicy.Event.ACCEPT);
+            history.add(toEntry(state, HistoryEntry.STATUS_ACCEPTED));
         }
         return state.menu;
     }
 
     // ------------------------------------------------------------- helpers
+
+    /**
+     * แปลงระดับดวงของ DrawEngine (GameConfig.LEVEL_GREAT = 0 … LEVEL_CAUTION = 3)
+     * เป็นระดับในประวัติ (1..4, 4 = ดีที่สุด) ซึ่งเท่ากับจำนวนดาวที่หน้าผลแสดง
+     */
+    static int historyLevel(int drawLevel) {
+        return GameConfig.LEVEL_COUNT - drawLevel;
+    }
+
+    /** แถวประวัติของเมนูที่แสดงอยู่ใน {@code shown} (ต้องมีเมนู) */
+    private static HistoryEntry toEntry(DrawState shown, String status) {
+        Menu m = shown.menu;
+        HistoryEntry e = new HistoryEntry();
+        assert m != null;
+        e.menuId = m.id;
+        e.nameTh = m.nameTh;
+        e.nameEn = m.nameEn;
+        e.level = historyLevel(shown.level);
+        e.stickNo = shown.stickNo;
+        e.status = status;
+        e.mode = HistoryEntry.MODE_SOLO;
+        e.createdAt = System.currentTimeMillis();
+        return e;
+    }
 
     /** @param keepShown true เมื่อเป็นการขอใหม่ระหว่างแสดงผล: ถ้าสุ่มไม่ได้ให้คงเมนูเดิมไว้ */
     private DrawState apply(DrawResult r, Pool pool, boolean keepShown) {
