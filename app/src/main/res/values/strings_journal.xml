@@ -27,5 +27,8 @@
     <string name="journal_msg_empty_filter">Nothing matches this filter</string>
     <string name="journal_tab_entries">Entries</string>
     <string name="journal_tab_stats">Stats</string>
-    <string name="journal_msg_stats_pending">Stats screen is coming soon.</string>
+    <string name="stats_title_top">Most drawn</string>
+    <string name="stats_title_ratio">Accepted / Re-drawn</string>
+    <string name="stats_title_week">Last 7 days</string>
+    <string name="stats_label_ratio">Accepted %1$d · Re-drawn %2$d (%3$d%%)</string>
 </resources>

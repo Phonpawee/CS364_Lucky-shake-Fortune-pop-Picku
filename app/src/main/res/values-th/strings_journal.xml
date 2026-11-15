@@ -27,5 +27,8 @@
     <string name="journal_msg_empty_filter">ไม่มีรายการในตัวกรองนี้</string>
     <string name="journal_tab_entries">รายการ</string>
     <string name="journal_tab_stats">สถิติ</string>
-    <string name="journal_msg_stats_pending">หน้าสถิติกำลังพัฒนา</string>
+    <string name="stats_title_top">เมนูที่ออกบ่อยสุด</string>
+    <string name="stats_title_ratio">ยอมรับ / ขอใหม่</string>
+    <string name="stats_title_week">7 วันล่าสุด</string>
+    <string name="stats_label_ratio">ยอมรับ %1$d · ขอใหม่ %2$d (%3$d%%)</string>
 </resources>

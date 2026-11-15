@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingVertical="@dimen/spacing_sm">
+
+    <!-- Dish Name -->
+    <TextView
+        android:id="@+id/stats_top_dish_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginEnd="@dimen/spacing_sm"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-medium"
+        android:maxLines="1"
+        android:textColor="@color/journal_text"
+        android:textSize="16sp"
+        tools:text="ชัย" />
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/stats_top_dish_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="110dp"
+        android:layout_height="10dp"
+        android:layout_marginEnd="@dimen/spacing_md"
+        android:max="100"
+        android:progressDrawable="@drawable/journal_progress_red"
+        tools:progress="60" />
+
+    <!-- Count Number -->
+    <TextView
+        android:id="@+id/stats_top_dish_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="24dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="end"
+        android:textColor="@color/journal_text"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="1" />
+</LinearLayout>

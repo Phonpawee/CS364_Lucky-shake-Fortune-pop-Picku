@@ -183,6 +183,7 @@
 
         <!-- Entries Card: wrap_content with constrained height -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/journal_card_entries"
             style="@style/Widget.LuckyShake.Card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -232,5 +233,18 @@
                 </LinearLayout>
             </FrameLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <!-- Stats View Container (Included) -->
+        <include
+            android:id="@+id/view_journal_stats"
+            layout="@layout/view_journal_stats"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/journal_toggle_group_tab" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
