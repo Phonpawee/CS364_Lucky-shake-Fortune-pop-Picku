@@ -10,6 +10,9 @@ import android.content.Context;
 
 import androidx.test.platform.app.InstrumentationRegistry;
 
+import com.cs364.luckyshake.logic.GameConfig;
+import com.cs364.luckyshake.logic.WeightPolicy;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,13 +24,12 @@ import java.util.List;
  * It starts every test with a fresh database (the app's data on that device is reset).
  */
 public class RepositoriesInstrumentedTest {
-    private Context context;
     private MenuRepository menus;
     private HistoryRepository history;
 
     @Before
     public void setUp() {
-        context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
         DbHelper.closeInstance();
         context.deleteDatabase(DbHelper.DB_NAME);
         menus = new MenuRepository(context);
@@ -156,12 +158,53 @@ public class RepositoriesInstrumentedTest {
         assertEquals(10, menus.adjustWeight(id, 10));
         assertEquals(1, menus.adjustWeight(id, -20));
         assertEquals(-1, menus.adjustWeight(999999, 1));
-        assertTrue(menus.updateWeight(id, 7, 12345L));
+        long recent = System.currentTimeMillis() - 1000;
+        assertTrue(menus.updateWeight(id, 7, recent));
         Menu m = menus.getMenu(id);
         assertEquals(7, m.weight);
-        assertEquals(12345L, m.lastTouched);
+        assertEquals(recent, m.lastTouched);
         menus.resetWeights(lunch);
         assertEquals(DbHelper.DEFAULT_WEIGHT, menus.getMenu(id).weight);
+    }
+
+    @Test
+    public void recordEvent_acceptAndRedraw_useWeightPolicy() {
+        long lunch = menus.getSets().get(0).id;
+        long id = menus.getMenus(lunch, null, null).get(0).id;
+        assertEquals(DbHelper.DEFAULT_WEIGHT + 1, menus.recordEvent(id, WeightPolicy.Event.ACCEPT));
+        assertEquals(DbHelper.DEFAULT_WEIGHT, menus.recordEvent(id, WeightPolicy.Event.REDRAW));
+        for (int i = 0; i < 20; i++) menus.recordEvent(id, WeightPolicy.Event.REDRAW);
+        assertEquals(GameConfig.MIN_WEIGHT, menus.getMenu(id).weight);
+        assertEquals(-1, menus.recordEvent(999999, WeightPolicy.Event.ACCEPT));
+    }
+
+    @Test
+    public void recordEvent_afterAWeekUntouched_decaysFirstThenApplies() {
+        long lunch = menus.getSets().get(0).id;
+        long id = menus.getMenus(lunch, null, null).get(0).id;
+        long before = System.currentTimeMillis();
+        menus.updateWeight(id, 9, before - GameConfig.WEIGHT_DECAY_PERIOD_MS - 60_000);
+
+        // 9 → คืนค่า 1 สัปดาห์ = 8 → ยอมรับ +1 = 9 (ไม่ใช่ 10)
+        assertEquals(9, menus.recordEvent(id, WeightPolicy.Event.ACCEPT));
+        Menu m = menus.getMenu(id);
+        assertEquals(9, m.weight);
+        assertTrue(m.lastTouched >= before);
+    }
+
+    @Test
+    public void reading_untouchedMenu_decaysOneStepPerWeekAndSaves() {
+        long lunch = menus.getSets().get(0).id;
+        long id = menus.getMenus(lunch, null, null).get(0).id;
+        long week = GameConfig.WEIGHT_DECAY_PERIOD_MS;
+        long touched = System.currentTimeMillis() - week - 60_000; // แตะล่าสุดเกิน 1 สัปดาห์
+        menus.updateWeight(id, 9, touched);
+
+        Menu m = menus.getMenu(id);
+        assertEquals(8, m.weight);
+        assertEquals(touched + week, m.lastTouched);
+        // อ่านซ้ำทันทีต้องไม่ลดซ้ำ (บันทึกแล้ว)
+        assertEquals(8, menus.getMenus(lunch, null, null).get(0).weight);
     }
 
     @Test

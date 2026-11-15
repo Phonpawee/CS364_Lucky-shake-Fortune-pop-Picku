@@ -122,6 +122,7 @@
     <string name="nav_shake">เขย่า</string>
     <string name="nav_menu">เมนู</string>
     <string name="nav_group">กลุ่ม</string>
+    <string name="nav_journal">สมุด</string>
     <string name="nav_settings">ตั้งค่า</string>
     <string name="home_msg_set_empty">ชุดเมนูนี้ยังไม่มีเมนู เพิ่มได้ที่แท็บเมนู</string>
     <string name="home_msg_no_match">ไม่มีเมนูที่ตรงกับตัวกรอง</string>

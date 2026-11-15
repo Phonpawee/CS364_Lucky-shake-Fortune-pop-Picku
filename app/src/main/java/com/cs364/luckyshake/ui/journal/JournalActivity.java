@@ -25,6 +25,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.data.HistoryEntry;
 import com.cs364.luckyshake.data.HistoryRepository;
+import com.cs364.luckyshake.ui.nav.BottomNav;
+import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.chip.ChipGroup;
@@ -84,6 +86,7 @@ public class JournalActivity extends AppCompatActivity {
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
             return insets;
         });
+        BottomNav.attach(this, R.id.nav_journal);
 
         Locale locale = getResources().getConfiguration().getLocales().get(0);
         boolean thai = "th".equals(locale.getLanguage());
@@ -113,7 +116,8 @@ public class JournalActivity extends AppCompatActivity {
 
         adapter = new JournalAdapter(this, thai, locale, entry -> {
             viewModel.delete(entry.id);
-            Snackbar.make(root, R.string.journal_msg_deleted, Snackbar.LENGTH_SHORT).show();
+            BottomNav.show(this, Snackbar.make(root, R.string.journal_msg_deleted,
+                    Snackbar.LENGTH_SHORT));
         });
 
         if (recycler != null) {
@@ -168,6 +172,7 @@ public class JournalActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        FontSizeHelper.apply(this, root);   // the user may have changed the size in Settings
         viewModel.refresh();
     }
 

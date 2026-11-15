@@ -19,6 +19,7 @@ import androidx.lifecycle.LifecycleOwner;
 import com.cs364.luckyshake.MainActivity;
 import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.ui.group.GroupSetupActivity;
+import com.cs364.luckyshake.ui.journal.JournalActivity;
 import com.cs364.luckyshake.ui.menu.MenuListActivity;
 import com.cs364.luckyshake.ui.settings.SettingsActivity;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
@@ -130,6 +131,8 @@ public final class BottomNav {
             intent = new Intent(from, MenuListActivity.class);
         } else if (id == R.id.nav_group) {
             intent = GroupSetupActivity.newIntent(from);
+        } else if (id == R.id.nav_journal) {
+            intent = JournalActivity.newIntent(from);
         } else if (id == R.id.nav_settings) {
             intent = new Intent(from, SettingsActivity.class);
         } else {
