@@ -123,4 +123,7 @@
     <string name="nav_menu">Dishes</string>
     <string name="nav_group">Group</string>
     <string name="nav_settings">Settings</string>
+    <string name="home_msg_set_empty">No dishes in this set yet. Add some on the Dishes tab.</string>
+    <string name="home_msg_no_match">No dish matches the filters.</string>
+    <string name="home_msg_few_items">Only a few dishes in this set.</string>
 </resources>
