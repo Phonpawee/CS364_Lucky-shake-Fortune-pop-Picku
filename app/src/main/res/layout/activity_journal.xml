@@ -109,7 +109,6 @@
                 android:layout_weight="1"
                 app:checkedIconVisible="false"
                 app:selectionRequired="true"
-                app:singleLine="true"
                 app:singleSelection="true">
 
                 <com.google.android.material.chip.Chip

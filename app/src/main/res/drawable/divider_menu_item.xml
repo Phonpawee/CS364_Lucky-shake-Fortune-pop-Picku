@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Thin gold line between dishes, inset so it does not touch the card edge. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetLeft="@dimen/spacing_md"
+    android:insetRight="@dimen/spacing_md">
+    <shape android:shape="rectangle">
+        <size android:height="1dp" />
+        <solid android:color="@color/app_accent" />
+    </shape>
+</inset>

@@ -11,6 +11,8 @@ import com.cs364.luckyshake.data.HistoryEntry;
 import com.cs364.luckyshake.data.HistoryRepository;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * ViewModel for managing the state of the Journal (history) screen.
@@ -25,6 +27,7 @@ public class JournalViewModel extends AndroidViewModel {
     }
 
     private final HistoryRepository repository;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final MutableLiveData<Filter> filter = new MutableLiveData<>(Filter.ALL);
     private final MutableLiveData<List<HistoryEntry>> entries = new MutableLiveData<>();
     private final MutableLiveData<Integer> totalCount = new MutableLiveData<>();
@@ -55,6 +58,38 @@ public class JournalViewModel extends AndroidViewModel {
     }
 
     public void refresh() {
+        final Filter currentFilter = filter.getValue();
+        executor.execute(() -> {
+            String dbStatus = null;
+            if (currentFilter == Filter.ACCEPTED) {
+                dbStatus = HistoryEntry.STATUS_ACCEPTED;
+            } else if (currentFilter == Filter.REDRAWN) {
+                dbStatus = HistoryEntry.STATUS_REDRAWN;
+            }
+
+            List<HistoryEntry> list = repository.list(dbStatus, 0);
+            int total = repository.count(null);
+
+            entries.postValue(list);
+            totalCount.postValue(total);
+        });
+    }
+
+    public void delete(long id) {
+        executor.execute(() -> {
+            repository.delete(id);
+            refreshInternal();
+        });
+    }
+
+    public void clearAll() {
+        executor.execute(() -> {
+            repository.clearAll();
+            refreshInternal();
+        });
+    }
+
+    private void refreshInternal() {
         Filter currentFilter = filter.getValue();
         String dbStatus = null;
         if (currentFilter == Filter.ACCEPTED) {
@@ -66,17 +101,13 @@ public class JournalViewModel extends AndroidViewModel {
         List<HistoryEntry> list = repository.list(dbStatus, 0);
         int total = repository.count(null);
 
-        entries.setValue(list);
-        totalCount.setValue(total);
+        entries.postValue(list);
+        totalCount.postValue(total);
     }
 
-    public void delete(long id) {
-        repository.delete(id);
-        refresh();
-    }
-
-    public void clearAll() {
-        repository.clearAll();
-        refresh();
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        executor.shutdown();
     }
 }

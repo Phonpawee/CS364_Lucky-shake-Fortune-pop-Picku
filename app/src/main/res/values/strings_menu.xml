@@ -27,6 +27,28 @@
     <string name="menu_form_error_save_failed">Could not save the dish</string>
     <string name="menu_list_label_delete_item">Delete %1$s</string>
 
+    <!-- Menu set management (issue #25) -->
+    <string name="menu_sets_btn_add">New set</string>
+    <string name="menu_sets_btn_rename">Rename</string>
+    <string name="menu_sets_btn_delete">Delete set</string>
+    <string name="menu_sets_title_add">New set</string>
+    <string name="menu_sets_title_rename">Rename set</string>
+    <string name="menu_sets_hint_name">Set name</string>
+    <string name="menu_sets_error_name_empty">Enter a set name to continue.</string>
+    <string name="menu_sets_error_name_too_long">Name is too long (max %1$d characters).</string>
+    <string name="menu_sets_error_name_duplicate">A set with this name already exists.</string>
+    <string name="menu_sets_title_delete">Delete this set?</string>
+    <plurals name="menu_sets_msg_delete_confirm">
+        <item quantity="one">“%1$s” and its %2$d dish will be deleted. This cannot be undone. Your past history is kept.</item>
+        <item quantity="other">“%1$s” and its %2$d dishes will be deleted. This cannot be undone. Your past history is kept.</item>
+    </plurals>
+    <string name="menu_sets_error_last_set">You cannot delete the last set. At least one set must remain.</string>
+    <string name="menu_sets_msg_added">Set added</string>
+    <string name="menu_sets_msg_renamed">Set renamed</string>
+    <string name="menu_sets_msg_deleted">Set deleted</string>
+    <string name="menu_sets_error_save_failed">Could not save the set</string>
+    <string name="menu_sets_error_delete_failed">Could not delete the set</string>
+
     <!-- Dish types and tags (shared with the form and the filters) -->
     <string name="menu_label_type_rice">Rice</string>
     <string name="menu_label_type_noodle">Noodles</string>

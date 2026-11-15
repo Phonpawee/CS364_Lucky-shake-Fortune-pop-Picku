@@ -27,6 +27,27 @@
     <string name="menu_form_error_save_failed">บันทึกเมนูไม่สำเร็จ</string>
     <string name="menu_list_label_delete_item">ลบ %1$s</string>
 
+    <!-- จัดการชุดเมนู (issue #25) -->
+    <string name="menu_sets_btn_add">เพิ่มชุด</string>
+    <string name="menu_sets_btn_rename">เปลี่ยนชื่อ</string>
+    <string name="menu_sets_btn_delete">ลบชุด</string>
+    <string name="menu_sets_title_add">เพิ่มชุดเมนู</string>
+    <string name="menu_sets_title_rename">เปลี่ยนชื่อชุด</string>
+    <string name="menu_sets_hint_name">ชื่อชุด</string>
+    <string name="menu_sets_error_name_empty">ใส่ชื่อชุดเพื่อไปต่อ</string>
+    <string name="menu_sets_error_name_too_long">ชื่อยาวเกินไป (ไม่เกิน %1$d ตัวอักษร)</string>
+    <string name="menu_sets_error_name_duplicate">มีชุดชื่อนี้แล้ว</string>
+    <string name="menu_sets_title_delete">ลบชุดนี้หรือไม่?</string>
+    <plurals name="menu_sets_msg_delete_confirm">
+        <item quantity="other">“%1$s” และเมนูในชุด %2$d รายการจะถูกลบ กู้คืนไม่ได้ ประวัติเดิมของคุณยังอยู่</item>
+    </plurals>
+    <string name="menu_sets_error_last_set">ลบชุดสุดท้ายไม่ได้ ต้องเหลืออย่างน้อย 1 ชุด</string>
+    <string name="menu_sets_msg_added">เพิ่มชุดแล้ว</string>
+    <string name="menu_sets_msg_renamed">เปลี่ยนชื่อชุดแล้ว</string>
+    <string name="menu_sets_msg_deleted">ลบชุดแล้ว</string>
+    <string name="menu_sets_error_save_failed">บันทึกชุดไม่สำเร็จ</string>
+    <string name="menu_sets_error_delete_failed">ลบชุดไม่สำเร็จ</string>
+
     <!-- ประเภทและแท็กของเมนู (ใช้ร่วมกับฟอร์มและตัวกรอง) -->
     <string name="menu_label_type_rice">ข้าว</string>
     <string name="menu_label_type_noodle">เส้น</string>

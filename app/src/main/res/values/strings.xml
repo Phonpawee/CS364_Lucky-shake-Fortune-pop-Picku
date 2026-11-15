@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">LuckyShake</string>
     <string name="home_title_main">Lucky Shake</string>
-    <string name="home_btn_draw">Draw a fortune</string>
+    <string name="home_btn_draw">Draw now</string>
     <string name="home_btn_filter">Filter menus</string>
     <string name="result_title_fortune">Your fortune</string>
     <string name="result_label_menu">Menu for today: %1$s</string>
@@ -42,4 +42,88 @@
     <string name="group_proposal_error_restaurant_empty">Enter at least one restaurant</string>
     <string name="group_proposal_msg_pass_phone">Pass the phone to the next person</string>
     <string name="group_proposal_msg_all_done">Everyone has proposed</string>
+
+    <!-- Fortune Provider (#27) -->
+    <string name="fortune_msg_level_1_1">A little surprise may brighten your day. Enjoy %1$s.</string>
+    <string name="fortune_msg_level_1_2">A simple choice can bring a pleasant moment. Try %1$s.</string>
+    <string name="fortune_msg_level_1_3">Take it easy today and make time for %1$s.</string>
+
+    <string name="fortune_msg_level_2_1">A good conversation may make today warmer. Share %1$s with someone.</string>
+    <string name="fortune_msg_level_2_2">A change of pace may feel refreshing. Give %1$s a try.</string>
+    <string name="fortune_msg_level_2_3">A familiar favorite may be just right today: %1$s.</string>
+
+    <string name="fortune_msg_level_3_1">A cheerful moment may be closer than you think. Enjoy %1$s.</string>
+    <string name="fortune_msg_level_3_2">Your plans may go smoothly. Take a happy break with %1$s.</string>
+    <string name="fortune_msg_level_3_3">Good company and a tasty meal are within reach. Share %1$s.</string>
+
+    <string name="fortune_msg_level_4_1">A bright moment is waiting for you. Let %1$s be today\'s highlight.</string>
+    <string name="fortune_msg_level_4_2">There is room for extra joy today. Celebrate with %1$s.</string>
+    <string name="fortune_msg_level_4_3">A lovely memory could start with one good choice: %1$s.</string>
+
+    <!-- Food type names for group proposals -->
+    <string name="food_type_rice">Rice &amp; made-to-order</string>
+    <string name="food_type_noodles">Noodles</string>
+    <string name="food_type_grill">Grill &amp; Thai barbecue</string>
+    <string name="food_type_hotpot">Shabu &amp; sukiyaki</string>
+    <string name="food_type_japanese">Japanese</string>
+    <string name="food_type_korean">Korean</string>
+    <string name="food_type_isan">Isan</string>
+    <string name="food_type_fast_food">Fast food</string>
+    <string name="food_type_dessert_cafe">Dessert &amp; café</string>
+    <string name="food_type_healthy_vegetarian">Healthy &amp; vegetarian</string>
+    <string name="home_label_set">Menu set</string>
+    <string name="home_label_filters">Filters: none</string>
+    <string name="home_label_tube">Shake the fortune tube</string>
+    <string name="home_label_rice">Rice dishes</string>
+    <string name="home_label_noodles">Noodles</string>
+    <string name="home_label_basil">Basil chicken with rice</string>
+    <string name="home_label_omelette">Omelette with rice</string>
+    <string name="home_label_boat_noodles">Boat noodles</string>
+    <string name="home_label_pad_thai">Pad Thai</string>
+    <string name="result_btn_home">Back to Home</string>
+
+    <!-- Meal reminders -->
+    <string name="reminder_title_notification">Meal reminder</string>
+    <string name="reminder_msg_notification_body">Time to choose a meal from %1$s.</string>
+    <string name="reminder_label_channel_name">Meal reminders</string>
+    <string name="reminder_msg_channel_description">Reminders to choose a meal.</string>
+    <string name="reminder_msg_permission_denied">Notifications are disabled. Enable them in system settings to receive meal reminders.</string>
+
+    <string name="reminder_btn_allow_notifications">Allow notifications</string>
+    <string name="reminder_msg_permission_granted">Notification permission granted.</string>
+    <string name="reminder_msg_permission_not_required">This Android version does not require notification permission.</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_font_size">Text size</string>
+    <string name="settings_reroll_quota">Reroll limit</string>
+    <string name="settings_language_thai">ไทย</string>
+    <string name="settings_language_english">English</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_theme_system">Follow system</string>
+    <string-array name="settings_reroll_quota_options">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <!-- อังกฤษ -->
+    <string name="settings_shake_sensitivity">Shake sensitivity</string>
+    <string name="settings_font_size_small">A-</string>
+    <string name="settings_font_size_normal">A</string>
+    <string name="settings_font_size_large">A+</string>
+    <string name="settings_font_size_extra_large">A++</string>
+
+    <string name="settings_label_shake_sensitivity">Shake sensitivity</string>
+    <string name="nav_shake">Shake</string>
+    <string name="nav_menu">Dishes</string>
+    <string name="nav_group">Group</string>
+    <string name="nav_settings">Settings</string>
+    <string name="home_msg_set_empty">No dishes in this set yet. Add some on the Dishes tab.</string>
+    <string name="home_msg_no_match">No dish matches the filters.</string>
+    <string name="home_msg_few_items">Only a few dishes in this set.</string>
 </resources>

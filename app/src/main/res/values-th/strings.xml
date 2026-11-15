@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">LuckyShake</string>
     <string name="home_title_main">เซียมซีกินอะไรดี</string>
-    <string name="home_btn_draw">เสี่ยงเซียมซี</string>
+    <string name="home_btn_draw">สุ่มเลย</string>
     <string name="home_btn_filter">กรองเมนู</string>
     <string name="result_title_fortune">คำทำนายของคุณ</string>
     <string name="result_label_menu">เมนูวันนี้: %1$s</string>
@@ -42,4 +42,88 @@
     <string name="group_proposal_error_restaurant_empty">กรุณาใส่ชื่อร้านอย่างน้อย 1 ร้าน</string>
     <string name="group_proposal_msg_pass_phone">ส่งมือถือให้คนถัดไป</string>
     <string name="group_proposal_msg_all_done">ทุกคนเสนอครบแล้ว</string>
+
+    <!-- Fortune Provider (#27) -->
+    <string name="fortune_msg_level_1_1">วันนี้อาจมีเรื่องเล็ก ๆ มาทำให้ยิ้ม ขอให้อร่อยกับ %1$s</string>
+    <string name="fortune_msg_level_1_2">เมนูเรียบง่ายก็เติมช่วงเวลาดี ๆ ได้ ลอง %1$s ดูนะ</string>
+    <string name="fortune_msg_level_1_3">วันนี้ค่อย ๆ ใช้เวลาและหาโอกาสอร่อยกับ %1$s</string>
+
+    <string name="fortune_msg_level_2_1">บทสนทนาดี ๆ อาจทำให้วันนี้อบอุ่นขึ้น ลองแบ่ง %1$s กับใครสักคน</string>
+    <string name="fortune_msg_level_2_2">เปลี่ยนบรรยากาศสักนิดอาจทำให้สดชื่น ลองเลือก %1$s ดู</string>
+    <string name="fortune_msg_level_2_3">ของโปรดที่คุ้นเคยอาจเหมาะกับวันนี้ที่สุด: %1$s</string>
+
+    <string name="fortune_msg_level_3_1">ช่วงเวลาดี ๆ อาจอยู่ใกล้กว่าที่คิด ขอให้อร่อยกับ %1$s</string>
+    <string name="fortune_msg_level_3_2">วันนี้แผนต่าง ๆ อาจราบรื่น แวะพักมาอร่อยกับ %1$s กัน</string>
+    <string name="fortune_msg_level_3_3">มื้ออร่อยกับคนถูกใจอยู่ใกล้แค่เอื้อม ลองแบ่ง %1$s กัน</string>
+
+    <string name="fortune_msg_level_4_1">วันนี้อาจมีช่วงเวลาสดใสรออยู่ ให้ %1$s เป็นมื้อพิเศษของวัน</string>
+    <string name="fortune_msg_level_4_2">วันนี้ยังมีพื้นที่ให้ความสุขเพิ่มขึ้น ฉลองด้วย %1$s กัน</string>
+    <string name="fortune_msg_level_4_3">ความทรงจำดี ๆ อาจเริ่มจากการเลือกมื้ออร่อย: %1$s</string>
+
+    <!-- Food type names for group proposals -->
+    <string name="food_type_rice">ข้าว / อาหารตามสั่ง</string>
+    <string name="food_type_noodles">ก๋วยเตี๋ยว</string>
+    <string name="food_type_grill">ปิ้งย่าง / หมูกระทะ</string>
+    <string name="food_type_hotpot">ชาบู / สุกี้</string>
+    <string name="food_type_japanese">อาหารญี่ปุ่น</string>
+    <string name="food_type_korean">อาหารเกาหลี</string>
+    <string name="food_type_isan">อาหารอีสาน</string>
+    <string name="food_type_fast_food">ฟาสต์ฟู้ด</string>
+    <string name="food_type_dessert_cafe">ของหวาน / คาเฟ่</string>
+    <string name="food_type_healthy_vegetarian">อาหารสุขภาพ / เจ</string>
+    <string name="home_label_set">ชุดเมนู</string>
+    <string name="home_label_filters">ตัวกรอง: ไม่มี</string>
+    <string name="home_label_tube">เขย่ากระบอกเซียมซี</string>
+    <string name="home_label_rice">เมนูข้าว</string>
+    <string name="home_label_noodles">เมนูเส้น</string>
+    <string name="home_label_basil">ข้าวกะเพราไก่</string>
+    <string name="home_label_omelette">ข้าวไข่เจียว</string>
+    <string name="home_label_boat_noodles">ก๋วยเตี๋ยวเรือ</string>
+    <string name="home_label_pad_thai">ผัดไทย</string>
+    <string name="result_btn_home">กลับหน้าหลัก</string>
+
+    <!-- Meal reminders -->
+    <string name="reminder_title_notification">เตือนมื้ออาหาร</string>
+    <string name="reminder_msg_notification_body">ถึงเวลาเลือกเมนูจากชุด %1$s แล้ว</string>
+    <string name="reminder_label_channel_name">การเตือนมื้ออาหาร</string>
+    <string name="reminder_msg_channel_description">แจ้งเตือนให้เลือกเมนูอาหาร</string>
+    <string name="reminder_msg_permission_denied">ปิดการแจ้งเตือนไว้ เปิดสิทธิ์ในการตั้งค่าเครื่องเพื่อรับการเตือนมื้ออาหาร</string>
+
+    <string name="reminder_btn_allow_notifications">อนุญาตการแจ้งเตือน</string>
+    <string name="reminder_msg_permission_granted">อนุญาตการแจ้งเตือนแล้ว</string>
+    <string name="reminder_msg_permission_not_required">Android เวอร์ชันนี้ไม่ต้องขอสิทธิ์แจ้งเตือน</string>
+
+    <string name="settings_title">ตั้งค่า</string>
+    <string name="settings_language">ภาษา</string>
+    <string name="settings_theme">ธีม</string>
+    <string name="settings_font_size">ขนาดตัวอักษร</string>
+    <string name="settings_reroll_quota">จำนวนครั้งที่ขอใหม่</string>
+    <string name="settings_language_thai">ไทย</string>
+    <string name="settings_language_english">อังกฤษ</string>
+    <string name="settings_theme_light">สว่าง</string>
+    <string name="settings_theme_dark">มืด</string>
+    <string name="settings_theme_system">ตามระบบ</string>
+    <string-array name="settings_reroll_quota_options">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <!-- ไทย -->
+    <string name="settings_shake_sensitivity">ความไวการเขย่า</string>
+    <string name="settings_font_size_small">A-</string>
+    <string name="settings_font_size_normal">A</string>
+    <string name="settings_font_size_large">A+</string>
+    <string name="settings_font_size_extra_large">A++</string>
+
+    <string name="settings_label_shake_sensitivity">ความไวในการเขย่า</string>
+    <string name="nav_shake">เขย่า</string>
+    <string name="nav_menu">เมนู</string>
+    <string name="nav_group">กลุ่ม</string>
+    <string name="nav_settings">ตั้งค่า</string>
+    <string name="home_msg_set_empty">ชุดเมนูนี้ยังไม่มีเมนู เพิ่มได้ที่แท็บเมนู</string>
+    <string name="home_msg_no_match">ไม่มีเมนูที่ตรงกับตัวกรอง</string>
+    <string name="home_msg_few_items">ชุดนี้มีเมนูให้สุ่มน้อย</string>
 </resources>
