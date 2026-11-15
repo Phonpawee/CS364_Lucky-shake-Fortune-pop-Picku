@@ -1,11 +1,15 @@
 package com.cs364.luckyshake;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
 import androidx.lifecycle.ViewModelStore;
 import androidx.lifecycle.ViewModelStoreOwner;
 
+import com.cs364.luckyshake.data.PrefKeys;
 import com.cs364.luckyshake.ui.settings.ThemeManager;
 
 /**
@@ -18,6 +22,17 @@ public class LuckyShakeApplication extends Application implements ViewModelStore
     @Override
     public void onCreate() {
         super.onCreate();
+
+        SharedPreferences preferences =
+                getSharedPreferences(PrefKeys.PREFS_NAME, MODE_PRIVATE);
+
+        // ตั้งภาษาก็ต่อเมื่อผู้ใช้เคยเลือกไว้ ถ้ายังไม่เคยเลือกให้ตามภาษาของเครื่อง
+        String language = preferences.getString(PrefKeys.LANGUAGE, null);
+        if (language != null) {
+            AppCompatDelegate.setApplicationLocales(
+                    LocaleListCompat.forLanguageTags(language));
+        }
+
         ThemeManager.applySavedMode(this);
     }
 

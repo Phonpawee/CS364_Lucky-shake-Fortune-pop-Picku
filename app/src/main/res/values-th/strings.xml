@@ -93,4 +93,30 @@
     <string name="reminder_msg_permission_granted">อนุญาตการแจ้งเตือนแล้ว</string>
     <string name="reminder_msg_permission_not_required">Android เวอร์ชันนี้ไม่ต้องขอสิทธิ์แจ้งเตือน</string>
 
+    <string name="settings_title">ตั้งค่า</string>
+    <string name="settings_language">ภาษา</string>
+    <string name="settings_theme">ธีม</string>
+    <string name="settings_font_size">ขนาดตัวอักษร</string>
+    <string name="settings_reroll_quota">จำนวนครั้งที่ขอใหม่</string>
+    <string name="settings_language_thai">ไทย</string>
+    <string name="settings_language_english">อังกฤษ</string>
+    <string name="settings_theme_light">สว่าง</string>
+    <string name="settings_theme_dark">มืด</string>
+    <string name="settings_theme_system">ตามระบบ</string>
+    <string-array name="settings_reroll_quota_options">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <!-- ไทย -->
+    <string name="settings_shake_sensitivity">ความไวการเขย่า</string>
+    <string name="settings_font_size_small">A-</string>
+    <string name="settings_font_size_normal">A</string>
+    <string name="settings_font_size_large">A+</string>
+    <string name="settings_font_size_extra_large">A++</string>
+
+    <string name="settings_label_shake_sensitivity">ความไวในการเขย่า</string>
 </resources>
