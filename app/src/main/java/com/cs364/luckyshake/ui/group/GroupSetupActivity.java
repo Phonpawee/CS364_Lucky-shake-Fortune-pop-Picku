@@ -20,7 +20,6 @@ import com.cs364.luckyshake.ui.nav.BottomNav;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
-import com.google.android.material.snackbar.Snackbar;
 
 /**
  * Setup screen for group decision mode (#34).
@@ -118,15 +117,9 @@ public class GroupSetupActivity extends AppCompatActivity {
     private void handleStartRound() {
         if (viewModel.startGroupSession()) {
             ProposalMethod method = viewModel.getProposalMethod().getValue();
-            if (method == ProposalMethod.RESTAURANT_NAME) {
-                Integer count = viewModel.getParticipantCount().getValue();
-                int pCount = count != null ? count : GameConfig.MIN_GROUP_PLAYERS;
-                startActivity(GroupProposalActivity.newIntent(this, pCount, method));
-            } else {
-                BottomNav.show(this, Snackbar.make(root, R.string.group_setup_msg_started,
-                        Snackbar.LENGTH_SHORT));
-                // TODO(#35): Navigate to food category picker screen once implemented.
-            }
+            Integer count = viewModel.getParticipantCount().getValue();
+            int pCount = count != null ? count : GameConfig.MIN_GROUP_PLAYERS;
+            startActivity(GroupProposalActivity.newIntent(this, pCount, method));
             viewModel.resetSession();
         }
     }

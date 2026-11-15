@@ -151,6 +151,32 @@ public class GroupSessionTest {
     }
 
     @Test
+    public void testFoodTypeModeProposals() {
+        session.setParticipantCount(3);
+        session.setProposalMethod(ProposalMethod.FOOD_TYPE);
+        session.startSession();
+
+        assertEquals(GroupPhase.COLLECT, session.getPhase());
+
+        // Player 1 submits 1 food category
+        assertTrue(session.submitProposal(Collections.singletonList("food_type_grill")));
+        assertEquals(1, session.getProposals().get(0).size());
+        assertEquals("food_type_grill", session.getProposals().get(0).get(0));
+
+        // Player 2 skips turn (submits empty list)
+        assertTrue(session.submitProposal(Collections.emptyList()));
+        assertTrue(session.getProposals().get(1).isEmpty());
+
+        // Player 3 submits 1 food category
+        assertTrue(session.submitProposal(Collections.singletonList("food_type_hotpot")));
+        assertEquals(1, session.getProposals().get(2).size());
+        assertEquals("food_type_hotpot", session.getProposals().get(2).get(0));
+
+        // All 3 turns done -> Phase becomes FINAL
+        assertEquals(GroupPhase.FINAL, session.getPhase());
+    }
+
+    @Test
     public void testResetPreservesSettings() {
         session.setParticipantCount(5);
         session.setProposalMethod(ProposalMethod.RESTAURANT_NAME);
