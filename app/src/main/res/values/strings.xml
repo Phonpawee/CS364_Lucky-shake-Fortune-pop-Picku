@@ -126,4 +126,10 @@
     <string name="home_msg_set_empty">No dishes in this set yet. Add some on the Dishes tab.</string>
     <string name="home_msg_no_match">No dish matches the filters.</string>
     <string name="home_msg_few_items">Only a few dishes in this set.</string>
+    <string name="home_label_filter_type">Menu type</string>
+    <string name="home_label_all_types">All types</string>
+    <string name="home_label_no_fried">Exclude fried dishes</string>
+    <string name="home_label_no_spicy">Exclude spicy dishes</string>
+    <string name="home_btn_clear_filters">Clear filters</string>
+    <string name="home_label_filter_count">%1$d/%2$d menus left</string>
 </resources>
