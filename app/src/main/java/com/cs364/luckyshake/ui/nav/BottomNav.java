@@ -8,10 +8,13 @@ import android.widget.LinearLayout;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.cs364.luckyshake.MainActivity;
 import com.cs364.luckyshake.R;
@@ -64,7 +67,6 @@ public final class BottomNav {
         BottomNavigationView nav = (BottomNavigationView) activity.getLayoutInflater()
                 .inflate(R.layout.view_bottom_nav, container, false);
         container.addView(nav);
-        FontSizeHelper.apply(activity, nav);
         content.addView(container, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
@@ -87,6 +89,15 @@ public final class BottomNav {
         ViewCompat.requestApplyInsets(root);
 
         nav.setSelectedItemId(selectedId);
+        // Selecting a tab makes Material reset its label size, so scale after that. Home stays
+        // alive while other tabs open, so scale again every time the screen comes back.
+        FontSizeHelper.apply(activity, nav);
+        activity.getLifecycle().addObserver(new DefaultLifecycleObserver() {
+            @Override
+            public void onResume(@NonNull LifecycleOwner owner) {
+                FontSizeHelper.apply(activity, nav);
+            }
+        });
         nav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id != selectedId) {
