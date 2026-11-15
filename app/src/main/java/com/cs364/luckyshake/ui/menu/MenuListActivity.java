@@ -7,7 +7,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -31,6 +30,7 @@ import com.cs364.luckyshake.data.Menu;
 import com.cs364.luckyshake.data.MenuRepository;
 import com.cs364.luckyshake.data.MenuSet;
 import com.cs364.luckyshake.ui.nav.BottomNav;
+import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -196,6 +196,7 @@ public class MenuListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        FontSizeHelper.apply(this, root);   // the user may have changed the size in Settings
         // Data may have changed while another screen was open (e.g. the form or sets screen).
         reloadSets();
         refreshList();
@@ -227,10 +228,7 @@ public class MenuListActivity extends AppCompatActivity {
                 found = true;
             }
         }
-        ArrayAdapter<String> spinnerAdapter =
-                new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, names);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        setSpinner.setAdapter(spinnerAdapter);
+        setSpinner.setAdapter(FontSizeHelper.spinnerAdapter(this, names));
 
         if (sets.isEmpty()) {
             currentSetId = -1;

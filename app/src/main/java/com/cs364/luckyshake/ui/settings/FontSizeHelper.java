@@ -5,11 +5,13 @@ import android.content.SharedPreferences;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.os.Build;
 
 import com.cs364.luckyshake.data.PrefKeys;
 
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -17,6 +19,32 @@ public final class FontSizeHelper {
     private static final Map<View, Float> ORIGINAL_SP = new WeakHashMap<>();
 
     private FontSizeHelper() {
+    }
+
+    /**
+     * Adapter for a Spinner whose selected row and drop-down rows follow the font size setting.
+     * A Spinner creates its rows later, during layout, so applying the helper to the Spinner
+     * once is not enough.
+     */
+    public static ArrayAdapter<String> spinnerAdapter(Context context, List<String> items) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                context, android.R.layout.simple_spinner_item, items) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                FontSizeHelper.apply(getContext(), view);
+                return view;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                FontSizeHelper.apply(getContext(), view);
+                return view;
+            }
+        };
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        return adapter;
     }
 
     public static void apply(Context context, View root) {

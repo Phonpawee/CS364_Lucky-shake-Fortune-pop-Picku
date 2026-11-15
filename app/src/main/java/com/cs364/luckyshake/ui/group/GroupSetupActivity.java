@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.logic.GameConfig;
 import com.cs364.luckyshake.ui.nav.BottomNav;
+import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.snackbar.Snackbar;
@@ -128,5 +129,11 @@ public class GroupSetupActivity extends AppCompatActivity {
             }
             viewModel.resetSession();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FontSizeHelper.apply(this, root);   // the user may have changed the size in Settings
     }
 }
