@@ -12,6 +12,20 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!-- Stats Empty State Text -->
+        <TextView
+            android:id="@+id/stats_empty_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:padding="@dimen/spacing_lg"
+            android:text="@string/journal_msg_empty"
+            android:textColor="@color/journal_text"
+            android:textSize="@dimen/text_body"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
         <!-- Card 1: Most Drawn Dishes -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_stats_top"

@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.cs364.luckyshake.data.HistoryEntry;
 import com.cs364.luckyshake.data.HistoryRepository;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -119,7 +120,20 @@ public class JournalViewModel extends AndroidViewModel {
         int accepted = repository.count(HistoryEntry.STATUS_ACCEPTED);
         int redrawn = repository.count(HistoryEntry.STATUS_REDRAWN);
         int[] perDay = repository.countPerDay(7);
-        JournalStats computedStats = new JournalStats(top, accepted, redrawn, perDay);
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.add(Calendar.DAY_OF_YEAR, -6);
+        long[] perDayMillis = new long[7];
+        for (int i = 0; i < 7; i++) {
+            perDayMillis[i] = cal.getTimeInMillis();
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+        }
+
+        JournalStats computedStats = new JournalStats(top, accepted, redrawn, perDay, perDayMillis);
 
         // Discard stale query results if filter or refresh generation changed in the meantime
         if (requestGen == refreshGeneration.get()) {

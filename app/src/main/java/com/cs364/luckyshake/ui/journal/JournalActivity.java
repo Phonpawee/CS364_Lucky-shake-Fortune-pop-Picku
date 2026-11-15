@@ -36,6 +36,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -63,6 +64,7 @@ public class JournalActivity extends AppCompatActivity {
     private View cardStatsTop;
     private View cardStatsRatio;
     private View cardStatsWeek;
+    private TextView statsEmptyText;
     private LinearLayout topDishesContainer;
     private ProgressBar progressRatio;
     private TextView labelRatio;
@@ -109,6 +111,7 @@ public class JournalActivity extends AppCompatActivity {
             cardStatsTop = viewJournalStats.findViewById(R.id.card_stats_top);
             cardStatsRatio = viewJournalStats.findViewById(R.id.card_stats_ratio);
             cardStatsWeek = viewJournalStats.findViewById(R.id.card_stats_week);
+            statsEmptyText = viewJournalStats.findViewById(R.id.stats_empty_text);
             topDishesContainer = viewJournalStats.findViewById(R.id.stats_top_dishes_container);
             progressRatio = viewJournalStats.findViewById(R.id.stats_progress_ratio);
             labelRatio = viewJournalStats.findViewById(R.id.stats_label_ratio);
@@ -248,12 +251,17 @@ public class JournalActivity extends AppCompatActivity {
             if (cardStatsTop != null) cardStatsTop.setVisibility(View.GONE);
             if (cardStatsRatio != null) cardStatsRatio.setVisibility(View.GONE);
             if (cardStatsWeek != null) cardStatsWeek.setVisibility(View.GONE);
+            if (statsEmptyText != null) {
+                statsEmptyText.setText(R.string.journal_msg_empty);
+                statsEmptyText.setVisibility(View.VISIBLE);
+            }
             return;
         }
 
         if (cardStatsTop != null) cardStatsTop.setVisibility(View.VISIBLE);
         if (cardStatsRatio != null) cardStatsRatio.setVisibility(View.VISIBLE);
         if (cardStatsWeek != null) cardStatsWeek.setVisibility(View.VISIBLE);
+        if (statsEmptyText != null) statsEmptyText.setVisibility(View.GONE);
 
         // 1. Render Top Dishes
         if (topDishesContainer != null) {
@@ -316,7 +324,12 @@ public class JournalActivity extends AppCompatActivity {
                 int cnt = stats.perDay[i];
                 countView.setText(String.valueOf(cnt));
 
-                String dayName = daySdf.format(cal.getTime());
+                String dayName;
+                if (stats.perDayMillis != null && stats.perDayMillis.length > i && stats.perDayMillis[i] > 0) {
+                    dayName = daySdf.format(new Date(stats.perDayMillis[i]));
+                } else {
+                    dayName = daySdf.format(cal.getTime());
+                }
                 dayView.setText(dayName);
 
                 int heightDp = cnt == 0 ? 3 : Math.max(3, (cnt * 100) / maxDay);

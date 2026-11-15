@@ -16,8 +16,13 @@ public class JournalStats {
     public final int accepted;
     public final int redrawn;
     public final int[] perDay;
+    public final long[] perDayMillis;
 
     public JournalStats(List<HistoryRepository.NameCount> topDishes, int accepted, int redrawn, int[] perDay) {
+        this(topDishes, accepted, redrawn, perDay, null);
+    }
+
+    public JournalStats(List<HistoryRepository.NameCount> topDishes, int accepted, int redrawn, int[] perDay, long[] perDayMillis) {
         this.topDishes = topDishes != null ? new ArrayList<>(topDishes) : Collections.emptyList();
         this.accepted = Math.max(0, accepted);
         this.redrawn = Math.max(0, redrawn);
@@ -25,6 +30,11 @@ public class JournalStats {
             this.perDay = perDay.clone();
         } else {
             this.perDay = new int[7];
+        }
+        if (perDayMillis != null && perDayMillis.length == 7) {
+            this.perDayMillis = perDayMillis.clone();
+        } else {
+            this.perDayMillis = new long[7];
         }
     }
 
