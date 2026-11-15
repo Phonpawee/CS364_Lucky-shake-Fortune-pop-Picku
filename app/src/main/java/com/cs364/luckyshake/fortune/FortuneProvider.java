@@ -15,7 +15,7 @@ public class FortuneProvider {
     };
 
     public FortuneProvider(Context context) {
-        this.context = context.getApplicationContext();
+        this.context = context;
     }
 
     // level: 1–4, index: 0–2

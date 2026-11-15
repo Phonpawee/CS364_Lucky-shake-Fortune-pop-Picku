@@ -133,4 +133,14 @@
     <string name="home_label_no_spicy">ไม่เอาเผ็ด</string>
     <string name="home_btn_clear_filters">ล้างตัวกรอง</string>
     <string name="home_label_filter_count">เหลือ %1$d/%2$d เมนู</string>
+    <string name="result_label_stick">ไม้เซียมซีเลข %1$d</string>
+    <string name="result_label_stars">ระดับดวง %1$s</string>
+    <string name="result_label_quota">%1$s  ขอใหม่ได้อีก %2$d/%3$d ครั้ง</string>
+    <string name="result_label_star">★</string>
+    <string name="result_label_dot_remaining">●</string>
+    <string name="result_label_dot_used">○</string>
+    <string name="result_btn_accept">ยอมรับ</string>
+    <string name="result_btn_redraw">ขอใหม่</string>
+    <string name="result_msg_accepted">ยอมรับแล้ว</string>
+    <string name="result_msg_quota_empty">ใช้โควตาขอใหม่ครบแล้ว</string>
 </resources>

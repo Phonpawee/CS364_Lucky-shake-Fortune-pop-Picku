@@ -133,4 +133,14 @@
     <string name="home_label_no_spicy">Exclude spicy dishes</string>
     <string name="home_btn_clear_filters">Clear filters</string>
     <string name="home_label_filter_count">%1$d/%2$d menus left</string>
+    <string name="result_label_stick">Stick no. %1$d</string>
+    <string name="result_label_stars">Fortune level %1$s</string>
+    <string name="result_label_quota">%1$s  Redraws left %2$d/%3$d</string>
+    <string name="result_label_star">★</string>
+    <string name="result_label_dot_remaining">●</string>
+    <string name="result_label_dot_used">○</string>
+    <string name="result_btn_accept">Accept</string>
+    <string name="result_btn_redraw">Draw again</string>
+    <string name="result_msg_accepted">Accepted</string>
+    <string name="result_msg_quota_empty">You have used all your redraws.</string>
 </resources>
