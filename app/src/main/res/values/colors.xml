@@ -11,4 +11,13 @@
     <color name="app_header">#8F1D16</color>
     <color name="app_heading">#8F1D16</color>
     <color name="app_link">#8F1D16</color>
+
+    <!-- Journal Screen Tokens (#40) -->
+    <color name="journal_page_bg">#FFE7C2</color>
+    <color name="journal_surface">#FFF5DF</color>
+    <color name="journal_primary">#C52D22</color>
+    <color name="journal_outline">#E8D5B7</color>
+    <color name="journal_text">#35211D</color>
+    <color name="journal_text_muted">#7B6A63</color>
+    <color name="transparent">#00000000</color>
 </resources>

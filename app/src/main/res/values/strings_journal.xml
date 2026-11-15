@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="journal_title_main">Fortune journal</string>
+    <string name="journal_btn_filter_all">All</string>
+    <string name="journal_btn_filter_accepted">Accepted</string>
+    <string name="journal_btn_filter_redrawn">Re-drawn</string>
+    <string name="journal_btn_clear_all"><u>Clear all</u></string>
+    <string name="journal_title_clear_confirm">Clear all history?</string>
+    <string name="journal_msg_clear_confirm">All %1$d entries will be deleted. This can\'t be undone.</string>
+    <string name="journal_btn_clear_confirm">Clear</string>
+    <string name="journal_btn_delete_desc">Delete this entry</string>
+    <string name="journal_msg_deleted">Entry deleted</string>
+    <string name="journal_label_meta">%1$s · %2$s %3$s · %4$s</string>
+    <string name="journal_label_mode_solo">Solo</string>
+    <string name="journal_label_mode_group">Group</string>
+    <string name="journal_label_status_accepted">✓</string>
+    <string name="journal_label_status_redrawn">↻</string>
+    <string name="journal_label_status_accepted_desc">Accepted</string>
+    <string name="journal_label_status_redrawn_desc">Re-drawn</string>
+    <string name="journal_label_star_filled">★</string>
+    <string name="journal_label_star_empty">☆</string>
+    <string name="journal_label_level_1">Careful</string>
+    <string name="journal_label_level_2">So-so</string>
+    <string name="journal_label_level_3">Good</string>
+    <string name="journal_label_level_4">Great</string>
+    <string name="journal_msg_empty">No history yet. Try drawing a fortune!</string>
+    <string name="journal_msg_empty_filter">Nothing matches this filter</string>
+    <string name="journal_tab_entries">Entries</string>
+    <string name="journal_tab_stats">Stats</string>
+    <string name="journal_msg_stats_pending">Stats screen is coming soon.</string>
+</resources>
