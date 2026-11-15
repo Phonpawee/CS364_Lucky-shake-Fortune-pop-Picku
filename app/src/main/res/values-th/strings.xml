@@ -126,4 +126,10 @@
     <string name="home_msg_set_empty">ชุดเมนูนี้ยังไม่มีเมนู เพิ่มได้ที่แท็บเมนู</string>
     <string name="home_msg_no_match">ไม่มีเมนูที่ตรงกับตัวกรอง</string>
     <string name="home_msg_few_items">ชุดนี้มีเมนูให้สุ่มน้อย</string>
+    <string name="home_label_filter_type">ประเภทเมนู</string>
+    <string name="home_label_all_types">ทุกประเภท</string>
+    <string name="home_label_no_fried">ไม่เอาของทอด</string>
+    <string name="home_label_no_spicy">ไม่เอาเผ็ด</string>
+    <string name="home_btn_clear_filters">ล้างตัวกรอง</string>
+    <string name="home_label_filter_count">เหลือ %1$d/%2$d เมนู</string>
 </resources>
