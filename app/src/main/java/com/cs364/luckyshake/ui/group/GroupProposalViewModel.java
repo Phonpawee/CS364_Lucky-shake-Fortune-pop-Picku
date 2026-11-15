@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * ViewModel for the group proposal collection screen (#36).
+ * ViewModel for the group proposal collection screen (#36, #35).
  * Retains state across screen rotations and manages proposal submissions per participant.
  */
 public class GroupProposalViewModel extends ViewModel {
@@ -19,6 +19,7 @@ public class GroupProposalViewModel extends ViewModel {
     private final MutableLiveData<GroupPhase> phase = new MutableLiveData<>();
     private final MutableLiveData<Boolean> isLastTurn = new MutableLiveData<>();
     private final MutableLiveData<List<List<String>>> proposals = new MutableLiveData<>();
+    private final MutableLiveData<String> selectedFoodType = new MutableLiveData<>(null);
 
     public GroupProposalViewModel() {
         session = new GroupSession();
@@ -59,6 +60,36 @@ public class GroupProposalViewModel extends ViewModel {
         return proposals;
     }
 
+    public LiveData<String> getSelectedFoodType() {
+        return selectedFoodType;
+    }
+
+    /**
+     * Updates the active food type selection for the current turn if valid.
+     */
+    public void selectFoodType(String key) {
+        if (key != null && FoodTypes.isValid(key)) {
+            selectedFoodType.setValue(key);
+        }
+    }
+
+    /**
+     * Submits the selected food category for the current participant.
+     * Returns false if no valid food type is selected.
+     */
+    public boolean submitFoodType() {
+        String key = selectedFoodType.getValue();
+        if (key == null || !FoodTypes.isValid(key)) {
+            return false;
+        }
+        boolean ok = session.submitProposal(Collections.singletonList(key));
+        if (ok) {
+            selectedFoodType.setValue(null);
+            updateLiveData();
+        }
+        return ok;
+    }
+
     /**
      * Normalizes raw restaurant inputs and submits them for the current participant.
      * Returns false if normalization yields an empty list (all fields empty/whitespace).
@@ -79,6 +110,7 @@ public class GroupProposalViewModel extends ViewModel {
      * Submits an empty proposal list for the current participant to skip their turn.
      */
     public boolean skipTurn() {
+        selectedFoodType.setValue(null);
         boolean ok = session.submitProposal(Collections.emptyList());
         if (ok) {
             updateLiveData();
