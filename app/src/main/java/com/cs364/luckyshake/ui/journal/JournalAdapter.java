@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.data.HistoryEntry;
+import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 
 import java.util.Locale;
 import java.util.Objects;
@@ -125,6 +126,8 @@ public class JournalAdapter extends ListAdapter<HistoryEntry, JournalAdapter.Vie
 
         String metaStr = context.getString(R.string.journal_label_meta, timeStr, starStr, levelStr, modeStr);
         holder.metaText.setText(metaStr);
+
+        FontSizeHelper.apply(context, holder.itemView);   // rows are created after the screen
 
         holder.deleteButton.setContentDescription(deleteDesc);
         holder.deleteButton.setOnClickListener(v -> {
