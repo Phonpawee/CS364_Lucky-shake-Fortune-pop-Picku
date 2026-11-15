@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -23,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.data.Menu;
 import com.cs364.luckyshake.data.MenuRepository;
+import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -133,10 +133,7 @@ public class MenuFormActivity extends AppCompatActivity {
         for (String type : TYPES) {
             typeNames.add(MenuLabels.type(this, type));
         }
-        ArrayAdapter<String> typeAdapter =
-                new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, typeNames);
-        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        typeSpinner.setAdapter(typeAdapter);
+        typeSpinner.setAdapter(FontSizeHelper.spinnerAdapter(this, typeNames));
 
         if (savedInstanceState == null) {
             fillFromDish();
@@ -176,6 +173,12 @@ public class MenuFormActivity extends AppCompatActivity {
         });
         findViewById(R.id.menu_form_cancel).setOnClickListener(v -> requestExit());
         saveButton.setOnClickListener(v -> save());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FontSizeHelper.apply(this, root);   // the user may have changed the size in Settings
     }
 
     @Override
@@ -230,6 +233,9 @@ public class MenuFormActivity extends AppCompatActivity {
             error = getString(R.string.menu_form_error_name_duplicate);
         }
         nameLayout.setError(error);
+        if (error != null) {
+            FontSizeHelper.apply(this, nameLayout);   // the error caption is created by setError
+        }
         if (error != null) {
             nameInput.requestFocus();
             return false;

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.data.Menu;
+import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 
 import java.util.Objects;
 
@@ -72,6 +73,8 @@ public class MenuListAdapter extends ListAdapter<Menu, MenuListAdapter.ViewHolde
         holder.name.setText(name);
         holder.meta.setText(MenuLabels.typeAndTags(context, menu));
         holder.delete.setContentDescription(context.getString(R.string.menu_list_label_delete_item, name));
+
+        FontSizeHelper.apply(context, holder.itemView);   // rows are created after the screen
 
         holder.itemView.setOnClickListener(v -> listener.onEdit(menu));
         holder.delete.setOnClickListener(v -> listener.onDelete(menu));

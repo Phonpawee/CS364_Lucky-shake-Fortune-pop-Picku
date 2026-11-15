@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.logic.GameConfig;
+import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
@@ -159,6 +160,7 @@ public class GroupProposalActivity extends AppCompatActivity {
         boolean ok = viewModel.submitRestaurants(Arrays.asList(r1, r2, r3));
         if (!ok) {
             layoutRestaurant1.setError(getString(R.string.group_proposal_error_restaurant_empty));
+            FontSizeHelper.apply(this, layoutRestaurant1);   // the error caption is created by setError
         } else {
             layoutRestaurant1.setError(null);
             editRestaurant1.setText("");
@@ -169,5 +171,11 @@ public class GroupProposalActivity extends AppCompatActivity {
                 Snackbar.make(root, R.string.group_proposal_msg_pass_phone, Snackbar.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FontSizeHelper.apply(this, root);   // the user may have changed the size in Settings
     }
 }
