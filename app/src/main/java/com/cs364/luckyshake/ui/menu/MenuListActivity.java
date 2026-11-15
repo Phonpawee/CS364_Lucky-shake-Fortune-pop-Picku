@@ -30,6 +30,7 @@ import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.data.Menu;
 import com.cs364.luckyshake.data.MenuRepository;
 import com.cs364.luckyshake.data.MenuSet;
+import com.cs364.luckyshake.ui.nav.BottomNav;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -80,7 +81,8 @@ public class MenuListActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
                     refreshList();
-                    Snackbar.make(root, R.string.menu_form_msg_saved, Snackbar.LENGTH_SHORT).show();
+                    BottomNav.show(this, Snackbar.make(root, R.string.menu_form_msg_saved,
+                            Snackbar.LENGTH_SHORT));
                 }
             });
 
@@ -99,6 +101,7 @@ public class MenuListActivity extends AppCompatActivity {
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
             return insets;
         });
+        BottomNav.attach(this, R.id.nav_menu);
 
         menus = new MenuRepository(this);
         setSpinner = findViewById(R.id.menu_list_set_spinner);
@@ -182,7 +185,7 @@ public class MenuListActivity extends AppCompatActivity {
         findViewById(R.id.menu_sets_btn_rename).setOnClickListener(v -> {
             MenuSet set = currentSet();
             if (set == null) {
-                Snackbar.make(root, R.string.menu_list_msg_empty_no_set, Snackbar.LENGTH_SHORT).show();
+                BottomNav.show(this, Snackbar.make(root, R.string.menu_list_msg_empty_no_set, Snackbar.LENGTH_SHORT));
             } else {
                 showSetNameDialog(set);
             }
@@ -275,9 +278,9 @@ public class MenuListActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.menu_list_btn_delete, (dialog, which) -> {
                     if (menus.deleteMenu(menu.id)) {
                         refreshList();
-                        Snackbar.make(root, R.string.menu_list_msg_deleted, Snackbar.LENGTH_SHORT).show();
+                        BottomNav.show(this, Snackbar.make(root, R.string.menu_list_msg_deleted, Snackbar.LENGTH_SHORT));
                     } else {
-                        Snackbar.make(root, R.string.menu_list_error_delete_failed, Snackbar.LENGTH_SHORT).show();
+                        BottomNav.show(this, Snackbar.make(root, R.string.menu_list_error_delete_failed, Snackbar.LENGTH_SHORT));
                     }
                 })
                 .show();
@@ -398,14 +401,14 @@ public class MenuListActivity extends AppCompatActivity {
     private void addSet(String name) {
         long id = menus.addSet(name, "");
         if (id <= 0) {
-            Snackbar.make(root, R.string.menu_sets_error_save_failed, Snackbar.LENGTH_SHORT).show();
+            BottomNav.show(this, Snackbar.make(root, R.string.menu_sets_error_save_failed, Snackbar.LENGTH_SHORT));
             return;
         }
         currentSetId = id;          // jump to the new set
         searchInput.setText("");    // an old search would hide the (empty) new set
         reloadSets();
         refreshList();
-        Snackbar.make(root, R.string.menu_sets_msg_added, Snackbar.LENGTH_SHORT).show();
+        BottomNav.show(this, Snackbar.make(root, R.string.menu_sets_msg_added, Snackbar.LENGTH_SHORT));
     }
 
     private void renameSet(MenuSet set, String name, boolean editsEnglish) {
@@ -414,9 +417,9 @@ public class MenuListActivity extends AppCompatActivity {
         if (menus.renameSet(set.id, th, en)) {
             reloadSets();
             refreshList();
-            Snackbar.make(root, R.string.menu_sets_msg_renamed, Snackbar.LENGTH_SHORT).show();
+            BottomNav.show(this, Snackbar.make(root, R.string.menu_sets_msg_renamed, Snackbar.LENGTH_SHORT));
         } else {
-            Snackbar.make(root, R.string.menu_sets_error_save_failed, Snackbar.LENGTH_SHORT).show();
+            BottomNav.show(this, Snackbar.make(root, R.string.menu_sets_error_save_failed, Snackbar.LENGTH_SHORT));
         }
     }
 
@@ -424,11 +427,12 @@ public class MenuListActivity extends AppCompatActivity {
     private void confirmDeleteSet() {
         MenuSet set = currentSet();
         if (set == null) {
-            Snackbar.make(root, R.string.menu_list_msg_empty_no_set, Snackbar.LENGTH_SHORT).show();
+            BottomNav.show(this, Snackbar.make(root, R.string.menu_list_msg_empty_no_set, Snackbar.LENGTH_SHORT));
             return;
         }
         if (menus.countSets() <= 1) {
-            Snackbar.make(root, R.string.menu_sets_error_last_set, Snackbar.LENGTH_LONG).show();
+            BottomNav.show(this, Snackbar.make(root, R.string.menu_sets_error_last_set,
+                    Snackbar.LENGTH_LONG));
             return;
         }
         int count = menus.countMenus(set.id, null);
@@ -444,7 +448,8 @@ public class MenuListActivity extends AppCompatActivity {
 
     private void deleteSet(MenuSet set) {
         if (menus.countSets() <= 1) {   // re-check: the data may have changed
-            Snackbar.make(root, R.string.menu_sets_error_last_set, Snackbar.LENGTH_LONG).show();
+            BottomNav.show(this, Snackbar.make(root, R.string.menu_sets_error_last_set,
+                    Snackbar.LENGTH_LONG));
             return;
         }
         // The dishes inside are removed by ON DELETE CASCADE; history is kept.
@@ -452,9 +457,9 @@ public class MenuListActivity extends AppCompatActivity {
             currentSetId = -1;      // reloadSets() then picks the first remaining set
             reloadSets();
             refreshList();
-            Snackbar.make(root, R.string.menu_sets_msg_deleted, Snackbar.LENGTH_SHORT).show();
+            BottomNav.show(this, Snackbar.make(root, R.string.menu_sets_msg_deleted, Snackbar.LENGTH_SHORT));
         } else {
-            Snackbar.make(root, R.string.menu_sets_error_delete_failed, Snackbar.LENGTH_SHORT).show();
+            BottomNav.show(this, Snackbar.make(root, R.string.menu_sets_error_delete_failed, Snackbar.LENGTH_SHORT));
         }
     }
 
@@ -462,7 +467,7 @@ public class MenuListActivity extends AppCompatActivity {
     private void openMenuForm(@Nullable Menu menu) {
         if (menu == null && currentSetId < 0) {
             // A new dish needs a set to live in.
-            Snackbar.make(root, R.string.menu_list_msg_empty_no_set, Snackbar.LENGTH_SHORT).show();
+            BottomNav.show(this, Snackbar.make(root, R.string.menu_list_msg_empty_no_set, Snackbar.LENGTH_SHORT));
             return;
         }
         formLauncher.launch(MenuFormActivity.newIntent(this, currentSetId, menu));

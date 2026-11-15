@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.logic.GameConfig;
+import com.cs364.luckyshake.ui.nav.BottomNav;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.snackbar.Snackbar;
@@ -54,6 +55,7 @@ public class GroupSetupActivity extends AppCompatActivity {
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
             return insets;
         });
+        BottomNav.attach(this, R.id.nav_group);
 
         viewModel = new ViewModelProvider(this).get(GroupViewModel.class);
 
@@ -120,7 +122,8 @@ public class GroupSetupActivity extends AppCompatActivity {
                 int pCount = count != null ? count : GameConfig.MIN_GROUP_PLAYERS;
                 startActivity(GroupProposalActivity.newIntent(this, pCount, method));
             } else {
-                Snackbar.make(root, R.string.group_setup_msg_started, Snackbar.LENGTH_SHORT).show();
+                BottomNav.show(this, Snackbar.make(root, R.string.group_setup_msg_started,
+                        Snackbar.LENGTH_SHORT));
                 // TODO(#35): Navigate to food category picker screen once implemented.
             }
             viewModel.resetSession();

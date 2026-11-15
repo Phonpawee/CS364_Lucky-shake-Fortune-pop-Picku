@@ -32,7 +32,7 @@ import com.cs364.luckyshake.ui.result.ResultActivity;
 import java.util.Arrays;
 import java.util.List;
 
-import com.cs364.luckyshake.ui.settings.SettingsActivity;
+import com.cs364.luckyshake.ui.nav.BottomNav;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 
 public class MainActivity extends AppCompatActivity {
@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        BottomNav.attach(this, R.id.nav_home);
 
         setPicker = findViewById(R.id.home_spinner_set);
         ArrayAdapter<String> sets = new ArrayAdapter<>(this,
@@ -97,9 +98,6 @@ public class MainActivity extends AppCompatActivity {
 
         Button permissionButton = findViewById(R.id.reminder_permission_button);
         permissionButton.setOnClickListener(v -> requestNotificationPermission());
-
-        findViewById(R.id.home_btn_settings).setOnClickListener(v ->
-                startActivity(new Intent(this, SettingsActivity.class)));
     }
 
     @Override
