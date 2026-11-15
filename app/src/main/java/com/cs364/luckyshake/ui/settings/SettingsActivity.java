@@ -134,6 +134,7 @@ public class SettingsActivity extends AppCompatActivity {
                             .apply();
 
                     FontSizeHelper.apply(this, root);
+                    BottomNav.applyFontSize(this);
                 });
 
         shakeSensitivitySeekBar.setOnSeekBarChangeListener(

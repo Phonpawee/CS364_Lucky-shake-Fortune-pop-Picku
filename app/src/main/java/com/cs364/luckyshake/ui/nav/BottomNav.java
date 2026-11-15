@@ -18,7 +18,9 @@ import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.ui.group.GroupSetupActivity;
 import com.cs364.luckyshake.ui.menu.MenuListActivity;
 import com.cs364.luckyshake.ui.settings.SettingsActivity;
+import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 /**
  * Bottom tab bar shared by the main screens (Home, Menus, Group, Settings), like the web demo.
@@ -33,6 +35,23 @@ public final class BottomNav {
     private BottomNav() {
     }
 
+    /** Re-applies the saved text size to the bar (call after the user changes it). */
+    public static void applyFontSize(AppCompatActivity activity) {
+        View nav = activity.findViewById(R.id.bottom_nav);
+        if (nav != null) {
+            FontSizeHelper.apply(activity, nav);
+        }
+    }
+
+    /** Shows the snackbar above the bar (when the bar is visible) instead of over it. */
+    public static void show(AppCompatActivity activity, Snackbar snackbar) {
+        View nav = activity.findViewById(R.id.bottom_nav);
+        if (nav != null && nav.getVisibility() == View.VISIBLE) {
+            snackbar.setAnchorView(nav);
+        }
+        snackbar.show();
+    }
+
     public static void attach(AppCompatActivity activity, @IdRes int selectedId) {
         ViewGroup content = activity.findViewById(android.R.id.content);
         View root = content.getChildAt(0);
@@ -45,6 +64,7 @@ public final class BottomNav {
         BottomNavigationView nav = (BottomNavigationView) activity.getLayoutInflater()
                 .inflate(R.layout.view_bottom_nav, container, false);
         container.addView(nav);
+        FontSizeHelper.apply(activity, nav);
         content.addView(container, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 

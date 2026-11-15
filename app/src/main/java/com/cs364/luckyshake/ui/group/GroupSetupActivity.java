@@ -122,7 +122,8 @@ public class GroupSetupActivity extends AppCompatActivity {
                 int pCount = count != null ? count : GameConfig.MIN_GROUP_PLAYERS;
                 startActivity(GroupProposalActivity.newIntent(this, pCount, method));
             } else {
-                Snackbar.make(root, R.string.group_setup_msg_started, Snackbar.LENGTH_SHORT).show();
+                BottomNav.show(this, Snackbar.make(root, R.string.group_setup_msg_started,
+                        Snackbar.LENGTH_SHORT));
                 // TODO(#35): Navigate to food category picker screen once implemented.
             }
             viewModel.resetSession();
