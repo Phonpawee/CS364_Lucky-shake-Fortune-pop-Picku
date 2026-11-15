@@ -8,6 +8,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
@@ -17,10 +18,13 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs364.luckyshake.R;
+import com.cs364.luckyshake.fortune.FortuneProvider;
 import com.cs364.luckyshake.logic.GameConfig;
+import com.cs364.luckyshake.sensor.ShakeDetector;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -30,8 +34,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.Arrays;
 
 /**
- * Screen for collecting restaurant or food group proposals per participant (#36, #35).
- * Shows food category grid or restaurant input fields, passing the device to the next person.
+ * Screen for collecting restaurant or food group proposals per participant (#36, #35)
+ * and rendering vote summary tally and drawing weighted winner (#37).
  */
 public class GroupProposalActivity extends AppCompatActivity {
     public static final String EXTRA_PARTICIPANT_COUNT = "extra_participant_count";
@@ -41,6 +45,8 @@ public class GroupProposalActivity extends AppCompatActivity {
     private View root;
     private TextView titleTurn;
     private TextView instructions;
+    private View inputCard;
+    private View buttonPair;
     private View restaurantGroup;
     private RecyclerView foodGrid;
     private TextView foodError;
@@ -52,6 +58,14 @@ public class GroupProposalActivity extends AppCompatActivity {
     private TextInputEditText editRestaurant3;
     private MaterialButton btnSkip;
     private MaterialButton btnConfirm;
+
+    // Tally & Draw Views (#37)
+    private View tallySection;
+    private RecyclerView tallyList;
+    private MaterialButton tallyBtnDraw;
+    private TextView tallyWinner;
+    private GroupTallyAdapter tallyAdapter;
+    private ShakeDetector shakeDetector;
 
     private ProposalMethod proposalMethod = ProposalMethod.FOOD_TYPE;
 
@@ -91,6 +105,8 @@ public class GroupProposalActivity extends AppCompatActivity {
 
         titleTurn = findViewById(R.id.group_proposal_title_turn);
         instructions = findViewById(R.id.group_proposal_instructions);
+        inputCard = findViewById(R.id.group_proposal_input_card);
+        buttonPair = findViewById(R.id.group_proposal_button_pair);
         restaurantGroup = findViewById(R.id.group_proposal_restaurant_group);
         foodGrid = findViewById(R.id.group_proposal_food_grid);
         foodError = findViewById(R.id.group_proposal_food_error);
@@ -101,6 +117,19 @@ public class GroupProposalActivity extends AppCompatActivity {
         editRestaurant3 = findViewById(R.id.group_proposal_edit_restaurant_3);
         btnSkip = findViewById(R.id.group_proposal_btn_skip);
         btnConfirm = findViewById(R.id.group_proposal_btn_confirm);
+
+        // Tally & Winner Views (#37)
+        tallySection = findViewById(R.id.group_tally_section);
+        tallyList = findViewById(R.id.group_tally_list);
+        tallyBtnDraw = findViewById(R.id.group_tally_btn_draw);
+        tallyWinner = findViewById(R.id.group_tally_winner);
+
+        shakeDetector = ShakeDetector.create(this);
+        shakeDetector.setOnShakeListener(() -> viewModel.drawWinner());
+
+        if (tallyBtnDraw != null) {
+            tallyBtnDraw.setOnClickListener(v -> viewModel.drawWinner());
+        }
 
         if (proposalMethod == ProposalMethod.FOOD_TYPE) {
             if (restaurantGroup != null) restaurantGroup.setVisibility(View.GONE);
@@ -163,16 +192,60 @@ public class GroupProposalActivity extends AppCompatActivity {
             }
         });
 
+        viewModel.getTally().observe(this, tallyOptions -> {
+            if (tallyAdapter != null && tallyOptions != null) {
+                tallyAdapter.submitList(tallyOptions);
+            }
+        });
+
         viewModel.getPhase().observe(this, phase -> {
-            if (phase == GroupPhase.FINAL) {
-                if (editRestaurant1 != null) editRestaurant1.setEnabled(false);
-                if (editRestaurant2 != null) editRestaurant2.setEnabled(false);
-                if (editRestaurant3 != null) editRestaurant3.setEnabled(false);
-                if (foodGrid != null) foodGrid.setEnabled(false);
-                btnSkip.setEnabled(false);
-                btnConfirm.setEnabled(false);
-                Snackbar.make(root, R.string.group_proposal_msg_all_done, Snackbar.LENGTH_LONG).show();
-                // TODO(#37): Navigate to vote tally and draw winner screen once implemented.
+            if (phase == GroupPhase.FINAL || phase == GroupPhase.DONE) {
+                if (viewModel.isTallyEmpty()) {
+                    Toast.makeText(this, R.string.group_tally_msg_all_skipped, Toast.LENGTH_LONG).show();
+                    finish();
+                    return;
+                }
+
+                if (inputCard != null) inputCard.setVisibility(View.GONE);
+                if (buttonPair != null) buttonPair.setVisibility(View.GONE);
+                if (tallySection != null) tallySection.setVisibility(View.VISIBLE);
+
+                if (tallyAdapter == null && tallyList != null) {
+                    tallyAdapter = new GroupTallyAdapter(this, proposalMethod);
+                    tallyList.setLayoutManager(new LinearLayoutManager(this));
+                    tallyList.setAdapter(tallyAdapter);
+                    if (viewModel.getTally().getValue() != null) {
+                        tallyAdapter.submitList(viewModel.getTally().getValue());
+                    }
+                }
+
+                if (viewModel.getWinner().getValue() == null) {
+                    shakeDetector.start();
+                }
+            }
+        });
+
+        viewModel.getWinner().observe(this, winner -> {
+            if (winner != null) {
+                shakeDetector.stop();
+                if (tallyBtnDraw != null) {
+                    tallyBtnDraw.setVisibility(View.GONE);
+                }
+
+                String displayName = winner.label;
+                if (proposalMethod == ProposalMethod.FOOD_TYPE) {
+                    String translated = new FortuneProvider(this).getFoodTypeName(winner.label);
+                    if (translated != null && !translated.isEmpty()) {
+                        displayName = translated;
+                    }
+                }
+
+                if (tallyWinner != null) {
+                    tallyWinner.setText(getString(R.string.group_tally_winner, displayName, winner.votes));
+                    tallyWinner.setVisibility(View.VISIBLE);
+                }
+
+                // TODO(#39): open the group winner screen (fortune, history log, play again)
             }
         });
     }
@@ -242,5 +315,18 @@ public class GroupProposalActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         FontSizeHelper.apply(this, root);
+        GroupPhase currentPhase = viewModel.getPhase().getValue();
+        if ((currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
+                && viewModel.getWinner().getValue() == null) {
+            shakeDetector.start();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (shakeDetector != null) {
+            shakeDetector.stop();
+        }
     }
 }

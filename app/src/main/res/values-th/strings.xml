@@ -28,9 +28,8 @@
     <string name="group_setup_msg_method_food_type">แต่ละคนเลือกกลุ่มอาหารที่อยากกิน 1 กลุ่ม เช่น ปิ้งย่าง ชาบู ก๋วยเตี๋ยว กลุ่มที่มีคนเลือกซ้ำจะมีโอกาสชนะมากขึ้น</string>
     <string name="group_setup_msg_method_restaurant">แต่ละคนพิมพ์ชื่อร้านที่อยากกินได้สูงสุด 3 ร้าน ร้านที่มีคนเสนอซ้ำจะมีโอกาสชนะมากขึ้น</string>
     <string name="group_setup_btn_start">เริ่ม</string>
-    <string name="group_setup_msg_started">โหมดเลือกกลุ่มอาหารกำลังพัฒนา</string>
 
-    <!-- Group Proposal Screen (#36, #35) -->
+    <!-- Group Proposal Screen (#36, #35, #37) -->
     <string name="group_proposal_title_turn">ถึงตาคนที่ %1$d จาก %2$d</string>
     <string name="group_proposal_msg_restaurant_hint">ส่งมือถือให้คนนี้ ตอบเงียบ ๆ อย่าให้คนอื่นเห็น</string>
     <string name="group_proposal_msg_food_hint">ส่งมือถือให้คนนี้ เลือกกลุ่มอาหารที่อยากกิน 1 กลุ่ม อย่าให้คนอื่นเห็น</string>
@@ -44,6 +43,16 @@
     <string name="group_proposal_error_food_empty">กรุณาเลือกกลุ่มอาหาร 1 กลุ่ม</string>
     <string name="group_proposal_msg_pass_phone">ส่งมือถือให้คนถัดไป</string>
     <string name="group_proposal_msg_all_done">ทุกคนเสนอครบแล้ว</string>
+
+    <!-- Group Tally & Draw (#37) -->
+    <string name="group_tally_title">สรุปผลโหวต</string>
+    <string name="group_tally_votes">×%1$d</string>
+    <string name="group_tally_proposers">เสนอโดย %1$s</string>
+    <string name="group_tally_person">คนที่ %1$d</string>
+    <string name="group_tally_hint">เขย่ามือถือหรือกดปุ่มเพื่อสุ่มผู้ชนะ</string>
+    <string name="group_tally_btn_draw">เขย่าสุ่มผู้ชนะ</string>
+    <string name="group_tally_winner">ผู้ชนะ: %1$s (×%2$d)</string>
+    <string name="group_tally_msg_all_skipped">ไม่มีใครเสนอเลย ลองตั้งค่าใหม่อีกครั้ง</string>
 
     <!-- Fortune Provider (#27) -->
     <string name="fortune_msg_level_1_1">วันนี้อาจมีเรื่องเล็ก ๆ มาทำให้ยิ้ม ขอให้อร่อยกับ %1$s</string>

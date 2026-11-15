@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingVertical="@dimen/spacing_sm">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <!-- Option Name -->
+        <TextView
+            android:id="@+id/text_tally_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/app_on_surface"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="KFC" />
+
+        <!-- Proposers Subtitle -->
+        <TextView
+            android:id="@+id/text_tally_proposers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/journal_text_muted"
+            android:textSize="14sp"
+            tools:text="เสนอโดย คนที่ 1, 2" />
+    </LinearLayout>
+
+    <!-- Votes Multiplier -->
+    <TextView
+        android:id="@+id/text_tally_votes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_sm"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="end"
+        android:minWidth="32dp"
+        android:textColor="@color/app_primary"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="×2" />
+</LinearLayout>
