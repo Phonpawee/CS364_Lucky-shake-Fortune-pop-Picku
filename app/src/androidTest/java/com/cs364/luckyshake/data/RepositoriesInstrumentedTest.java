@@ -179,6 +179,20 @@ public class RepositoriesInstrumentedTest {
     }
 
     @Test
+    public void recordEvent_afterAWeekUntouched_decaysFirstThenApplies() {
+        long lunch = menus.getSets().get(0).id;
+        long id = menus.getMenus(lunch, null, null).get(0).id;
+        long before = System.currentTimeMillis();
+        menus.updateWeight(id, 9, before - GameConfig.WEIGHT_DECAY_PERIOD_MS - 60_000);
+
+        // 9 → คืนค่า 1 สัปดาห์ = 8 → ยอมรับ +1 = 9 (ไม่ใช่ 10)
+        assertEquals(9, menus.recordEvent(id, WeightPolicy.Event.ACCEPT));
+        Menu m = menus.getMenu(id);
+        assertEquals(9, m.weight);
+        assertTrue(m.lastTouched >= before);
+    }
+
+    @Test
     public void reading_untouchedMenu_decaysOneStepPerWeekAndSaves() {
         long lunch = menus.getSets().get(0).id;
         long id = menus.getMenus(lunch, null, null).get(0).id;

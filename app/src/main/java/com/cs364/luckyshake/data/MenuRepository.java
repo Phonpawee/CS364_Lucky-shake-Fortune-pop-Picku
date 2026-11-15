@@ -129,11 +129,7 @@ public class MenuRepository {
 
     /** One menu (weekly decay applied), or null if it does not exist. */
     public Menu getMenu(long id) {
-        Menu m;
-        try (Cursor c = helper.getReadableDatabase().query(DbHelper.T_MENU, null, BY_ID,
-                new String[]{String.valueOf(id)}, null, null, null)) {
-            m = c.moveToFirst() ? readMenu(c) : null;
-        }
+        Menu m = readMenuRow(id);
         if (m != null) {
             applyDecay(m, System.currentTimeMillis());
         }
@@ -228,29 +224,34 @@ public class MenuRepository {
     /**
      * Applies an accept / ask-again event through {@link WeightPolicy} (after the weekly decay)
      * and stamps last_touched = now. Returns the new weight, or -1 if the menu does not exist.
+     *
+     * <p>The decay and the new last_touched use the same {@code now}, so a week boundary
+     * crossed between them cannot swallow that week's decay.
      */
     public int recordEvent(long menuId, WeightPolicy.Event event) {
-        Menu m = getMenu(menuId);
+        long now = System.currentTimeMillis();
+        Menu m = readMenuRow(menuId);
         if (m == null) {
             return -1;
         }
-        int w = WeightPolicy.apply(m.weight, event);
-        updateWeight(menuId, w, System.currentTimeMillis());
+        int w = WeightPolicy.apply(WeightPolicy.decay(m.weight, m.lastTouched, now), event);
+        updateWeight(menuId, w, now);
         return w;
     }
 
     /**
-     * Adds {@code delta} to the weight (clamped to 1..10) and stamps last_touched = now.
-     * Used for "accept" (+1) and "ask again" (-1). Returns the new weight, or -1 if the menu
-     * does not exist.
+     * Adds {@code delta} to the weight (clamped to 1..10, after the weekly decay) and stamps
+     * last_touched = now. Returns the new weight, or -1 if the menu does not exist.
+     * Prefer {@link #recordEvent} for accept / ask again.
      */
     public int adjustWeight(long menuId, int delta) {
-        Menu m = getMenu(menuId);
+        long now = System.currentTimeMillis();
+        Menu m = readMenuRow(menuId);
         if (m == null) {
             return -1;
         }
-        int w = clamp(m.weight + delta);
-        updateWeight(menuId, w, System.currentTimeMillis());
+        int w = clamp(WeightPolicy.decay(m.weight, m.lastTouched, now) + delta);
+        updateWeight(menuId, w, now);
         return w;
     }
 
@@ -280,6 +281,14 @@ public class MenuRepository {
      * (see {@link WeightPolicy#decay}) and saves it, so the decay is counted only once.
      * Updates {@code m} in place.
      */
+    /** One menu row exactly as stored (no decay), or null. */
+    private Menu readMenuRow(long id) {
+        try (Cursor c = helper.getReadableDatabase().query(DbHelper.T_MENU, null, BY_ID,
+                new String[]{String.valueOf(id)}, null, null, null)) {
+            return c.moveToFirst() ? readMenu(c) : null;
+        }
+    }
+
     private void applyDecay(Menu m, long now) {
         int decayed = WeightPolicy.decay(m.weight, m.lastTouched, now);
         if (decayed == m.weight) {
