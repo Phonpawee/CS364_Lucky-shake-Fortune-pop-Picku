@@ -13,6 +13,7 @@ import com.cs364.luckyshake.data.HistoryRepository;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * ViewModel for managing the state of the Journal (history) screen.
@@ -31,6 +32,8 @@ public class JournalViewModel extends AndroidViewModel {
     private final MutableLiveData<Filter> filter = new MutableLiveData<>(Filter.ALL);
     private final MutableLiveData<List<HistoryEntry>> entries = new MutableLiveData<>();
     private final MutableLiveData<Integer> totalCount = new MutableLiveData<>();
+
+    private final AtomicLong refreshGeneration = new AtomicLong(0);
 
     public JournalViewModel(@NonNull Application application) {
         super(application);
@@ -58,39 +61,28 @@ public class JournalViewModel extends AndroidViewModel {
     }
 
     public void refresh() {
+        final long requestGen = refreshGeneration.incrementAndGet();
         final Filter currentFilter = filter.getValue();
-        executor.execute(() -> {
-            String dbStatus = null;
-            if (currentFilter == Filter.ACCEPTED) {
-                dbStatus = HistoryEntry.STATUS_ACCEPTED;
-            } else if (currentFilter == Filter.REDRAWN) {
-                dbStatus = HistoryEntry.STATUS_REDRAWN;
-            }
-
-            List<HistoryEntry> list = repository.list(dbStatus, 0);
-            int total = repository.count(null);
-
-            entries.postValue(list);
-            totalCount.postValue(total);
-        });
+        executor.execute(() -> executeQueryAndPublish(requestGen, currentFilter));
     }
 
     public void delete(long id) {
+        final long requestGen = refreshGeneration.incrementAndGet();
         executor.execute(() -> {
             repository.delete(id);
-            refreshInternal();
+            executeQueryAndPublish(requestGen, filter.getValue());
         });
     }
 
     public void clearAll() {
+        final long requestGen = refreshGeneration.incrementAndGet();
         executor.execute(() -> {
             repository.clearAll();
-            refreshInternal();
+            executeQueryAndPublish(requestGen, filter.getValue());
         });
     }
 
-    private void refreshInternal() {
-        Filter currentFilter = filter.getValue();
+    private void executeQueryAndPublish(long requestGen, Filter currentFilter) {
         String dbStatus = null;
         if (currentFilter == Filter.ACCEPTED) {
             dbStatus = HistoryEntry.STATUS_ACCEPTED;
@@ -101,8 +93,11 @@ public class JournalViewModel extends AndroidViewModel {
         List<HistoryEntry> list = repository.list(dbStatus, 0);
         int total = repository.count(null);
 
-        entries.postValue(list);
-        totalCount.postValue(total);
+        // Discard stale query results if filter or refresh generation changed in the meantime
+        if (requestGen == refreshGeneration.get()) {
+            entries.postValue(list);
+            totalCount.postValue(total);
+        }
     }
 
     @Override
