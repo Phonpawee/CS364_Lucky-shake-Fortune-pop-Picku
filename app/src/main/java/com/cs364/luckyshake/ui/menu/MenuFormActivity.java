@@ -234,6 +234,9 @@ public class MenuFormActivity extends AppCompatActivity {
         }
         nameLayout.setError(error);
         if (error != null) {
+            FontSizeHelper.apply(this, nameLayout);   // the error caption is created by setError
+        }
+        if (error != null) {
             nameInput.requestFocus();
             return false;
         }

@@ -160,6 +160,7 @@ public class GroupProposalActivity extends AppCompatActivity {
         boolean ok = viewModel.submitRestaurants(Arrays.asList(r1, r2, r3));
         if (!ok) {
             layoutRestaurant1.setError(getString(R.string.group_proposal_error_restaurant_empty));
+            FontSizeHelper.apply(this, layoutRestaurant1);   // the error caption is created by setError
         } else {
             layoutRestaurant1.setError(null);
             editRestaurant1.setText("");
