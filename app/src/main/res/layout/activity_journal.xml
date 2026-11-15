@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/journal_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/journal_page_bg"
+    android:orientation="vertical"
+    tools:context=".ui.journal.JournalActivity">
+
+    <!-- Top Header Bar with journal_surface background -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/journal_surface"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/journal_title_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:paddingHorizontal="@dimen/spacing_md"
+            android:paddingTop="@dimen/spacing_md"
+            android:paddingBottom="@dimen/spacing_sm"
+            android:text="@string/journal_title_main"
+            android:textAppearance="@style/TextAppearance.LuckyShake.Heading"
+            android:textColor="@color/app_heading" />
+
+        <!-- 1dp Bottom Border for Header Bar -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/journal_outline" />
+    </LinearLayout>
+
+    <!-- Main Content Container with ConstraintLayout -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingHorizontal="@dimen/spacing_md"
+        android:paddingTop="@dimen/spacing_md"
+        android:paddingBottom="@dimen/spacing_md">
+
+        <!-- Tab Toggle Group: Entries vs Stats -->
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/journal_toggle_group_tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cornerRadius="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:selectionRequired="true"
+            app:singleSelection="true"
+            app:strokeColor="@color/journal_outline"
+            app:strokeWidth="1dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/journal_btn_tab_entries"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-medium"
+                android:minHeight="48dp"
+                android:text="@string/journal_tab_entries"
+                android:textColor="@color/journal_tab_text"
+                android:textStyle="bold"
+                app:backgroundTint="@color/journal_tab_bg"
+                app:cornerRadius="24dp"
+                app:strokeWidth="0dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/journal_btn_tab_stats"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-medium"
+                android:minHeight="48dp"
+                android:text="@string/journal_tab_stats"
+                android:textColor="@color/journal_tab_text"
+                android:textStyle="bold"
+                app:backgroundTint="@color/journal_tab_bg"
+                app:cornerRadius="24dp"
+                app:strokeWidth="0dp" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <!-- Filter & Clear All Row -->
+        <LinearLayout
+            android:id="@+id/journal_filter_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:baselineAligned="false"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/journal_toggle_group_tab">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/journal_chip_group"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:checkedIconVisible="false"
+                app:selectionRequired="true"
+                app:singleLine="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/journal_chip_all"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/journal_btn_filter_all"
+                    android:textColor="@color/journal_chip_text"
+                    android:textSize="@dimen/text_body"
+                    android:textStyle="bold"
+                    app:checkedIconVisible="false"
+                    app:chipBackgroundColor="@color/journal_chip_background"
+                    app:chipCornerRadius="20dp"
+                    app:chipEndPadding="12dp"
+                    app:chipMinHeight="40dp"
+                    app:chipStartPadding="12dp"
+                    app:chipStrokeColor="@color/journal_outline"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/journal_chip_accepted"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/journal_btn_filter_accepted"
+                    android:textColor="@color/journal_chip_text"
+                    android:textSize="@dimen/text_body"
+                    android:textStyle="bold"
+                    app:checkedIconVisible="false"
+                    app:chipBackgroundColor="@color/journal_chip_background"
+                    app:chipCornerRadius="20dp"
+                    app:chipEndPadding="12dp"
+                    app:chipMinHeight="40dp"
+                    app:chipStartPadding="12dp"
+                    app:chipStrokeColor="@color/journal_outline"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/journal_chip_redrawn"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/journal_btn_filter_redrawn"
+                    android:textColor="@color/journal_chip_text"
+                    android:textSize="@dimen/text_body"
+                    android:textStyle="bold"
+                    app:checkedIconVisible="false"
+                    app:chipBackgroundColor="@color/journal_chip_background"
+                    app:chipCornerRadius="20dp"
+                    app:chipEndPadding="12dp"
+                    app:chipMinHeight="40dp"
+                    app:chipStartPadding="12dp"
+                    app:chipStrokeColor="@color/journal_outline"
+                    app:chipStrokeWidth="1dp" />
+            </com.google.android.material.chip.ChipGroup>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/journal_btn_clear_all"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/journal_btn_clear_all"
+                android:textColor="@color/journal_primary"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Entries Card: wrap_content with constrained height -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.LuckyShake.Card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            app:cardBackgroundColor="@color/journal_surface"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/journal_filter_row"
+            app:layout_constraintVertical_bias="0.0"
+            app:strokeColor="@color/journal_outline"
+            app:strokeWidth="1dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/journal_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingVertical="@dimen/spacing_sm" />
+
+                <!-- Empty State Group -->
+                <LinearLayout
+                    android:id="@+id/journal_empty_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_lg"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/journal_empty_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center"
+                        android:textColor="@color/journal_text"
+                        android:textSize="@dimen/text_body"
+                        tools:text="ยังไม่มีประวัติ ลองเสี่ยงเซียมซีดูสิ" />
+                </LinearLayout>
+            </FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

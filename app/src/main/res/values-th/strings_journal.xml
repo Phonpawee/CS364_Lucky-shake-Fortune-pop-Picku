@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="journal_title_main">สมุดเซียมซี</string>
+    <string name="journal_btn_filter_all">ทั้งหมด</string>
+    <string name="journal_btn_filter_accepted">ยอมรับ</string>
+    <string name="journal_btn_filter_redrawn">ขอใหม่</string>
+    <string name="journal_btn_clear_all"><u>ล้างทั้งหมด</u></string>
+    <string name="journal_title_clear_confirm">ล้างประวัติทั้งหมด?</string>
+    <string name="journal_msg_clear_confirm">ประวัติทั้งหมด %1$d รายการจะถูกลบ และกู้คืนไม่ได้</string>
+    <string name="journal_btn_clear_confirm">ล้าง</string>
+    <string name="journal_btn_delete_desc">ลบรายการนี้</string>
+    <string name="journal_msg_deleted">ลบรายการแล้ว</string>
+    <string name="journal_label_meta">%1$s · %2$s %3$s · %4$s</string>
+    <string name="journal_label_mode_solo">เดี่ยว</string>
+    <string name="journal_label_mode_group">กลุ่ม</string>
+    <string name="journal_label_status_accepted">✓</string>
+    <string name="journal_label_status_redrawn">↻</string>
+    <string name="journal_label_status_accepted_desc">ยอมรับ</string>
+    <string name="journal_label_status_redrawn_desc">ขอใหม่</string>
+    <string name="journal_label_star_filled">★</string>
+    <string name="journal_label_star_empty">☆</string>
+    <string name="journal_label_level_1">ระวังหน่อย</string>
+    <string name="journal_label_level_2">กลาง ๆ</string>
+    <string name="journal_label_level_3">ดี</string>
+    <string name="journal_label_level_4">ดีมาก</string>
+    <string name="journal_msg_empty">ยังไม่มีประวัติ ลองเสี่ยงเซียมซีดูสิ</string>
+    <string name="journal_msg_empty_filter">ไม่มีรายการในตัวกรองนี้</string>
+    <string name="journal_tab_entries">รายการ</string>
+    <string name="journal_tab_stats">สถิติ</string>
+    <string name="journal_msg_stats_pending">หน้าสถิติกำลังพัฒนา</string>
+</resources>
