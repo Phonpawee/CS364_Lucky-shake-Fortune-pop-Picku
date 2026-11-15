@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:minHeight="64dp"
+    android:orientation="horizontal"
+    android:padding="@dimen/spacing_md">
+
+    <!-- Status Icon (✓ / ↻) -->
+    <TextView
+        android:id="@+id/journal_item_status"
+        android:layout_width="28dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:textColor="@color/journal_text"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        tools:text="✓" />
+
+    <!-- Middle Column: Name + Meta -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="@dimen/spacing_sm"
+        android:layout_marginEnd="@dimen/spacing_sm"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/journal_item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:textColor="@color/journal_text"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="ชัย" />
+
+        <TextView
+            android:id="@+id/journal_item_meta"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/journal_text_muted"
+            android:textSize="14sp"
+            tools:text="13 พ.ย. 09:45 · ★★☆☆ กลาง ๆ · กลุ่ม" />
+    </LinearLayout>
+
+    <!-- Delete Button -->
+    <ImageButton
+        android:id="@+id/journal_item_delete"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/journal_btn_delete_desc"
+        android:src="@drawable/ic_delete_outline"
+        app:tint="@color/journal_muted" />
+</LinearLayout>
