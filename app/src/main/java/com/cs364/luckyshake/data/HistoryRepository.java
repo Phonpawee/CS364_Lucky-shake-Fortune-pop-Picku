@@ -39,13 +39,18 @@ public class HistoryRepository {
     /**
      * Adds an entry and returns its id (also stored in {@code e.id}). If createdAt is 0 it
      * becomes "now". Returns -1 on failure.
+     *
+     * <p>If {@code e.menuId} points to a dish that no longer exists (deleted while its result
+     * was still on screen), the row is saved with menu_id NULL, the same as a dish deleted
+     * later. Without this the foreign key would reject the insert and the entry would be lost.
      */
     public long add(HistoryEntry e) {
         if (e.nameTh == null || e.nameTh.trim().isEmpty() || e.status == null || e.mode == null) {
             return -1;
         }
+        SQLiteDatabase db = helper.getWritableDatabase();
         ContentValues v = new ContentValues();
-        if (e.menuId != null) {
+        if (e.menuId != null && menuExists(db, e.menuId)) {
             v.put(DbHelper.C_HIST_MENU_ID, e.menuId);
         } else {
             v.putNull(DbHelper.C_HIST_MENU_ID);
@@ -57,11 +62,16 @@ public class HistoryRepository {
         v.put(DbHelper.C_HIST_STATUS, e.status);
         v.put(DbHelper.C_HIST_MODE, e.mode);
         v.put(DbHelper.C_HIST_CREATED_AT, e.createdAt > 0 ? e.createdAt : System.currentTimeMillis());
-        long id = helper.getWritableDatabase().insert(DbHelper.T_HISTORY, null, v);
+        long id = db.insert(DbHelper.T_HISTORY, null, v);
         if (id > 0) {
             e.id = id;
         }
         return id;
+    }
+
+    private static boolean menuExists(SQLiteDatabase db, long menuId) {
+        return DatabaseUtils.queryNumEntries(db, DbHelper.T_MENU,
+                DbHelper.C_MENU_ID + " = ?", new String[]{String.valueOf(menuId)}) > 0;
     }
 
     /**

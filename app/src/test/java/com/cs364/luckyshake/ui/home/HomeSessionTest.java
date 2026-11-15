@@ -1,5 +1,6 @@
 package com.cs364.luckyshake.ui.home;
 
+import com.cs364.luckyshake.data.HistoryEntry;
 import com.cs364.luckyshake.data.Menu;
 import com.cs364.luckyshake.data.MenuFilter;
 import com.cs364.luckyshake.logic.DrawRound;
@@ -48,11 +49,15 @@ public class HomeSessionTest {
     private final HomeSession.WeightRecorder recorder =
             (menuId, event) -> recorded.add(menuId + ":" + event);
 
+    /** ประวัติที่ถูกบันทึก ตามลำดับ */
+    private final List<HistoryEntry> history = new ArrayList<>();
+
     private static Menu menu(long id, int tags) {
         Menu m = new Menu();
         m.id = id;
         m.setId = RICE;
         m.nameTh = "เมนู" + id;
+        m.nameEn = "Menu " + id;
         m.tags = tags;
         m.weight = GameConfig.DEFAULT_WEIGHT;
         return m;
@@ -65,7 +70,7 @@ public class HomeSessionTest {
         sets.put(EMPTY, new ArrayList<>());
         HomeSession s = new HomeSession(
                 new DrawRound(new WeightedDrawEngine(new Random(42)), new RedrawQuota(maxRedraws)),
-                source, recorder);
+                source, recorder, history::add);
         s.setSetId(RICE);
         return s;
     }
@@ -291,6 +296,90 @@ public class HomeSessionTest {
         s.redraw();
         assertNotNull(shown);
         assertEquals(List.of(shown.id + ":" + WeightPolicy.Event.ACCEPT), recorded);
+    }
+
+    // --------------------------------------------------------------- history
+
+    private static void assertEntry(DrawState shown, String status, HistoryEntry e) {
+        assertNotNull(shown.menu);
+        assertEquals(Long.valueOf(shown.menu.id), e.menuId);
+        assertEquals(shown.menu.nameTh, e.nameTh);
+        assertEquals(shown.menu.nameEn, e.nameEn);
+        assertEquals(GameConfig.LEVEL_COUNT - shown.level, e.level);
+        assertEquals(shown.stickNo, e.stickNo);
+        assertEquals(status, e.status);
+        assertEquals(HistoryEntry.MODE_SOLO, e.mode);
+        assertTrue(e.createdAt > 0);
+    }
+
+    @Test
+    public void redrawOnce_acceptOnce_recordsTwoMatchingEntries() {
+        HomeSession s = newSession(3);
+        DrawState first = s.draw();
+        DrawState second = s.redraw();
+        s.accept();
+        assertEquals(2, history.size());
+        assertEntry(first, HistoryEntry.STATUS_REDRAWN, history.get(0));
+        assertEntry(second, HistoryEntry.STATUS_ACCEPTED, history.get(1));
+    }
+
+    @Test
+    public void draw_recordsNoHistory() {
+        HomeSession s = newSession(3);
+        s.draw();
+        s.draw();
+        assertTrue(history.isEmpty());
+    }
+
+    @Test
+    public void acceptTwice_recordsOnce() {
+        HomeSession s = newSession(3);
+        s.draw();
+        s.accept();
+        s.accept();
+        assertEquals(1, history.size());
+    }
+
+    @Test
+    public void redraw_quotaEmpty_recordsNoHistory() {
+        HomeSession s = newSession(1);
+        s.draw();
+        s.redraw();
+        history.clear();
+        assertEquals(DrawStatus.QUOTA_EMPTY, s.redraw().status);
+        assertTrue(history.isEmpty());
+    }
+
+    @Test
+    public void redraw_noMatch_recordsNoHistory() {
+        HomeSession s = newSession(3);
+        s.draw();
+        s.setFilter(new MenuFilter(null, false, true));
+        assertEquals(DrawStatus.NO_MATCH, s.redraw().status);
+        assertTrue(history.isEmpty());
+    }
+
+    @Test
+    public void redraw_afterAccept_recordsOnlyTheAccept() {
+        HomeSession s = newSession(3);
+        s.draw();
+        s.accept();
+        s.redraw();
+        assertEquals(1, history.size());
+        assertEquals(HistoryEntry.STATUS_ACCEPTED, history.get(0).status);
+    }
+
+    @Test
+    public void historyLevel_bestLevelHasMostStars() {
+        assertEquals(4, HomeSession.historyLevel(GameConfig.LEVEL_GREAT));
+        assertEquals(3, HomeSession.historyLevel(GameConfig.LEVEL_GOOD));
+        assertEquals(2, HomeSession.historyLevel(GameConfig.LEVEL_NEUTRAL));
+        assertEquals(1, HomeSession.historyLevel(GameConfig.LEVEL_CAUTION));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nullHistory_isRejected() {
+        new HomeSession(new DrawRound(new WeightedDrawEngine()), source, recorder, null);
     }
 
     @Test(expected = IllegalArgumentException.class)
