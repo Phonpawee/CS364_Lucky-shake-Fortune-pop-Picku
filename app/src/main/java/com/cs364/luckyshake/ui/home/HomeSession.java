@@ -37,7 +37,7 @@ public class HomeSession {
     }
 
     /**
-     * ที่บันทึกประวัติ (อิชชู #24) ใน ViewModel คือ HistoryRepository.add ในเทสต์ใช้ของปลอมได้
+     * ที่บันทึกประวัติ ใน ViewModel คือ HistoryRepository.add ในเทสต์ใช้ของปลอมได้
      * entry ที่ส่งมามีชื่อเมนูไทย/อังกฤษติดไปด้วย ลบเมนูทีหลังประวัติก็ยังอ่านชื่อได้
      */
     public interface HistoryRecorder {
