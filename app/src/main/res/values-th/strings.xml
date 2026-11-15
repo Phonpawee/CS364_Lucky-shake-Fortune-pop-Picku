@@ -119,4 +119,8 @@
     <string name="settings_font_size_extra_large">A++</string>
 
     <string name="settings_label_shake_sensitivity">ความไวในการเขย่า</string>
+    <string name="nav_shake">เขย่า</string>
+    <string name="nav_menu">เมนู</string>
+    <string name="nav_group">กลุ่ม</string>
+    <string name="nav_settings">ตั้งค่า</string>
 </resources>

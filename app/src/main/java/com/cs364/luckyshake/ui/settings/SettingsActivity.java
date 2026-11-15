@@ -18,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.data.PrefKeys;
 import com.cs364.luckyshake.logic.GameConfig;
+import com.cs364.luckyshake.ui.nav.BottomNav;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -46,6 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
                     bottom + bars.bottom);
             return insets;
         });
+        BottomNav.attach(this, R.id.nav_settings);
 
         preferences = getSharedPreferences(PrefKeys.PREFS_NAME, MODE_PRIVATE);
 

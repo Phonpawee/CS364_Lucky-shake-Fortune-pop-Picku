@@ -119,4 +119,8 @@
     <string name="settings_font_size_extra_large">A++</string>
 
     <string name="settings_label_shake_sensitivity">Shake sensitivity</string>
+    <string name="nav_shake">Shake</string>
+    <string name="nav_menu">Dishes</string>
+    <string name="nav_group">Group</string>
+    <string name="nav_settings">Settings</string>
 </resources>

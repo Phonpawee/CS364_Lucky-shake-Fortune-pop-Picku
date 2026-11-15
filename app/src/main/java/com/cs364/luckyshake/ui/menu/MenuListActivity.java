@@ -30,6 +30,7 @@ import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.data.Menu;
 import com.cs364.luckyshake.data.MenuRepository;
 import com.cs364.luckyshake.data.MenuSet;
+import com.cs364.luckyshake.ui.nav.BottomNav;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -99,6 +100,7 @@ public class MenuListActivity extends AppCompatActivity {
             v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
             return insets;
         });
+        BottomNav.attach(this, R.id.nav_menu);
 
         menus = new MenuRepository(this);
         setSpinner = findViewById(R.id.menu_list_set_spinner);
