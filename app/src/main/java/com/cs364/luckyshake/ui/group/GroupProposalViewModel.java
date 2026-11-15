@@ -168,16 +168,16 @@ public class GroupProposalViewModel extends ViewModel {
     }
 
     private void updateLiveData() {
-        currentTurnNumber.setValue(session.getCurrentTurnNumber());
-        participantCount.setValue(session.getParticipantCount());
-        phase.setValue(session.getPhase());
-        isLastTurn.setValue(session.isLastTurn());
-        proposals.setValue(session.getProposals());
-
         if (session.getPhase() == GroupPhase.FINAL || session.getPhase() == GroupPhase.DONE) {
             if (tally.getValue() == null) {
                 tally.setValue(VoteTally.tally(session.getProposals()));
             }
         }
+
+        currentTurnNumber.setValue(session.getCurrentTurnNumber());
+        participantCount.setValue(session.getParticipantCount());
+        proposals.setValue(session.getProposals());
+        isLastTurn.setValue(session.isLastTurn());
+        phase.setValue(session.getPhase());
     }
 }

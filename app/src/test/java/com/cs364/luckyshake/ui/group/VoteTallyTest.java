@@ -1,6 +1,8 @@
 package com.cs364.luckyshake.ui.group;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.cs364.luckyshake.logic.DrawEngine;
@@ -14,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Pure Java unit tests for {@link VoteTally}.
+ * Pure Java unit tests for {@link VoteTally} and group proposal final tally calculation.
  */
 public class VoteTallyTest {
 
@@ -134,5 +136,27 @@ public class VoteTallyTest {
         double ratioA = (double) winsA / iterations;
         assertTrue("Wins for A (" + winsA + ") should be greater than B (" + winsB + ")", winsA > winsB);
         assertTrue("Ratio for A (" + ratioA + ") should be between 0.64 and 0.69", ratioA >= 0.64 && ratioA <= 0.69);
+    }
+
+    @Test
+    public void testTallyInitializationOnSessionFinalPhase() {
+        GroupSession session = new GroupSession();
+        session.setParticipantCount(2);
+        session.setProposalMethod(ProposalMethod.FOOD_TYPE);
+        session.startSession();
+
+        // Participant 1 submits
+        session.submitProposal(Collections.singletonList("food_type_grill"));
+        assertEquals(GroupPhase.COLLECT, session.getPhase());
+
+        // Participant 2 submits (final submission)
+        session.submitProposal(Collections.singletonList("food_type_hotpot"));
+        assertEquals(GroupPhase.FINAL, session.getPhase());
+
+        // Compute tally on FINAL phase
+        List<VoteOption> tally = VoteTally.tally(session.getProposals());
+        assertNotNull("Tally must be populated on FINAL phase", tally);
+        assertFalse("Tally must not be empty when valid proposals submitted", tally.isEmpty());
+        assertEquals(2, tally.size());
     }
 }
