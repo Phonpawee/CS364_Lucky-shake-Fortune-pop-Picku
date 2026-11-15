@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -25,11 +26,18 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.cs364.luckyshake.logic.DrawEngine;
+import com.cs364.luckyshake.data.MenuRepository;
+import com.cs364.luckyshake.data.MenuSet;
+import com.cs364.luckyshake.data.PrefKeys;
+import com.cs364.luckyshake.logic.DrawStatus;
+import com.cs364.luckyshake.logic.GameConfig;
+import com.cs364.luckyshake.ui.home.DrawState;
+import com.cs364.luckyshake.ui.home.HomeSession;
+import com.cs364.luckyshake.ui.home.HomeViewModel;
 import com.cs364.luckyshake.sensor.ShakeDetector;
 import com.cs364.luckyshake.ui.result.ResultActivity;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.cs364.luckyshake.ui.nav.BottomNav;
@@ -38,13 +46,9 @@ import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 public class MainActivity extends AppCompatActivity {
     private ActivityResultLauncher<String> notificationPermissionLauncher;
 
-    // Temporary menu sets for F-01, until the Home screen is wired to MenuRepository.
-    private static final List<Integer> RICE_MENUS =
-            Arrays.asList(R.string.home_label_basil, R.string.home_label_omelette);
-    private static final List<Integer> NOODLE_MENUS =
-            Arrays.asList(R.string.home_label_boat_noodles, R.string.home_label_pad_thai);
-
-    private final DrawEngine drawEngine = DrawEngine.create();
+    private HomeViewModel viewModel;
+    private MenuRepository menuRepository;
+    private List<MenuSet> sets = new ArrayList<>();
     private ShakeDetector shakeDetector;
     private Spinner setPicker;
     private View drawButton;
@@ -79,13 +83,21 @@ public class MainActivity extends AppCompatActivity {
         });
         BottomNav.attach(this, R.id.nav_home);
 
+        viewModel = HomeViewModel.get(this);
+        menuRepository = new MenuRepository(this);
         setPicker = findViewById(R.id.home_spinner_set);
-        ArrayAdapter<String> sets = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item,
-                Arrays.asList(getString(R.string.home_label_rice),
-                        getString(R.string.home_label_noodles)));
-        sets.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        setPicker.setAdapter(sets);
+        setPicker.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position >= 0 && position < sets.size()) {
+                    viewModel.selectSet(sets.get(position).id);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         shakeDetector = ShakeDetector.create(this);
         shakeDetector.setOnShakeListener(this::draw);
@@ -104,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         FontSizeHelper.apply(this, findViewById(R.id.main));
+        reloadSets();   // sets may have been added/renamed/deleted on the Dishes tab
+        viewModel.setMaxRedraws(getSharedPreferences(PrefKeys.PREFS_NAME, MODE_PRIVATE)
+                .getInt(PrefKeys.REROLL_QUOTA, GameConfig.MAX_REDRAWS));
         openingResult = false;
         shakeDetector.start();
     }
@@ -124,9 +139,17 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        List<Integer> menus = setPicker.getSelectedItemPosition() == 0
-                ? RICE_MENUS : NOODLE_MENUS;
-        int menu = drawEngine.weightedPick(menus, Arrays.asList(1.0, 1.0));
+        DrawState result = viewModel.draw();
+        if (!result.hasResult()) {
+            // Empty set / nothing passes the filter: no animation, tell the user why.
+            Toast.makeText(this, result.status == DrawStatus.NO_MATCH
+                    ? R.string.home_msg_no_match : R.string.home_msg_set_empty,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (result.status == DrawStatus.FEW_ITEMS) {
+            Toast.makeText(this, R.string.home_msg_few_items, Toast.LENGTH_SHORT).show();
+        }
         drawButton.setEnabled(false);
         tube.setEnabled(false);
         setPicker.setEnabled(false);
@@ -161,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animator animation) {
                 resetDrawAnimation();
-                showResult(menu);
+                showResult(result.menu.id);
             }
         });
         drawAnimation.start();
@@ -180,11 +203,36 @@ public class MainActivity extends AppCompatActivity {
         setPicker.setEnabled(true);
     }
 
-    private void showResult(int menu) {
+    private void showResult(long menuId) {
         openingResult = true;
         Intent intent = new Intent(this, ResultActivity.class);
-        intent.putExtra(ResultActivity.EXTRA_MENU_NAME, menu);
+        intent.putExtra(ResultActivity.EXTRA_MENU_ID, menuId);
         startActivity(intent);
+    }
+
+    /** Fills the set picker from the database and keeps the chosen set when it still exists. */
+    private void reloadSets() {
+        sets = menuRepository.getSets();
+        boolean thai = "th".equals(
+                getResources().getConfiguration().getLocales().get(0).getLanguage());
+        List<String> names = new ArrayList<>();
+        int selected = 0;
+        for (int i = 0; i < sets.size(); i++) {
+            names.add(sets.get(i).getName(thai));
+            if (sets.get(i).id == viewModel.getSelectedSetId()) {
+                selected = i;
+            }
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, names);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        setPicker.setAdapter(adapter);
+        if (sets.isEmpty()) {
+            viewModel.selectSet(HomeSession.NO_SET);
+        } else {
+            setPicker.setSelection(selected);
+            viewModel.selectSet(sets.get(selected).id);
+        }
     }
 
     private void requestNotificationPermission() {

@@ -10,15 +10,18 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.cs364.luckyshake.R;
+import com.cs364.luckyshake.data.Menu;
+import com.cs364.luckyshake.ui.home.HomeViewModel;
 
 public class ResultActivity extends AppCompatActivity {
-    public static final String EXTRA_MENU_NAME = "com.cs364.luckyshake.extra.MENU_NAME";
+    public static final String EXTRA_MENU_ID = "com.cs364.luckyshake.extra.MENU_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int menu = getIntent().getIntExtra(EXTRA_MENU_NAME, 0);
-        if (menu == 0) {
+        long menuId = getIntent().getLongExtra(EXTRA_MENU_ID, 0L);
+        Menu menu = HomeViewModel.get(this).currentState().menu;
+        if (menu == null || menu.id != menuId) {
             finish();
             return;
         }
@@ -31,7 +34,11 @@ public class ResultActivity extends AppCompatActivity {
             return insets;
         });
         TextView result = findViewById(R.id.result_label_menu);
-        result.setText(getString(R.string.result_label_menu, getString(menu)));
+        result.setText(getString(R.string.result_label_menu, menu.getName(isThai())));
         findViewById(R.id.result_btn_home).setOnClickListener(view -> finish());
+    }
+
+    private boolean isThai() {
+        return "th".equals(getResources().getConfiguration().getLocales().get(0).getLanguage());
     }
 }
