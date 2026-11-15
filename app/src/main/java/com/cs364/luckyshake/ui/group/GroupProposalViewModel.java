@@ -4,12 +4,14 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.cs364.luckyshake.logic.DrawEngine;
+
 import java.util.Collections;
 import java.util.List;
 
 /**
- * ViewModel for the group proposal collection screen (#36, #35).
- * Retains state across screen rotations and manages proposal submissions per participant.
+ * ViewModel for the group proposal collection and winner draw screen (#36, #35, #37).
+ * Retains state across screen rotations and manages proposal submissions and weighted winner draws.
  */
 public class GroupProposalViewModel extends ViewModel {
     private final GroupSession session;
@@ -21,9 +23,20 @@ public class GroupProposalViewModel extends ViewModel {
     private final MutableLiveData<List<List<String>>> proposals = new MutableLiveData<>();
     private final MutableLiveData<String> selectedFoodType = new MutableLiveData<>(null);
 
+    private final MutableLiveData<List<VoteOption>> tally = new MutableLiveData<>(null);
+    private final MutableLiveData<VoteOption> winner = new MutableLiveData<>(null);
+
+    private DrawEngine drawEngine = DrawEngine.create();
+
     public GroupProposalViewModel() {
         session = new GroupSession();
         updateLiveData();
+    }
+
+    public void setDrawEngine(DrawEngine drawEngine) {
+        if (drawEngine != null) {
+            this.drawEngine = drawEngine;
+        }
     }
 
     /**
@@ -62,6 +75,38 @@ public class GroupProposalViewModel extends ViewModel {
 
     public LiveData<String> getSelectedFoodType() {
         return selectedFoodType;
+    }
+
+    public LiveData<List<VoteOption>> getTally() {
+        return tally;
+    }
+
+    public LiveData<VoteOption> getWinner() {
+        return winner;
+    }
+
+    public boolean isTallyEmpty() {
+        List<VoteOption> list = tally.getValue();
+        return list == null || list.isEmpty();
+    }
+
+    /**
+     * Draws the winning option weighted by votes.
+     * Returns false if a winner was already drawn or if the tally is empty.
+     */
+    public boolean drawWinner() {
+        if (winner.getValue() != null || isTallyEmpty()) {
+            return false;
+        }
+        List<VoteOption> currentTally = tally.getValue();
+        if (currentTally == null || currentTally.isEmpty()) {
+            return false;
+        }
+        VoteOption picked = VoteTally.draw(currentTally, drawEngine);
+        winner.setValue(picked);
+        session.setPhase(GroupPhase.DONE);
+        updateLiveData();
+        return true;
     }
 
     /**
@@ -123,10 +168,16 @@ public class GroupProposalViewModel extends ViewModel {
     }
 
     private void updateLiveData() {
+        if (session.getPhase() == GroupPhase.FINAL || session.getPhase() == GroupPhase.DONE) {
+            if (tally.getValue() == null) {
+                tally.setValue(VoteTally.tally(session.getProposals()));
+            }
+        }
+
         currentTurnNumber.setValue(session.getCurrentTurnNumber());
         participantCount.setValue(session.getParticipantCount());
-        phase.setValue(session.getPhase());
-        isLastTurn.setValue(session.isLastTurn());
         proposals.setValue(session.getProposals());
+        isLastTurn.setValue(session.isLastTurn());
+        phase.setValue(session.getPhase());
     }
 }

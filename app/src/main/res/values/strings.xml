@@ -28,9 +28,8 @@
     <string name="group_setup_msg_method_food_type">Each person picks one food group, e.g. BBQ, shabu or noodles. Groups picked by more people have a better chance to win.</string>
     <string name="group_setup_msg_method_restaurant">Each person types up to 3 restaurants. Restaurants suggested by more people have a better chance to win.</string>
     <string name="group_setup_btn_start">Start</string>
-    <string name="group_setup_msg_started">Food category mode is coming soon.</string>
 
-    <!-- Group Proposal Screen (#36, #35) -->
+    <!-- Group Proposal Screen (#36, #35, #37) -->
     <string name="group_proposal_title_turn">Person %1$d of %2$d</string>
     <string name="group_proposal_msg_restaurant_hint">Hand the phone to this person. Answer quietly so no one else sees.</string>
     <string name="group_proposal_msg_food_hint">Hand the phone to this person. Pick one food group quietly.</string>
@@ -44,6 +43,16 @@
     <string name="group_proposal_error_food_empty">Please pick one food group</string>
     <string name="group_proposal_msg_pass_phone">Pass the phone to the next person</string>
     <string name="group_proposal_msg_all_done">Everyone has proposed</string>
+
+    <!-- Group Tally & Draw (#37) -->
+    <string name="group_tally_title">Vote summary</string>
+    <string name="group_tally_votes">×%1$d</string>
+    <string name="group_tally_proposers">Proposed by %1$s</string>
+    <string name="group_tally_person">Person %1$d</string>
+    <string name="group_tally_hint">Shake the phone or tap the button to draw</string>
+    <string name="group_tally_btn_draw">Draw the winner</string>
+    <string name="group_tally_winner">Winner: %1$s (×%2$d)</string>
+    <string name="group_tally_msg_all_skipped">Nobody proposed anything. Please set up again.</string>
 
     <!-- Fortune Provider (#27) -->
     <string name="fortune_msg_level_1_1">A little surprise may brighten your day. Enjoy %1$s.</string>
