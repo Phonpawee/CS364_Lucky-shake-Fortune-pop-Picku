@@ -89,4 +89,19 @@ public class HomeHistoryInstrumentedTest {
         assertEquals(rejected.nameTh, list.get(1).nameTh);
         assertEquals(rejected.nameEn, list.get(1).nameEn);
     }
+
+    @Test
+    public void menuDeletedWhileShown_acceptStillSavesEntry() {
+        Menu shown = session.draw().menu;
+        assertNotNull(shown);
+        assertTrue(menus.deleteMenu(shown.id));   // ลบเมนูระหว่างที่ผลยังแสดงอยู่
+
+        assertNotNull(session.accept());
+
+        List<HistoryEntry> list = history.list(null, 0);
+        assertEquals(1, list.size());
+        assertNull(list.get(0).menuId);
+        assertEquals(shown.nameTh, list.get(0).nameTh);
+        assertEquals(HistoryEntry.STATUS_ACCEPTED, list.get(0).status);
+    }
 }
