@@ -7,6 +7,7 @@ import com.cs364.luckyshake.logic.DrawResult;
 import com.cs364.luckyshake.logic.DrawRound;
 import com.cs364.luckyshake.logic.DrawStatus;
 import com.cs364.luckyshake.logic.GameConfig;
+import com.cs364.luckyshake.logic.WeightPolicy;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,8 +30,16 @@ public class HomeSession {
         List<Menu> getMenus(long setId, MenuFilter filter);
     }
 
+    /** ที่บันทึกน้ำหนัก (อิชชู #6) ใน ViewModel คือ MenuRepository.recordEvent ในเทสต์ใช้ของปลอมได้ */
+    public interface WeightRecorder {
+        void record(long menuId, WeightPolicy.Event event);
+    }
+
+    private static final WeightRecorder NO_RECORDER = (menuId, event) -> { };
+
     private final DrawRound round;
     private final MenuSource source;
+    private final WeightRecorder weights;
 
     private long setId = NO_SET;
     private MenuFilter filter = MenuFilter.none();
@@ -39,11 +48,17 @@ public class HomeSession {
     private DrawState state = DrawState.IDLE;
 
     public HomeSession(DrawRound round, MenuSource source) {
-        if (round == null || source == null) {
-            throw new IllegalArgumentException("round and source must not be null");
+        this(round, source, NO_RECORDER);
+    }
+
+    /** @param weights ถูกเรียกเมื่อยอมรับ (+1) หรือขอใหม่แล้วได้เมนูใหม่ (−1 ให้เมนูที่ถูกปฏิเสธ) */
+    public HomeSession(DrawRound round, MenuSource source, WeightRecorder weights) {
+        if (round == null || source == null || weights == null) {
+            throw new IllegalArgumentException("round, source and weights must not be null");
         }
         this.round = round;
         this.source = source;
+        this.weights = weights;
     }
 
     // ------------------------------------------------------------ settings
@@ -93,11 +108,22 @@ public class HomeSession {
         return apply(r, pool, false);
     }
 
-    /** ขอใหม่ (หน้าผล) ใช้โควตา 1 ครั้ง ถ้ากดหลังยอมรับแล้วจะเริ่มรอบใหม่ */
+    /**
+     * ขอใหม่ (หน้าผล) ใช้โควตา 1 ครั้ง ถ้ากดหลังยอมรับแล้วจะเริ่มรอบใหม่
+     *
+     * <p>เมนูที่ถูกปฏิเสธได้น้ำหนัก −1 เฉพาะเมื่อสุ่มใหม่ได้จริง (ใช้โควตา) ถ้าโควตาหมด
+     * หรือไม่มีเมนูผ่านตัวกรอง เมนูเดิมยังแสดงอยู่ จึงไม่นับเป็นการปฏิเสธ
+     */
     public DrawState redraw() {
+        // state.menu ยังแสดงอยู่ได้แม้สถานะเป็น NO_MATCH (ขอใหม่ครั้งก่อนกรองหมด)
+        Menu rejected = state.accepted ? null : state.menu;
         Pool pool = loadPool();
         DrawResult r = round.redraw(pool.all.size(), pool.candidates, recentIds);
-        return apply(r, pool, !state.accepted);
+        DrawState next = apply(r, pool, !state.accepted);
+        if (rejected != null && r.hasResult() && r.status != DrawStatus.QUOTA_EMPTY) {
+            weights.record(rejected.id, WeightPolicy.Event.REDRAW);
+        }
+        return next;
     }
 
     /**
@@ -111,6 +137,9 @@ public class HomeSession {
         }
         round.accept();
         state = state.asAccepted();
+        if (state.menu != null) {
+            weights.record(state.menu.id, WeightPolicy.Event.ACCEPT);
+        }
         return state.menu;
     }
 

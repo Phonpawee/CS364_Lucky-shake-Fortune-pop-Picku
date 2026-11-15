@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 
 import com.cs364.luckyshake.logic.GameConfig;
+import com.cs364.luckyshake.logic.WeightPolicy;
 
 /**
  * Reads and writes menu sets and menus. Calls are synchronous: the data is tiny,
@@ -96,7 +97,7 @@ public class MenuRepository {
 
     /**
      * Menus of a set, in a stable order (oldest first), so the position in the list
-     * can be used as the stick number.
+     * can be used as the stick number. The weekly weight decay is applied (and saved) here.
      *
      * @param filter optional filter (null = no filter)
      * @param search optional text; matches the Thai or English name (null/empty = all)
@@ -111,6 +112,10 @@ public class MenuRepository {
                 out.add(readMenu(c));
             }
         }
+        long now = System.currentTimeMillis();
+        for (Menu m : out) {
+            applyDecay(m, now);
+        }
         return out;
     }
 
@@ -122,12 +127,13 @@ public class MenuRepository {
                 DbHelper.T_MENU, where, args.toArray(new String[0]));
     }
 
-    /** One menu, or null if it does not exist. */
+    /** One menu (weekly decay applied), or null if it does not exist. */
     public Menu getMenu(long id) {
-        try (Cursor c = helper.getReadableDatabase().query(DbHelper.T_MENU, null, BY_ID,
-                new String[]{String.valueOf(id)}, null, null, null)) {
-            return c.moveToFirst() ? readMenu(c) : null;
+        Menu m = readMenuRow(id);
+        if (m != null) {
+            applyDecay(m, System.currentTimeMillis());
         }
+        return m;
     }
 
     /**
@@ -179,7 +185,7 @@ public class MenuRepository {
 
     /**
      * True if another menu in the same set already has this name (Thai or English,
-     * ignoring upper/lower case, including accented letters such as "Eclair" with an accent).
+     * ignoring upper/lower case, including accented letters such as with an accent).
      * Used by form validation.
      *
      * <p>The comparison is done in Java: SQLite's built-in LOWER() only folds ASCII letters,
@@ -208,7 +214,7 @@ public class MenuRepository {
         }
     }
 
-    /** Trims and lower-cases for name comparison; Locale.ROOT so the result never depends on the device language. */
+    /** Trims and lower-cases for name comparison; Locale. ROOT so the result never depends on the device language. */
     private static String foldName(String name) {
         return name == null ? "" : name.trim().toLowerCase(Locale.ROOT);
     }
@@ -216,17 +222,36 @@ public class MenuRepository {
     // --------------------------------------------------------------- weights
 
     /**
-     * Adds {@code delta} to the weight (clamped to 1..10) and stamps last_touched = now.
-     * Used for "accept" (+1) and "ask again" (-1). Returns the new weight, or -1 if the menu
-     * does not exist.
+     * Applies an accept / ask-again event through {@link WeightPolicy} (after the weekly decay)
+     * and stamps last_touched = now. Returns the new weight, or -1 if the menu does not exist.
+     *
+     * <p>The decay and the new last_touched use the same {@code now}, so a week boundary
+     * crossed between them cannot swallow that week's decay.
      */
-    public int adjustWeight(long menuId, int delta) {
-        Menu m = getMenu(menuId);
+    public int recordEvent(long menuId, WeightPolicy.Event event) {
+        long now = System.currentTimeMillis();
+        Menu m = readMenuRow(menuId);
         if (m == null) {
             return -1;
         }
-        int w = clamp(m.weight + delta);
-        updateWeight(menuId, w, System.currentTimeMillis());
+        int w = WeightPolicy.apply(WeightPolicy.decay(m.weight, m.lastTouched, now), event);
+        updateWeight(menuId, w, now);
+        return w;
+    }
+
+    /**
+     * Adds {@code delta} to the weight (clamped to 1..10, after the weekly decay) and stamps
+     * last_touched = now. Returns the new weight, or -1 if the menu does not exist.
+     * Prefer {@link #recordEvent} for accept / ask again.
+     */
+    public int adjustWeight(long menuId, int delta) {
+        long now = System.currentTimeMillis();
+        Menu m = readMenuRow(menuId);
+        if (m == null) {
+            return -1;
+        }
+        int w = clamp(WeightPolicy.decay(m.weight, m.lastTouched, now) + delta);
+        updateWeight(menuId, w, now);
         return w;
     }
 
@@ -249,6 +274,30 @@ public class MenuRepository {
         v.put(DbHelper.C_MENU_LAST_TOUCHED, System.currentTimeMillis());
         helper.getWritableDatabase().update(DbHelper.T_MENU, v,
                 DbHelper.C_MENU_SET_ID + " = ?", new String[]{String.valueOf(setId)});
+    }
+
+    /**
+     * Moves the weight one step toward the default for every whole week since last_touched
+     * (see {@link WeightPolicy#decay}) and saves it, so the decay is counted only once.
+     * Updates {@code m} in place.
+     */
+    /** One menu row exactly as stored (no decay), or null. */
+    private Menu readMenuRow(long id) {
+        try (Cursor c = helper.getReadableDatabase().query(DbHelper.T_MENU, null, BY_ID,
+                new String[]{String.valueOf(id)}, null, null, null)) {
+            return c.moveToFirst() ? readMenu(c) : null;
+        }
+    }
+
+    private void applyDecay(Menu m, long now) {
+        int decayed = WeightPolicy.decay(m.weight, m.lastTouched, now);
+        if (decayed == m.weight) {
+            return;
+        }
+        long touched = WeightPolicy.decayedLastTouched(m.lastTouched, now);
+        updateWeight(m.id, decayed, touched);
+        m.weight = decayed;
+        m.lastTouched = touched;
     }
 
     // --------------------------------------------------------------- helpers
