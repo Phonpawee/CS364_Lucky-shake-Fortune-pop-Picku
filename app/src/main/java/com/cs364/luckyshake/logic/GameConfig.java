@@ -17,7 +17,7 @@ public final class GameConfig {
     public static final int MIN_REDRAW_LIMIT = 1;
     public static final int MAX_REDRAW_LIMIT = 5;
 
-    /** Clamps a re-draw quota to MIN_REDRAW_LIMIT..MAX_REDRAW_LIMIT. */
+    /** Clamps a re-draw quota to MIN_REDRAW_LIMIT.MAX_REDRAW_LIMIT. */
     public static int clampRedrawLimit(int limit) {
         return Math.max(MIN_REDRAW_LIMIT, Math.min(MAX_REDRAW_LIMIT, limit));
     }
@@ -46,6 +46,14 @@ public final class GameConfig {
     public static final int DEFAULT_WEIGHT = 5;
     public static final int MAX_WEIGHT = 10;
 
+    /** Weight change when the user accepts a menu (see WeightPolicy). */
+    public static final int WEIGHT_ACCEPT_DELTA = 1;
+    /** Weight change when the user asks for a new menu instead (see WeightPolicy). */
+    public static final int WEIGHT_REDRAW_DELTA = -1;
+    /** A menu not touched for this long moves WEIGHT_DECAY_STEP back toward DEFAULT_WEIGHT. */
+    public static final long WEIGHT_DECAY_PERIOD_MS = 7L * 24 * 60 * 60 * 1000;
+    public static final int WEIGHT_DECAY_STEP = 1;
+
     // ----------------------------------------------------- recent penalty
     /** A menu drawn in the last RECENT_COUNT draws has its weight multiplied by this. */
     public static final double RECENT_PENALTY = 0.3;
@@ -64,12 +72,12 @@ public final class GameConfig {
     public static final double SHAKE_THRESHOLD_BASE = 22.0;
     public static final double SHAKE_THRESHOLD_STEP = 1.6;
 
-    /** Clamps a sensitivity value to MIN_SENSITIVITY..MAX_SENSITIVITY. */
+    /** Clamps a sensitivity value to MIN_SENSITIVITY.MAX_SENSITIVITY. */
     public static int clampSensitivity(int sensitivity) {
         return Math.max(MIN_SENSITIVITY, Math.min(MAX_SENSITIVITY, sensitivity));
     }
 
-    /** Clamps a menu weight to MIN_WEIGHT..MAX_WEIGHT. */
+    /** Clamps a menu weight to MIN_WEIGHT.MAX_WEIGHT. */
     public static int clampWeight(int weight) {
         return Math.max(MIN_WEIGHT, Math.min(MAX_WEIGHT, weight));
     }

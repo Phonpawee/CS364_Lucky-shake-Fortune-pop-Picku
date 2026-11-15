@@ -6,6 +6,7 @@ import com.cs364.luckyshake.logic.DrawRound;
 import com.cs364.luckyshake.logic.DrawStatus;
 import com.cs364.luckyshake.logic.GameConfig;
 import com.cs364.luckyshake.logic.RedrawQuota;
+import com.cs364.luckyshake.logic.WeightPolicy;
 import com.cs364.luckyshake.logic.WeightedDrawEngine;
 
 import org.junit.Test;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
@@ -33,12 +35,18 @@ public class HomeSessionTest {
 
     private final HomeSession.MenuSource source = (setId, filter) -> {
         List<Menu> out = new ArrayList<>();
-        for (Menu m : sets.getOrDefault(setId, new ArrayList<>())) {
+        for (Menu m : Objects.requireNonNull(sets.getOrDefault(setId, new ArrayList<>()))) {
             if (filter != null && filter.noSpicy && m.hasTag(Menu.TAG_SPICY)) continue;
             out.add(m);
         }
         return out;
     };
+
+    /** น้ำหนักที่ถูกบันทึก ในรูป "id:EVENT" ตามลำดับ */
+    private final List<String> recorded = new ArrayList<>();
+
+    private final HomeSession.WeightRecorder recorder =
+            (menuId, event) -> recorded.add(menuId + ":" + event);
 
     private static Menu menu(long id, int tags) {
         Menu m = new Menu();
@@ -57,7 +65,7 @@ public class HomeSessionTest {
         sets.put(EMPTY, new ArrayList<>());
         HomeSession s = new HomeSession(
                 new DrawRound(new WeightedDrawEngine(new Random(42)), new RedrawQuota(maxRedraws)),
-                source);
+                source, recorder);
         s.setSetId(RICE);
         return s;
     }
@@ -124,6 +132,8 @@ public class HomeSessionTest {
         for (int left = 1; left >= 0; left--) {
             DrawState r = s.redraw();
             assertEquals(left, r.redrawsLeft);
+            assertNotNull(shown.menu);
+            assertNotNull(r.menu);
             assertNotEquals(shown.menu.id, r.menu.id);
             shown = r;
         }
@@ -151,8 +161,8 @@ public class HomeSessionTest {
     public void recentIds_newestFirst_cappedAtRecentCount() {
         HomeSession s = newSession(5);
         List<Long> shown = new ArrayList<>();
-        shown.add(0, s.draw().menu.id);
-        for (int i = 0; i < 3; i++) shown.add(0, s.redraw().menu.id);
+        shown.add(0, Objects.requireNonNull(s.draw().menu).id);
+        for (int i = 0; i < 3; i++) shown.add(0, Objects.requireNonNull(s.redraw().menu).id);
         assertEquals(shown.subList(0, GameConfig.RECENT_COUNT), s.getRecentIds());
     }
 
@@ -207,6 +217,85 @@ public class HomeSessionTest {
         s.accept();
         s.setSetId(EMPTY);
         assertFalse(s.redraw().hasResult());
+    }
+
+    // --------------------------------------------------------------- weights
+
+    @Test
+    public void accept_recordsPlusOneForAcceptedMenu() {
+        HomeSession s = newSession(3);
+        Menu shown = s.draw().menu;
+        s.accept();
+        assertNotNull(shown);
+        assertEquals(List.of(shown.id + ":" + WeightPolicy.Event.ACCEPT), recorded);
+        s.accept(); // ยอมรับซ้ำไม่บันทึกซ้ำ
+        assertEquals(1, recorded.size());
+    }
+
+    @Test
+    public void redraw_recordsMinusOneForRejectedMenu() {
+        HomeSession s = newSession(3);
+        Menu first = s.draw().menu;
+        Menu second = s.redraw().menu;
+        s.redraw();
+        assertNotNull(first);
+        assertNotNull(second);
+        assertEquals(List.of(first.id + ":" + WeightPolicy.Event.REDRAW,
+                second.id + ":" + WeightPolicy.Event.REDRAW), recorded);
+    }
+
+    @Test
+    public void draw_recordsNothing() {
+        HomeSession s = newSession(3);
+        s.draw();
+        s.draw();
+        assertTrue(recorded.isEmpty());
+    }
+
+    @Test
+    public void redraw_quotaEmpty_recordsNothing() {
+        HomeSession s = newSession(1);
+        s.draw();
+        s.redraw();
+        recorded.clear();
+        assertEquals(DrawStatus.QUOTA_EMPTY, s.redraw().status);
+        assertTrue(recorded.isEmpty());
+    }
+
+    @Test
+    public void redraw_noMatch_recordsNothing() {
+        HomeSession s = newSession(3);
+        s.draw();
+        s.setFilter(new MenuFilter(null, false, true));
+        assertEquals(DrawStatus.NO_MATCH, s.redraw().status);
+        assertTrue(recorded.isEmpty());
+    }
+
+    @Test
+    public void redraw_afterNoMatch_stillPenalisesMenuOnScreen() {
+        HomeSession s = newSession(3);
+        Menu shown = s.draw().menu;
+        s.setFilter(new MenuFilter(null, false, true));
+        s.redraw();                 // NO_MATCH: เมนูเดิมยังแสดงอยู่
+        s.setFilter(null);
+        s.redraw();                 // ได้เมนูใหม่จริง → เมนูเดิมถูกปฏิเสธ
+        assertNotNull(shown);
+        assertEquals(List.of(shown.id + ":" + WeightPolicy.Event.REDRAW), recorded);
+    }
+
+    @Test
+    public void redraw_afterAccept_startsNewRound_recordsOnlyTheAccept() {
+        HomeSession s = newSession(3);
+        Menu shown = s.draw().menu;
+        s.accept();
+        s.redraw();
+        assertNotNull(shown);
+        assertEquals(List.of(shown.id + ":" + WeightPolicy.Event.ACCEPT), recorded);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void nullRecorder_isRejected() {
+        new HomeSession(new DrawRound(new WeightedDrawEngine()), source, null);
     }
 
     // -------------------------------------------------------------- settings

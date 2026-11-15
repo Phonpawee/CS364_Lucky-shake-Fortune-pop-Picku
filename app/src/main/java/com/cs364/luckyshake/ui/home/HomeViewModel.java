@@ -28,7 +28,7 @@ import java.util.List;
  * vm.getState().observe(this, state -> { ... แสดง state.menu, state.status, state.redrawsLeft ... });
  * vm.selectSet(setId);  vm.setFilter(filter);
  * DrawState s = vm.draw();      // หน้าหลัก: ถ้า s.hasResult() ไปหน้าผล ไม่งั้นแสดงข้อความตาม s.status
- * vm.redraw();  vm.accept();    // หน้าผล
+ * vm.redraw();  vm.accept();    // หน้าผล (บันทึกน้ำหนัก −1 / +1 ให้เอง ดู WeightPolicy)
  * </pre>
  *
  * <p>ต้องเรียกผ่าน {@link #get} เท่านั้น ห้ามใช้ {@code new ViewModelProvider(this)} เอง
@@ -46,7 +46,8 @@ public class HomeViewModel extends AndroidViewModel {
         super(application);
         MenuRepository repository = new MenuRepository(application);
         session = new HomeSession(new DrawRound(DrawEngine.create()),
-                (setId, filter) -> repository.getMenus(setId, filter, null));
+                (setId, filter) -> repository.getMenus(setId, filter, null),
+                repository::recordEvent);
     }
 
     /** ViewModel ตัวเดียวกันสำหรับทุกหน้า (ผูกกับ Application) */
