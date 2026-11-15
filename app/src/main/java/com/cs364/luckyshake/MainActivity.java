@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -72,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
     private Spinner setPicker;
     private View drawButton;
     private View tube;
-    private View stick;
+    private static final String STATE_PENDING_DRAW = "pending_draw";
+    private long pendingMenuId;
     private AnimatorSet drawAnimation;
     private boolean openingResult;
 
@@ -123,7 +125,9 @@ public class MainActivity extends AppCompatActivity {
         shakeDetector = ShakeDetector.create(this);
         shakeDetector.setOnShakeListener(this::draw);
         tube = findViewById(R.id.home_image_tube);
-        stick = findViewById(R.id.home_image_stick);
+        if (savedInstanceState != null) {
+            pendingMenuId = savedInstanceState.getLong(STATE_PENDING_DRAW);
+        }
         drawButton = findViewById(R.id.home_btn_draw);
         drawButton.setOnClickListener(view -> draw());
         tube.setOnClickListener(view -> draw());
@@ -143,6 +147,14 @@ public class MainActivity extends AppCompatActivity {
                 .getInt(PrefKeys.REROLL_QUOTA, GameConfig.MAX_REDRAWS));
         openingResult = false;
         shakeDetector.start();
+        if (pendingMenuId != 0L) {
+            DrawState pending = viewModel.currentState();
+            if (pending.menu != null && pending.menu.id == pendingMenuId) {
+                animateDraw();
+            } else {
+                pendingMenuId = 0L;
+            }
+        }
     }
 
     @Override
@@ -156,8 +168,14 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        state.putLong(STATE_PENDING_DRAW, pendingMenuId);
+    }
+
     private void draw() {
-        if (openingResult || drawAnimation != null) {
+        if (openingResult || pendingMenuId != 0L) {
             return;
         }
 
@@ -173,45 +191,44 @@ public class MainActivity extends AppCompatActivity {
         if (result.status == DrawStatus.FEW_ITEMS) {
             Toast.makeText(this, R.string.home_msg_few_items, Toast.LENGTH_SHORT).show();
         }
+        pendingMenuId = result.menu.id;
+        animateDraw();
+    }
+
+    private void animateDraw() {
+        if (!ValueAnimator.areAnimatorsEnabled()) {
+            finishDraw();
+            return;
+        }
         drawButton.setEnabled(false);
         tube.setEnabled(false);
         setPicker.setEnabled(false);
         setFilterControlsEnabled(false);
 
         float density = getResources().getDisplayMetrics().density;
-        AnimatorSet shake = new AnimatorSet();
-        shake.playTogether(
+        drawAnimation = new AnimatorSet();
+        drawAnimation.playTogether(
                 ObjectAnimator.ofFloat(tube, View.ROTATION,
                         0f, -18f, 18f, -16f, 16f, -10f, 10f, 0f),
                 ObjectAnimator.ofFloat(tube, View.TRANSLATION_X,
                         0f, -14f * density, 14f * density, -12f * density,
                         12f * density, -6f * density, 6f * density, 0f));
-        shake.setDuration(620);
-        shake.setInterpolator(new LinearInterpolator());
-
-        AnimatorSet pop = new AnimatorSet();
-        pop.playTogether(
-                ObjectAnimator.ofFloat(stick, View.TRANSLATION_X, 0f, 30f * density, 77f * density),
-                ObjectAnimator.ofFloat(stick, View.TRANSLATION_Y, 0f, -63f * density, 94f * density),
-                ObjectAnimator.ofFloat(stick, View.ROTATION, 0f, 30f, 65f));
-        pop.setDuration(620);
-        pop.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                stick.setVisibility(View.VISIBLE);
-            }
-        });
-
-        drawAnimation = new AnimatorSet();
-        drawAnimation.playSequentially(shake, pop);
+        drawAnimation.setDuration(1000);
+        drawAnimation.setInterpolator(new LinearInterpolator());
         drawAnimation.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                resetDrawAnimation();
-                showResult(result.menu.id);
+                finishDraw();
             }
         });
         drawAnimation.start();
+    }
+
+    private void finishDraw() {
+        long menuId = pendingMenuId;
+        pendingMenuId = 0L;
+        resetDrawAnimation();
+        showResult(menuId);
     }
 
     private void resetDrawAnimation() {
@@ -219,10 +236,6 @@ public class MainActivity extends AppCompatActivity {
         tube.setRotation(0f);
         tube.setTranslationX(0f);
         tube.setEnabled(true);
-        stick.setVisibility(View.INVISIBLE);
-        stick.setTranslationX(0f);
-        stick.setTranslationY(0f);
-        stick.setRotation(0f);
         drawButton.setEnabled(true);
         setPicker.setEnabled(true);
         setFilterControlsEnabled(true);

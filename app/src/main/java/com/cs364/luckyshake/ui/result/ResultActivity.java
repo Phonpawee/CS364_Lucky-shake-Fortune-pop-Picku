@@ -1,7 +1,13 @@
 package com.cs364.luckyshake.ui.result;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -27,6 +33,11 @@ public class ResultActivity extends AppCompatActivity {
     public static final String EXTRA_MENU_ID = "com.cs364.luckyshake.extra.MENU_ID";
     private static final String STATE_MENU_ID = "result_menu_id";
 
+    private static final String STATE_STICK_LANDED = "stick_landed";
+
+    private View stick;
+    private AnimatorSet stickFall;
+    private boolean stickLanded;
     private FortuneProvider fortuneProvider;
     private long menuId;
     private int redrawLimit;
@@ -59,6 +70,8 @@ public class ResultActivity extends AppCompatActivity {
         });
         FontSizeHelper.apply(this, root);
 
+        stick = findViewById(R.id.result_image_stick);
+        stickLanded = savedInstanceState != null && savedInstanceState.getBoolean(STATE_STICK_LANDED);
         fortuneProvider = new FortuneProvider(this);
         redrawLimit = GameConfig.clampRedrawLimit(getSharedPreferences(PrefKeys.PREFS_NAME, MODE_PRIVATE)
                 .getInt(PrefKeys.REROLL_QUOTA, GameConfig.MAX_REDRAWS));
@@ -77,6 +90,47 @@ public class ResultActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
         state.putLong(STATE_MENU_ID, menuId);
+        state.putBoolean(STATE_STICK_LANDED, stickLanded);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (stick == null || stickLanded) {
+            return;
+        }
+        if (!ValueAnimator.areAnimatorsEnabled()) {
+            stickLanded = true;
+            return;
+        }
+
+        float distance = 64f * getResources().getDisplayMetrics().density;
+        stickFall = new AnimatorSet();
+        stickFall.playTogether(
+                ObjectAnimator.ofFloat(stick, View.TRANSLATION_Y, -distance, 0f),
+                ObjectAnimator.ofFloat(stick, View.ROTATION, -28f, 0f));
+        stickFall.setDuration(480);
+        stickFall.setInterpolator(new AccelerateInterpolator());
+        stickFall.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                stickLanded = true;
+                stickFall = null;
+            }
+        });
+        stickFall.start();
+    }
+
+    @Override
+    protected void onPause() {
+        if (stickFall != null) {
+            stickFall.removeAllListeners();
+            stickFall.cancel();
+            stickFall = null;
+            stick.setTranslationY(0f);
+            stick.setRotation(0f);
+        }
+        super.onPause();
     }
 
     private void render(DrawState state) {
