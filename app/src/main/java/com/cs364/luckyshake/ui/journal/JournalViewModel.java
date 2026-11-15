@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.cs364.luckyshake.data.HistoryEntry;
 import com.cs364.luckyshake.data.HistoryRepository;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,7 +18,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * ViewModel for managing the state of the Journal (history) screen.
- * Retains filter selections across configuration changes (e.g. screen rotation).
+ * Retains filter selections and active tab across configuration changes (e.g. screen rotation).
  */
 public class JournalViewModel extends AndroidViewModel {
 
@@ -27,11 +28,18 @@ public class JournalViewModel extends AndroidViewModel {
         REDRAWN
     }
 
+    public enum Tab {
+        ENTRIES,
+        STATS
+    }
+
     private final HistoryRepository repository;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final MutableLiveData<Filter> filter = new MutableLiveData<>(Filter.ALL);
+    private final MutableLiveData<Tab> selectedTab = new MutableLiveData<>(Tab.ENTRIES);
     private final MutableLiveData<List<HistoryEntry>> entries = new MutableLiveData<>();
     private final MutableLiveData<Integer> totalCount = new MutableLiveData<>();
+    private final MutableLiveData<JournalStats> stats = new MutableLiveData<>();
 
     private final AtomicLong refreshGeneration = new AtomicLong(0);
 
@@ -45,6 +53,10 @@ public class JournalViewModel extends AndroidViewModel {
         return filter;
     }
 
+    public LiveData<Tab> getSelectedTab() {
+        return selectedTab;
+    }
+
     public LiveData<List<HistoryEntry>> getEntries() {
         return entries;
     }
@@ -53,10 +65,20 @@ public class JournalViewModel extends AndroidViewModel {
         return totalCount;
     }
 
+    public LiveData<JournalStats> getStats() {
+        return stats;
+    }
+
     public void setFilter(Filter f) {
         if (f != null && filter.getValue() != f) {
             filter.setValue(f);
             refresh();
+        }
+    }
+
+    public void setSelectedTab(Tab tab) {
+        if (tab != null && selectedTab.getValue() != tab) {
+            selectedTab.setValue(tab);
         }
     }
 
@@ -93,10 +115,33 @@ public class JournalViewModel extends AndroidViewModel {
         List<HistoryEntry> list = repository.list(dbStatus, 0);
         int total = repository.count(null);
 
+        // Fetch stats data from repository
+        List<HistoryRepository.NameCount> top = repository.topDishes(5);
+        int accepted = repository.count(HistoryEntry.STATUS_ACCEPTED);
+        int redrawn = repository.count(HistoryEntry.STATUS_REDRAWN);
+
+        // Capture bucket timestamps for the 7-day window
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        cal.add(Calendar.DAY_OF_YEAR, -6);
+        long[] perDayMillis = new long[7];
+        for (int i = 0; i < 7; i++) {
+            perDayMillis[i] = cal.getTimeInMillis();
+            cal.add(Calendar.DAY_OF_YEAR, 1);
+        }
+
+        int[] perDay = repository.countPerDay(7);
+
+        JournalStats computedStats = new JournalStats(top, accepted, redrawn, perDay, perDayMillis);
+
         // Discard stale query results if filter or refresh generation changed in the meantime
         if (requestGen == refreshGeneration.get()) {
             entries.postValue(list);
             totalCount.postValue(total);
+            stats.postValue(computedStats);
         }
     }
 

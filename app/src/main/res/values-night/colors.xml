@@ -17,5 +17,6 @@
     <color name="journal_outline">#5A443D</color>
     <color name="journal_text">#F8E8D3</color>
     <color name="journal_text_muted">#C2B3AC</color>
+    <color name="journal_chart_bar">#D89A23</color>
     <color name="transparent">#00000000</color>
 </resources>
