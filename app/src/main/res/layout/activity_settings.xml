@@ -195,5 +195,15 @@
                     android:spinnerMode="dropdown" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <!-- กดค้างที่เลขเวอร์ชันเพื่อเปิดเครื่องมือซ้อมเดโม (ซ่อนจากผู้ใช้ทั่วไป) -->
+        <TextView
+            android:id="@+id/settingsVersion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_md"
+            android:gravity="center"
+            android:padding="@dimen/spacing_md"
+            android:textColor="?attr/colorOnSurfaceVariant" />
     </LinearLayout>
 </ScrollView>

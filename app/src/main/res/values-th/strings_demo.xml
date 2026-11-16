@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_label_version">เวอร์ชัน %1$s</string>
+
+    <!-- เครื่องมือซ้อมเดโม (กดค้างที่เลขเวอร์ชันในหน้าตั้งค่า) -->
+    <string name="demo_title_tools">เครื่องมือซ้อมเดโม</string>
+    <string name="demo_btn_fill_history">เติมประวัติตัวอย่าง</string>
+    <string name="demo_btn_fire_reminder">ยิงแจ้งเตือนทันที</string>
+    <string name="demo_msg_history_filled">เพิ่มประวัติตัวอย่าง %1$d รายการลงสมุดแล้ว</string>
+    <string name="demo_msg_no_menus">ยังไม่มีเมนู เพิ่มเมนูก่อน</string>
+    <string name="demo_msg_reminder_scheduled">จะมีแจ้งเตือนในอีกราว %1$d วินาที</string>
+</resources>
