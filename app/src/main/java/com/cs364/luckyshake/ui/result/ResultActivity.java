@@ -26,6 +26,7 @@ import com.cs364.luckyshake.fortune.FortuneProvider;
 import com.cs364.luckyshake.logic.DrawStatus;
 import com.cs364.luckyshake.logic.GameConfig;
 import com.cs364.luckyshake.ui.home.DrawState;
+import com.cs364.luckyshake.ui.home.ResponsiveLayout;
 import com.cs364.luckyshake.ui.home.HomeViewModel;
 import com.cs364.luckyshake.ui.menu.MenuLabels;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
@@ -67,13 +68,17 @@ public class ResultActivity extends AppCompatActivity {
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_result);
-        View root = findViewById(R.id.result_root);
+        View root = findViewById(R.id.result_landscape_content);
+        if (root == null) {
+            root = findViewById(R.id.result_root);
+        }
         ViewCompat.setOnApplyWindowInsetsListener(root, (view, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
         FontSizeHelper.apply(this, root);
+        ResponsiveLayout.applyResult(this);
 
         stick = findViewById(R.id.result_image_stick);
         stick.setColorFilter(new ColorMatrixColorFilter(new float[] {
