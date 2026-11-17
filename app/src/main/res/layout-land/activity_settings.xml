@@ -361,7 +361,17 @@
                         android:text="@string/reminder_btn_test" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-                    <TextView
+                    <com.google.android.material.button.MaterialButton
+    android:id="@+id/settingsClearAll"
+    style="@style/Widget.LuckyShake.Button.Segment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="8dp"
+    android:text="@string/settings_btn_clear_all"
+    android:textColor="@color/home_accent"
+    app:strokeColor="@color/home_accent" />
+            <TextView
                         android:id="@+id/settingsVersion"
                         android:layout_width="wrap_content"
                         android:layout_gravity="center_horizontal"
@@ -377,13 +387,3 @@
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
-
-
-
-
-
-
-
-
-
-

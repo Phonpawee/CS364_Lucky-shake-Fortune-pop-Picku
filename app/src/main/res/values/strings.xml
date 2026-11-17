@@ -165,7 +165,8 @@
     <string name="reminder_time_button_description">Set reminder time</string>
     <string name="reminder_time_description">Reminder time %1$s</string>
     <string name="reminder_time_placeholder">07:30</string>
+    <string name="settings_btn_clear_all">Clear all data</string>
+    <string name="settings_clear_title">Clear all data?</string>
+    <string name="settings_clear_message">This deletes menus, history, and app preferences, and cancels all meal reminders.</string>
+    <string name="settings_clear_done">All app data was cleared.</string>
 </resources>
-
-
-

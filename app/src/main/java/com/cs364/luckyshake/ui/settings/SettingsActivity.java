@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.os.LocaleListCompat;
 
 import com.cs364.luckyshake.R;
+import com.cs364.luckyshake.data.DbHelper;
 import com.cs364.luckyshake.data.DemoHistory;
 import com.cs364.luckyshake.data.HistoryEntry;
 import com.cs364.luckyshake.data.HistoryRepository;
@@ -76,6 +77,7 @@ public class SettingsActivity extends AppCompatActivity {
         mealReminderSettings = new MealReminderSettings(this, reminderPermissionLauncher);
         mealReminderSettings.attach(root);
         findViewById(R.id.settingsTestReminder).setOnClickListener(v -> fireDemoReminder());
+        findViewById(R.id.settingsClearAll).setOnClickListener(v -> confirmClearAllData());
 
         MaterialButtonToggleGroup languageGroup =
                 findViewById(R.id.languageGroup);
@@ -206,6 +208,34 @@ public class SettingsActivity extends AppCompatActivity {
                 });
     }
 
+    private void confirmClearAllData() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.settings_clear_title)
+                .setMessage(R.string.settings_clear_message)
+                .setNegativeButton(R.string.common_btn_cancel, null)
+                .setPositiveButton(R.string.settings_btn_clear_all,
+                        (dialog, which) -> clearAllData())
+                .show();
+    }
+
+    private void clearAllData() {
+        for (int reminderId : new int[]{1, 2, 3}) {
+            ReminderScheduler.cancel(this, reminderId);
+        }
+        ReminderScheduler.cancel(this, ReminderScheduler.DEMO_REMINDER_ID);
+
+        DbHelper.closeInstance();
+        deleteDatabase(DbHelper.DB_NAME);
+        preferences.edit().clear().apply();
+
+        HomeViewModel homeViewModel = HomeViewModel.get(this);
+        homeViewModel.reset();
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.getEmptyLocaleList());
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+
+        Toast.makeText(this, R.string.settings_clear_done, Toast.LENGTH_SHORT).show();
+        recreate();
+    }
     // ------------------------------------------------------------ demo tools
 
     /** แสดงเลขเวอร์ชัน กดค้างเพื่อเปิดเครื่องมือซ้อมเดโม (ผู้ใช้ทั่วไปจะไม่รู้ว่ามี) */
@@ -348,4 +378,3 @@ public class SettingsActivity extends AppCompatActivity {
         return Math.max(min, Math.min(value, max));
     }
 }
-

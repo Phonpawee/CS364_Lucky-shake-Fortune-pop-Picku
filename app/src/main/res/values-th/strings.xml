@@ -165,7 +165,8 @@
     <string name="reminder_time_button_description">ตั้งเวลาแจ้งเตือน</string>
     <string name="reminder_time_description">เวลาแจ้งเตือน %1$s</string>
     <string name="reminder_time_placeholder">07:30 น.</string>
+    <string name="settings_btn_clear_all">ล้างข้อมูลทั้งหมด</string>
+    <string name="settings_clear_title">ล้างข้อมูลทั้งหมดหรือไม่</string>
+    <string name="settings_clear_message">เมนู ประวัติ และการตั้งค่าในแอปจะถูกลบ พร้อมยกเลิกการแจ้งเตือนทุกมื้อ</string>
+    <string name="settings_clear_done">ล้างข้อมูลทั้งหมดแล้ว</string>
 </resources>
-
-
-
