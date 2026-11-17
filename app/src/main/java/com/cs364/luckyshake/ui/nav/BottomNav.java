@@ -24,6 +24,7 @@ import com.cs364.luckyshake.ui.journal.JournalActivity;
 import com.cs364.luckyshake.ui.menu.MenuListActivity;
 import com.cs364.luckyshake.ui.settings.SettingsActivity;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.navigationrail.NavigationRailView;
 import com.google.android.material.snackbar.Snackbar;
@@ -49,10 +50,10 @@ public final class BottomNav {
         }
     }
 
-    /** Shows the snackbar above the bar (when the bar is visible) instead of over it. */
+    /** Anchors the snackbar above the visible bottom bar in portrait. */
     public static void show(AppCompatActivity activity, Snackbar snackbar) {
         View nav = activity.findViewById(R.id.bottom_nav);
-        if (nav != null && nav.getVisibility() == View.VISIBLE) {
+        if (nav instanceof BottomNavigationView && nav.getVisibility() == View.VISIBLE) {
             snackbar.setAnchorView(nav);
         }
         snackbar.show();
