@@ -7,6 +7,19 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
+import android.net.Uri;
+import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
+import java.io.IOException;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
@@ -40,6 +53,14 @@ public class ResultActivity extends AppCompatActivity {
 
     private static final float STICK_REST_ROTATION = 12f;
 
+    private static final String STATE_EXPORT = "result_export_snapshot";
+    private String pendingSnapshot;
+    private View saveImage;
+    private View resultCard;
+    // Register unconditionally so a picker result can be delivered after recreation.
+    private final ActivityResultLauncher<String> createImage = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument("image/png"), this::saveImageDocument);
+
     private ImageView stick;
     private AnimatorSet stickFall;
     private boolean stickLanded;
@@ -55,6 +76,9 @@ public class ResultActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            pendingSnapshot = savedInstanceState.getString(STATE_EXPORT);
+        }
         HomeViewModel viewModel = HomeViewModel.get(this);
         menuId = savedInstanceState == null
                 ? getIntent().getLongExtra(EXTRA_MENU_ID, 0L)
@@ -95,6 +119,28 @@ public class ResultActivity extends AppCompatActivity {
         redraw.setOnClickListener(view -> viewModel.redraw());
         accept.setOnClickListener(view -> viewModel.accept());
         home.setOnClickListener(view -> BackNavigation.goHome(this));
+        resultCard = findViewById(R.id.result_card);
+        if (resultCard == null) {
+            // Also supports tablet variants added by #16 before they gain export IDs.
+            resultCard = (View) findViewById(R.id.result_label_stick).getParent();
+        }
+        saveImage = findViewById(R.id.result_btn_save_image);
+        if (saveImage == null) {
+            android.widget.LinearLayout actions = (android.widget.LinearLayout) home.getParent();
+            View actionCard = (View) actions.getParent();
+            android.widget.LinearLayout column = (android.widget.LinearLayout) actionCard.getParent();
+            com.google.android.material.button.MaterialButton button =
+                    new com.google.android.material.button.MaterialButton(this);
+            button.setId(R.id.result_btn_save_image);
+            button.setText(R.string.result_save_image);
+            android.widget.LinearLayout.LayoutParams params = new android.widget.LinearLayout.LayoutParams(
+                    android.view.ViewGroup.LayoutParams.MATCH_PARENT,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+            column.addView(button, column.indexOfChild(actionCard) + 1, params);
+            saveImage = button;
+        }
+        saveImage.setEnabled(pendingSnapshot == null);
+        saveImage.setOnClickListener(view -> chooseImageDestination());
         BackNavigation.register(this, () -> {
             if (viewModel.currentState().hasPendingResult()) {
                 BackNavigation.confirmDiscard(this, R.string.back_draw_title,
@@ -112,6 +158,7 @@ public class ResultActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
+        state.putString(STATE_EXPORT, pendingSnapshot);
         state.putLong(STATE_MENU_ID, menuId);
         state.putBoolean(STATE_STICK_LANDED, stickLanded);
     }
@@ -154,6 +201,60 @@ public class ResultActivity extends AppCompatActivity {
             stick.setRotation(STICK_REST_ROTATION);
         }
         super.onPause();
+    }
+
+    private void chooseImageDestination() {
+        if (pendingSnapshot != null) return;
+        File snapshot = null;
+        try {
+            snapshot = File.createTempFile("fortune-", ".png", getCacheDir());
+            ResultCardImage.capture(resultCard, snapshot);
+            pendingSnapshot = snapshot.getName();
+            saveImage.setEnabled(false);
+            createImage.launch("LuckyShake-" + System.currentTimeMillis() + ".png");
+        } catch (IOException | RuntimeException | OutOfMemoryError error) {
+            if (snapshot != null) snapshot.delete();
+            pendingSnapshot = null;
+            saveImage.setEnabled(true);
+            Toast.makeText(this, R.string.result_save_error, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void saveImageDocument(Uri uri) {
+        String snapshotName = pendingSnapshot;
+        pendingSnapshot = null;
+        if (saveImage != null) saveImage.setEnabled(true);
+        if (snapshotName == null) {
+            Toast.makeText(this, uri == null ? R.string.result_save_cancelled
+                    : R.string.result_save_error, Toast.LENGTH_LONG).show();
+            return;
+        }
+        File snapshot = new File(getCacheDir(), snapshotName);
+        if (uri == null) {
+            snapshot.delete();
+            Toast.makeText(this, R.string.result_save_cancelled, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // Keep provider I/O off the UI thread, and use application context across rotation.
+        Context context = getApplicationContext();
+        new Thread(() -> {
+            int message = R.string.result_save_success;
+            try (FileInputStream input = new FileInputStream(snapshot);
+                 OutputStream output = context.getContentResolver().openOutputStream(uri, "w")) {
+                if (output == null) throw new IOException("Document provider returned no stream");
+                byte[] buffer = new byte[8192];
+                int count;
+                while ((count = input.read(buffer)) != -1) output.write(buffer, 0, count);
+                output.flush();
+            } catch (IOException | RuntimeException error) {
+                message = R.string.result_save_error;
+            } finally {
+                snapshot.delete();
+            }
+            int result = message;
+            new Handler(Looper.getMainLooper()).post(() ->
+                    Toast.makeText(context, result, Toast.LENGTH_LONG).show());
+        }, "result-image-save").start();
     }
 
     private void render(DrawState state) {

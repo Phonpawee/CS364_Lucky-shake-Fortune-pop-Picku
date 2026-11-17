@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="result_save_image">บันทึกภาพผลเซียมซี</string>
+    <string name="result_save_success">บันทึกภาพเรียบร้อยแล้ว</string>
+    <string name="result_save_cancelled">ยกเลิกการบันทึกภาพ</string>
+    <string name="result_save_error">บันทึกภาพไม่สำเร็จ กรุณาลองอีกครั้ง</string>
+</resources>
