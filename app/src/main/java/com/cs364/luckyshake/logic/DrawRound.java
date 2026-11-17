@@ -69,9 +69,13 @@ public class DrawRound {
      */
     public Candidate accept() {
         Candidate accepted = current;
+        discard();
+        return accepted;
+    }
+
+    public void discard() {
         quota.reset();
         clearCurrent();
-        return accepted;
     }
 
     /** เมนูที่แสดงอยู่ตอนนี้ หรือ null */

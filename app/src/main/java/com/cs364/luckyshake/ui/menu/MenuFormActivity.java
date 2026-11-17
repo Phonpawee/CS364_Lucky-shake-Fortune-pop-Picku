@@ -12,7 +12,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -20,10 +19,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.cs364.luckyshake.R;
+import com.cs364.luckyshake.ui.nav.BackNavigation;
 import com.cs364.luckyshake.data.Menu;
 import com.cs364.luckyshake.data.MenuRepository;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -40,7 +39,7 @@ import java.util.List;
  * <ul>
  *   <li>#24 (done): {@link #validateForm()} checks the name (empty, too long, duplicate in the
  *       same set) and shows the error on the name field.</li>
- *   <li>#14: Back and Cancel ask before discarding ({@link #requestExit()}); swap in the
+ *   <li>#14: Back and Cancel ask before discarding ({@link #requestExit(Runnable)}); swap in the
  *       shared confirmation dialog there if the team wants one.</li>
  * </ul>
  */
@@ -165,13 +164,8 @@ public class MenuFormActivity extends AppCompatActivity {
         });
 
         // Back and Cancel share one exit path, so unsaved changes are never dropped silently.
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                requestExit();
-            }
-        });
-        findViewById(R.id.menu_form_cancel).setOnClickListener(v -> requestExit());
+        BackNavigation.register(this, () -> requestExit(() -> BackNavigation.goHome(this)));
+        findViewById(R.id.menu_form_cancel).setOnClickListener(v -> requestExit(this::finish));
         saveButton.setOnClickListener(v -> save());
     }
 
@@ -196,25 +190,18 @@ public class MenuFormActivity extends AppCompatActivity {
                 || currentTags() != initialTags;
     }
 
-    /**
-     * Leaves the form. Asks first when there are unsaved changes; with nothing to lose it
-     * closes at once. Local dialog for now: #14 may swap it for the shared confirmation dialog.
-     */
-    private void requestExit() {
-        if (!hasUnsavedChanges()) {
+
+    private void requestExit(Runnable leave) {
+        Runnable cancel = () -> {
             setResult(RESULT_CANCELED);
-            finish();
-            return;
+            leave.run();
+        };
+        if (hasUnsavedChanges()) {
+            BackNavigation.confirmDiscard(this, R.string.menu_form_title_discard,
+                    R.string.menu_form_msg_discard, cancel);
+        } else {
+            cancel.run();
         }
-        new MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.menu_form_title_discard)
-                .setMessage(R.string.menu_form_msg_discard)
-                .setNegativeButton(R.string.menu_form_btn_keep, null)
-                .setPositiveButton(R.string.menu_form_btn_discard, (dialog, which) -> {
-                    setResult(RESULT_CANCELED);
-                    finish();
-                })
-                .show();
     }
 
     /**

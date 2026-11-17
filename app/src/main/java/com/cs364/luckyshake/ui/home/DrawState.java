@@ -50,6 +50,10 @@ public final class DrawState {
         return menu != null;
     }
 
+    public boolean hasPendingResult() {
+        return hasResult() && !accepted;
+    }
+
     /** ปุ่มขอใหม่กดได้ไหม */
     public boolean canRedraw() {
         return hasResult() && !accepted && redrawsLeft > 0;

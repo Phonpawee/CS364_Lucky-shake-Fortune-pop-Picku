@@ -19,6 +19,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.cs364.luckyshake.R;
+import com.cs364.luckyshake.ui.nav.BackNavigation;
 import com.cs364.luckyshake.data.Menu;
 import com.cs364.luckyshake.data.PrefKeys;
 import com.cs364.luckyshake.fortune.FortuneProvider;
@@ -93,7 +94,18 @@ public class ResultActivity extends AppCompatActivity {
         home = findViewById(R.id.result_btn_home);
         redraw.setOnClickListener(view -> viewModel.redraw());
         accept.setOnClickListener(view -> viewModel.accept());
-        home.setOnClickListener(view -> finish());
+        home.setOnClickListener(view -> BackNavigation.goHome(this));
+        BackNavigation.register(this, () -> {
+            if (viewModel.currentState().hasPendingResult()) {
+                BackNavigation.confirmDiscard(this, R.string.back_draw_title,
+                        R.string.back_draw_message, () -> {
+                            BackNavigation.goHome(this);
+                            viewModel.discardPendingResult();
+                        });
+            } else {
+                BackNavigation.goHome(this);
+            }
+        });
         viewModel.getState().observe(this, this::render);
     }
 
