@@ -1,0 +1,63 @@
+<resources>
+    <style name="Widget.LuckyShake.TabBanner" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">90dp</item>
+        <item name="android:background">@drawable/menu_header</item>
+    </style>
+    <style name="Widget.LuckyShake.TabPage.Sky" parent="">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:importantForAccessibility">no</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:src">@drawable/home_sky</item>
+    </style>
+    <style name="Widget.LuckyShake.TabBanner.Title" parent="">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">12dp</item>
+        <item name="android:layout_marginEnd">12dp</item>
+        <item name="android:accessibilityHeading">true</item>
+        <item name="android:background">@drawable/result_title_background</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingHorizontal">16dp</item>
+        <item name="android:paddingVertical">6dp</item>
+        <item name="android:textColor">@color/home_thumb</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="Widget.LuckyShake.TabBanner.Art" parent="">
+        <item name="android:layout_width">58dp</item>
+        <item name="android:layout_height">62dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:importantForAccessibility">no</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+    <style name="Widget.LuckyShake.Card.Tab" parent="Widget.LuckyShake.Card">
+        <item name="cardBackgroundColor">@color/tab_card_surface</item>
+        <item name="cardCornerRadius">20dp</item>
+        <item name="cardElevation">5dp</item>
+        <item name="strokeColor">@color/tab_card_outline</item>
+        <item name="strokeWidth">2dp</item>
+    </style>
+    <style name="Widget.LuckyShake.Button.Segment" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingRight">6dp</item>
+        <item name="android:textColor">@color/tab_segment_text</item>
+        <item name="android:textStyle">bold</item>
+        <item name="backgroundTint">@color/tab_segment_fill</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="strokeColor">@color/home_outline</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+    <style name="Widget.LuckyShake.Button.Stepper" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:paddingRight">0dp</item>
+        <item name="backgroundTint">@color/home_field</item>
+        <item name="cornerRadius">24dp</item>
+        <item name="strokeColor">@color/home_outline</item>
+    </style>
+</resources>

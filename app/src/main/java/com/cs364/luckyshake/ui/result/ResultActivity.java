@@ -5,9 +5,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.graphics.ColorMatrixColorFilter;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -35,7 +37,9 @@ public class ResultActivity extends AppCompatActivity {
 
     private static final String STATE_STICK_LANDED = "stick_landed";
 
-    private View stick;
+    private static final float STICK_REST_ROTATION = 12f;
+
+    private ImageView stick;
     private AnimatorSet stickFall;
     private boolean stickLanded;
     private FortuneProvider fortuneProvider;
@@ -71,6 +75,13 @@ public class ResultActivity extends AppCompatActivity {
         FontSizeHelper.apply(this, root);
 
         stick = findViewById(R.id.result_image_stick);
+        stick.setColorFilter(new ColorMatrixColorFilter(new float[] {
+                1.07f, 0f, 0f, 0f, 8f,
+                0f, 1.07f, 0f, 0f, 8f,
+                0f, 0f, 1.07f, 0f, 8f,
+                0f, 0f, 0f, 1f, 0f
+        }));
+        stick.setRotation(STICK_REST_ROTATION);
         stickLanded = savedInstanceState != null && savedInstanceState.getBoolean(STATE_STICK_LANDED);
         fortuneProvider = new FortuneProvider(this);
         redrawLimit = GameConfig.clampRedrawLimit(getSharedPreferences(PrefKeys.PREFS_NAME, MODE_PRIVATE)
@@ -108,7 +119,7 @@ public class ResultActivity extends AppCompatActivity {
         stickFall = new AnimatorSet();
         stickFall.playTogether(
                 ObjectAnimator.ofFloat(stick, View.TRANSLATION_Y, -distance, 0f),
-                ObjectAnimator.ofFloat(stick, View.ROTATION, -28f, 0f));
+                ObjectAnimator.ofFloat(stick, View.ROTATION, -28f, STICK_REST_ROTATION));
         stickFall.setDuration(480);
         stickFall.setInterpolator(new AccelerateInterpolator());
         stickFall.addListener(new AnimatorListenerAdapter() {
@@ -128,7 +139,7 @@ public class ResultActivity extends AppCompatActivity {
             stickFall.cancel();
             stickFall = null;
             stick.setTranslationY(0f);
-            stick.setRotation(0f);
+            stick.setRotation(STICK_REST_ROTATION);
         }
         super.onPause();
     }

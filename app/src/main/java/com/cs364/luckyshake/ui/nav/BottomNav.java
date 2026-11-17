@@ -10,6 +10,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -24,6 +25,8 @@ import com.cs364.luckyshake.ui.menu.MenuListActivity;
 import com.cs364.luckyshake.ui.settings.SettingsActivity;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigationrail.NavigationRailView;
 import com.google.android.material.snackbar.Snackbar;
 
 /**
@@ -47,10 +50,10 @@ public final class BottomNav {
         }
     }
 
-    /** Shows the snackbar above the bar (when the bar is visible) instead of over it. */
+    /** Anchors the snackbar above the visible bottom bar in portrait. */
     public static void show(AppCompatActivity activity, Snackbar snackbar) {
         View nav = activity.findViewById(R.id.bottom_nav);
-        if (nav != null && nav.getVisibility() == View.VISIBLE) {
+        if (nav instanceof BottomNavigationView && nav.getVisibility() == View.VISIBLE) {
             snackbar.setAnchorView(nav);
         }
         snackbar.show();
@@ -58,36 +61,53 @@ public final class BottomNav {
 
     public static void attach(AppCompatActivity activity, @IdRes int selectedId) {
         ViewGroup content = activity.findViewById(android.R.id.content);
+        attach(activity, selectedId, content.getChildAt(0));
+    }
+
+    /** Allows a full-bleed backdrop while keeping the interactive content clear of system bars. */
+    public static void attach(AppCompatActivity activity, @IdRes int selectedId, View insetTarget) {
+        ViewGroup content = activity.findViewById(android.R.id.content);
         View root = content.getChildAt(0);
         content.removeView(root);
 
         LinearLayout container = new LinearLayout(activity);
-        container.setOrientation(LinearLayout.VERTICAL);
-        container.addView(root, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
-        BottomNavigationView nav = (BottomNavigationView) activity.getLayoutInflater()
+        NavigationBarView nav = (NavigationBarView) activity.getLayoutInflater()
                 .inflate(R.layout.view_bottom_nav, container, false);
-        container.addView(nav);
+        boolean sideRail = nav instanceof NavigationRailView;
+        container.setOrientation(sideRail ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
+        nav.setBackgroundColor(ContextCompat.getColor(activity, R.color.home_paper));
+        nav.setItemIconTintList(ContextCompat.getColorStateList(activity, R.color.home_nav_tint));
+        nav.setItemTextColor(ContextCompat.getColorStateList(activity, R.color.home_nav_tint));
+        nav.setItemActiveIndicatorColor(ContextCompat.getColorStateList(activity, R.color.home_selected));
+        if (sideRail) {
+            container.addView(nav);
+            container.addView(root, new LinearLayout.LayoutParams(
+                    0, ViewGroup.LayoutParams.MATCH_PARENT, 1f));
+        } else {
+            container.addView(root, new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
+            container.addView(nav);
+        }
         content.addView(container, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         // The bar handles the bottom system inset itself. The screen keeps the other sides.
         // While the keyboard is open the bar is hidden and the screen makes room for the keyboard.
-        final int left = root.getPaddingLeft();
-        final int top = root.getPaddingTop();
-        final int right = root.getPaddingRight();
-        final int bottom = root.getPaddingBottom();
-        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+        final int left = insetTarget.getPaddingLeft();
+        final int top = insetTarget.getPaddingTop();
+        final int right = insetTarget.getPaddingRight();
+        final int bottom = insetTarget.getPaddingBottom();
+        ViewCompat.setOnApplyWindowInsetsListener(insetTarget, (v, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars()
                     | WindowInsetsCompat.Type.displayCutout());
             boolean imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime());
             int imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
             nav.setVisibility(imeVisible ? View.GONE : View.VISIBLE);
             v.setPadding(left + bars.left, top + bars.top, right + bars.right,
-                    bottom + (imeVisible ? imeBottom : 0));
+                    bottom + (imeVisible ? imeBottom : sideRail ? bars.bottom : 0));
             return insets;
         });
-        ViewCompat.requestApplyInsets(root);
+        ViewCompat.requestApplyInsets(insetTarget);
 
         nav.setSelectedItemId(selectedId);
         // Selecting a tab makes Material reset its label size, so scale after that. Home stays

@@ -1,0 +1,5 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" android:paddingMode="stack">
+    <item android:drawable="@drawable/home_select_field" />
+    <item android:drawable="@drawable/home_chevron" android:width="18dp"
+        android:height="18dp" android:gravity="end|center_vertical" android:end="8dp" />
+</layer-list>
