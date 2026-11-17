@@ -1,174 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/menu_list_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".ui.menu.MenuListActivity">
+    android:theme="@style/ThemeOverlay.LuckyShake.Home">
 
-    <TextView
-        android:id="@+id/menu_list_title"
+    <ImageView style="@style/Widget.LuckyShake.TabPage.Sky" />
+
+    <LinearLayout
+        android:id="@+id/menu_list_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/spacing_md"
-        android:layout_marginTop="@dimen/spacing_md"
-        android:text="@string/menu_list_title_main"
-        android:textAppearance="@style/TextAppearance.LuckyShake.Heading" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".ui.menu.MenuListActivity">
 
-    <!-- Menu set card: label, set picker and the add / rename / delete icon buttons (#25). -->
-    <com.google.android.material.card.MaterialCardView
-        style="@style/Widget.LuckyShake.Card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/spacing_md"
-        android:layout_marginTop="@dimen/spacing_sm">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            style="@style/Widget.LuckyShake.TabBanner"
+            android:layout_marginHorizontal="@dimen/spacing_md"
+            android:layout_marginTop="12dp">
 
+            <TextView
+                android:id="@+id/menu_list_title"
+                style="@style/Widget.LuckyShake.TabBanner.Title"
+                android:text="@string/menu_list_title_main"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tab_banner_art"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.cs364.luckyshake.ui.home.ShadowImageView
+                android:id="@+id/tab_banner_art"
+                style="@style/Widget.LuckyShake.TabBanner.Art"
+                android:layout_width="76dp"
+                android:layout_height="66dp"
+                app:srcCompat="@drawable/menu_rice_bowl"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Menu set card: label, set picker and the add / rename / delete icon buttons (#25). -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.LuckyShake.Card.Tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/spacing_md"
+            android:layout_marginTop="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="12dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="8dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@id/menu_list_set_spinner"
+                    android:text="@string/menu_list_label_set"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <Spinner
+                        android:id="@+id/menu_list_set_spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/spacing_sm"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/menu_list_label_set"
+                        android:minHeight="48dp"
+                        android:background="@drawable/home_spinner_background"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="30dp"
+                        android:popupBackground="@color/home_field" />
+
+                    <ImageButton
+                        android:id="@+id/menu_sets_btn_add"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/menu_sets_btn_add"
+                        android:src="@drawable/ic_add"
+                        android:tooltipText="@string/menu_sets_btn_add"
+                        app:tint="@color/home_accent" />
+
+                    <ImageButton
+                        android:id="@+id/menu_sets_btn_rename"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/menu_sets_btn_rename"
+                        android:src="@drawable/ic_edit"
+                        android:tooltipText="@string/menu_sets_btn_rename"
+                        app:tint="@color/home_accent" />
+
+                    <ImageButton
+                        android:id="@+id/menu_sets_btn_delete"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/menu_sets_btn_delete"
+                        android:src="@drawable/ic_delete_outline"
+                        android:tooltipText="@string/menu_sets_btn_delete"
+                        app:tint="@color/home_accent" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Search and "add dish" share one row. -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/spacing_md">
+            android:layout_marginHorizontal="@dimen/spacing_md"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:alpha="0.75"
-                android:text="@string/menu_list_label_set"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="14sp" />
+                android:layout_marginEnd="@dimen/spacing_sm"
+                android:layout_weight="1"
+                android:hint="@string/menu_list_hint_search"
+                app:boxBackgroundColor="@color/home_field"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxStrokeColor="@color/menu_search_stroke"
+                app:hintTextColor="@color/home_accent"
+                app:startIconDrawable="@drawable/menu_search_icon"
+                app:startIconTint="@color/home_accent">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <Spinner
-                    android:id="@+id/menu_list_set_spinner"
-                    android:layout_width="0dp"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/menu_list_search"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/spacing_sm"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/menu_list_label_set"
-                    android:minHeight="@dimen/button_min_height" />
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textColor="@color/home_ink"
+                    android:textColorHint="@color/home_ink" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                <ImageButton
-                    android:id="@+id/menu_sets_btn_add"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/menu_sets_btn_add"
-                    android:src="@drawable/ic_add"
-                    android:tooltipText="@string/menu_sets_btn_add"
-                    app:tint="?attr/colorOnSurface" />
-
-                <ImageButton
-                    android:id="@+id/menu_sets_btn_rename"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/menu_sets_btn_rename"
-                    android:src="@drawable/ic_edit"
-                    android:tooltipText="@string/menu_sets_btn_rename"
-                    app:tint="?attr/colorOnSurface" />
-
-                <ImageButton
-                    android:id="@+id/menu_sets_btn_delete"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/menu_sets_btn_delete"
-                    android:src="@drawable/ic_delete"
-                    android:tooltipText="@string/menu_sets_btn_delete"
-                    app:tint="?attr/colorOnSurface" />
-            </LinearLayout>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Search and "add dish" share one row. -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/spacing_md"
-        android:layout_marginTop="@dimen/spacing_sm"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/spacing_sm"
-            android:layout_weight="1"
-            android:hint="@string/menu_list_hint_search">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/menu_list_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:maxLines="1" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/menu_list_add_button"
-            style="@style/Widget.LuckyShake.Button.Primary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minHeight="56dp"
-            android:text="@string/menu_list_btn_add" />
-    </LinearLayout>
-
-    <!-- Dishes of the selected set: one card, thin lines between the rows. -->
-    <com.google.android.material.card.MaterialCardView
-        style="@style/Widget.LuckyShake.Card"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginHorizontal="@dimen/spacing_md"
-        android:layout_marginTop="@dimen/spacing_sm"
-        android:layout_marginBottom="@dimen/spacing_md"
-        android:layout_weight="1">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/menu_list_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipToPadding="false"
-                android:paddingVertical="@dimen/spacing_sm" />
-
-            <LinearLayout
-                android:id="@+id/menu_list_empty_group"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/menu_list_add_button"
+                style="@style/Widget.LuckyShake.Button.Menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_md"
-                android:visibility="gone">
+                android:minHeight="56dp"
+                android:text="@string/menu_list_btn_add" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/menu_list_empty_text"
+        <!-- Dishes of the selected set: one card, thin lines between the rows. -->
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.LuckyShake.Card.Tab"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/spacing_md"
+            android:layout_marginTop="@dimen/spacing_sm"
+            android:layout_marginBottom="@dimen/spacing_md"
+            android:layout_weight="1">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/menu_list_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingVertical="@dimen/spacing_sm" />
+
+                <LinearLayout
+                    android:id="@+id/menu_list_empty_group"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textColor="?attr/colorOnSurface"
-                    android:textSize="@dimen/text_body" />
+                    android:layout_gravity="center"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_md"
+                    android:visibility="gone">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/menu_list_empty_add_button"
-                    style="@style/Widget.LuckyShake.Button.Primary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_sm"
-                    android:text="@string/menu_list_btn_add" />
-            </LinearLayout>
-        </FrameLayout>
-    </com.google.android.material.card.MaterialCardView>
-</LinearLayout>
+                    <TextView
+                        android:id="@+id/menu_list_empty_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="@dimen/text_body" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/menu_list_empty_add_button"
+                        style="@style/Widget.LuckyShake.Button.Menu"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_sm"
+                        android:text="@string/menu_list_btn_add" />
+                </LinearLayout>
+            </FrameLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,6 @@
+<resources>
+    <color name="tab_card_surface">#253352</color>
+    <color name="tab_card_outline">#D7B77D</color>
+    <color name="tab_banner_start">#293658</color>
+    <color name="tab_banner_end">#475E89</color>
+</resources>

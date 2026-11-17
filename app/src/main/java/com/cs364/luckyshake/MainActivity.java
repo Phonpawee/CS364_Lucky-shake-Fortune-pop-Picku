@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
-import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -27,9 +26,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.cs364.luckyshake.data.MenuRepository;
 import com.cs364.luckyshake.data.Menu;
@@ -99,12 +95,12 @@ public class MainActivity extends AppCompatActivity {
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-        BottomNav.attach(this, R.id.nav_home);
+        View landscapeScroll = findViewById(R.id.home_landscape_scroll);
+        if (landscapeScroll == null) {
+            BottomNav.attach(this, R.id.nav_home);
+        } else {
+            BottomNav.attach(this, R.id.nav_home, landscapeScroll);
+        }
 
         viewModel = HomeViewModel.get(this);
         menuRepository = new MenuRepository(this);
@@ -209,6 +205,8 @@ public class MainActivity extends AppCompatActivity {
         setFilterControlsEnabled(false);
 
         float density = getResources().getDisplayMetrics().density;
+        tube.setPivotX(tube.getWidth() / 2f);
+        tube.setPivotY(tube.getHeight() * 0.72f);
         AnimatorSet shake = new AnimatorSet();
         shake.playTogether(
                 ObjectAnimator.ofFloat(tube, View.ROTATION,
@@ -221,9 +219,9 @@ public class MainActivity extends AppCompatActivity {
 
         AnimatorSet launchStick = new AnimatorSet();
         launchStick.playTogether(
-                ObjectAnimator.ofFloat(stick, View.TRANSLATION_Y, 0f, -74f * density),
-                ObjectAnimator.ofFloat(stick, View.TRANSLATION_X, 0f, 22f * density),
-                ObjectAnimator.ofFloat(stick, View.ROTATION, 0f, -28f),
+                ObjectAnimator.ofFloat(stick, View.TRANSLATION_Y, 0f, -68f * density),
+                ObjectAnimator.ofFloat(stick, View.TRANSLATION_X, 0f, 39f * density),
+                ObjectAnimator.ofFloat(stick, View.ROTATION, 0f, 32f),
                 ObjectAnimator.ofFloat(stick, View.SCALE_Y, 0.12f, 1f));
         launchStick.setDuration(320);
         launchStick.setInterpolator(new DecelerateInterpolator());
@@ -289,7 +287,7 @@ public class MainActivity extends AppCompatActivity {
                 selected = i;
             }
         }
-        setPicker.setAdapter(FontSizeHelper.spinnerAdapter(this, names));
+        setPicker.setAdapter(FontSizeHelper.spinnerAdapter(setPicker.getContext(), names));
         if (sets.isEmpty()) {
             viewModel.selectSet(HomeSession.NO_SET);
         } else {
@@ -311,7 +309,7 @@ public class MainActivity extends AppCompatActivity {
         for (String type : MENU_TYPES.subList(1, MENU_TYPES.size())) {
             typeNames.add(MenuLabels.type(this, type));
         }
-        bindSpinner(typePicker, typeNames);
+        typePicker.setAdapter(FontSizeHelper.spinnerAdapter(typePicker.getContext(), typeNames));
         typePicker.setSelection(Math.max(0,
                 MENU_TYPES.indexOf(filterPreferences.getString(PrefKeys.FILTER_TYPE, null))));
         noFried.setChecked(filterPreferences.getBoolean(PrefKeys.FILTER_NO_FRIED, false));
@@ -336,13 +334,6 @@ public class MainActivity extends AppCompatActivity {
             noSpicy.setChecked(false);
             applyFilters();
         });
-    }
-
-    private void bindSpinner(Spinner spinner, List<String> labels) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, labels);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
     }
 
     private MenuFilter currentFilter() {

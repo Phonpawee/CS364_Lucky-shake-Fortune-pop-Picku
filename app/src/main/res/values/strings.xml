@@ -154,4 +154,5 @@
     <string name="result_btn_redraw">Draw again</string>
     <string name="result_msg_accepted">Accepted</string>
     <string name="result_msg_quota_empty">You have used all your redraws.</string>
+    <string name="home_shake_hint">Shake to pick a dish</string>
 </resources>

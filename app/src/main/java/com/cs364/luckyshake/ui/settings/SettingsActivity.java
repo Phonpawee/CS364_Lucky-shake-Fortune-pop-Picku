@@ -18,10 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
 import androidx.core.os.LocaleListCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.data.DemoHistory;
@@ -67,23 +64,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         View root = findViewById(R.id.settings_root);
-        int left = root.getPaddingLeft();
-        int top = root.getPaddingTop();
-        int right = root.getPaddingRight();
-        int bottom = root.getPaddingBottom();
-
-        ViewCompat.setOnApplyWindowInsetsListener(root, (view, insets) -> {
-            Insets bars = insets.getInsets(
-                    WindowInsetsCompat.Type.systemBars()
-                            | WindowInsetsCompat.Type.displayCutout());
-            view.setPadding(
-                    left + bars.left,
-                    top + bars.top,
-                    right + bars.right,
-                    bottom + bars.bottom);
-            return insets;
-        });
-        BottomNav.attach(this, R.id.nav_settings);
+        BottomNav.attach(this, R.id.nav_settings, root);
 
         preferences = getSharedPreferences(PrefKeys.PREFS_NAME, MODE_PRIVATE);
 

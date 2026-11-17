@@ -14,11 +14,11 @@
 
     <!-- Journal Screen Tokens (#40) -->
     <color name="journal_page_bg">#FFE7C2</color>
-    <color name="journal_surface">#FFF5DF</color>
+    <color name="journal_surface">@color/home_paper</color>
     <color name="journal_primary">#C52D22</color>
-    <color name="journal_outline">#E8D5B7</color>
-    <color name="journal_text">#35211D</color>
+    <color name="journal_outline">@color/menu_divider</color>
+    <color name="journal_text">@color/home_ink</color>
     <color name="journal_text_muted">#7B6A63</color>
-    <color name="journal_chart_bar">#A97616</color>
+    <color name="journal_chart_bar">@color/home_accent</color>
     <color name="transparent">#00000000</color>
 </resources>

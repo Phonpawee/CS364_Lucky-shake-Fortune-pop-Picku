@@ -154,4 +154,5 @@
     <string name="result_btn_redraw">ขอใหม่</string>
     <string name="result_msg_accepted">ยอมรับแล้ว</string>
     <string name="result_msg_quota_empty">ใช้โควตาขอใหม่ครบแล้ว</string>
+    <string name="home_shake_hint">เขย่าเพื่อสุ่มเมนู</string>
 </resources>
