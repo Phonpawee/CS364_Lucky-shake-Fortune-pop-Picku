@@ -2,7 +2,7 @@
 
 Requires #15 (landscape layouts) to be merged first. This branch currently builds on that branch.
 
-Tablet resources use smallest width >= 600dp, in both orientations. Phone resources are unchanged. Content is centered with a 1000dp maximum width, two equally sized independently scrollable columns, larger artwork, and vertically centered content. Existing view IDs and Activity state handling are retained.
+Tablet resources use smallest width >= 600dp, in both orientations. Phone resources are unchanged. Portrait uses the phone layout in a single centered column, capped at 600dp. Landscape uses two independently scrollable columns capped at 1000dp, with larger artwork. Existing view IDs and Activity state handling are retained.
 
 | Device/configuration | Home | Result | Status |
 | --- | --- | --- | --- |
