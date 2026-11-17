@@ -45,6 +45,12 @@ public class SettingsActivity extends AppCompatActivity {
     private static final int DEMO_REMINDER_DELAY_SECONDS = 5;
 
     private SharedPreferences preferences;
+    private MealReminderSettings mealReminderSettings;
+
+    private final ActivityResultLauncher<String> reminderPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
+                if (mealReminderSettings != null) mealReminderSettings.onPermissionResult(granted);
+            });
 
     /** ขอสิทธิ์แจ้งเตือนจากปุ่มเดโม ได้สิทธิ์แล้วค่อยตั้งแจ้งเตือน */
     private final ActivityResultLauncher<String> demoPermissionLauncher =
@@ -67,6 +73,9 @@ public class SettingsActivity extends AppCompatActivity {
         BottomNav.attach(this, R.id.nav_settings, root);
 
         preferences = getSharedPreferences(PrefKeys.PREFS_NAME, MODE_PRIVATE);
+        mealReminderSettings = new MealReminderSettings(this, reminderPermissionLauncher);
+        mealReminderSettings.attach(root);
+        findViewById(R.id.settingsTestReminder).setOnClickListener(v -> fireDemoReminder());
 
         MaterialButtonToggleGroup languageGroup =
                 findViewById(R.id.languageGroup);
@@ -339,3 +348,4 @@ public class SettingsActivity extends AppCompatActivity {
         return Math.max(min, Math.min(value, max));
     }
 }
+

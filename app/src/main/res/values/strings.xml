@@ -155,4 +155,17 @@
     <string name="result_msg_accepted">Accepted</string>
     <string name="result_msg_quota_empty">You have used all your redraws.</string>
     <string name="home_shake_hint">Shake to pick a dish</string>
+    <string name="reminder_settings_title">Meal reminders</string>
+    <string name="reminder_meal_breakfast">Breakfast</string>
+    <string name="reminder_meal_lunch">Lunch</string>
+    <string name="reminder_meal_dinner">Dinner</string>
+    <string name="reminder_time_format">%1$02d:%2$02d</string>
+    <string name="reminder_no_sets">Create a menu set first.</string>
+    <string name="reminder_btn_test">Test reminder (5 seconds)</string>
+    <string name="reminder_time_button_description">Set reminder time</string>
+    <string name="reminder_time_description">Reminder time %1$s</string>
+    <string name="reminder_time_placeholder">07:30</string>
 </resources>
+
+
+

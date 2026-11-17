@@ -230,6 +230,128 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.LuckyShake.Card.Tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_md">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reminder_settings_title"
+                        android:textColor="@color/home_ink"
+                        android:textStyle="bold" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="4dp" android:layout_marginBottom="4dp" android:background="@color/home_outline" />
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/reminderBreakfastEnabled"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reminder_meal_breakfast" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+    android:id="@+id/reminderBreakfastTime"
+    style="@style/Widget.LuckyShake.Button.Segment"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1.5"
+    android:layout_marginEnd="8dp"
+    android:text="@string/reminder_time_placeholder"
+    android:contentDescription="@string/reminder_time_button_description"
+    app:cornerRadius="12dp"
+    app:icon="@drawable/ic_clock"
+    app:iconGravity="end"
+    app:iconPadding="4dp"
+    app:iconTint="@color/home_ink" />
+                        <Spinner
+                            android:id="@+id/reminderBreakfastSet"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:background="@drawable/home_spinner_background"
+                            android:minHeight="48dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="32dp"
+                            android:popupBackground="@color/home_field" />
+                    </LinearLayout>
+                                        <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="4dp" android:layout_marginBottom="4dp" android:background="@color/home_outline" />
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/reminderLunchEnabled"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reminder_meal_lunch" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+    android:id="@+id/reminderLunchTime"
+    style="@style/Widget.LuckyShake.Button.Segment"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1.5"
+    android:layout_marginEnd="8dp"
+    android:text="@string/reminder_time_placeholder"
+    android:contentDescription="@string/reminder_time_button_description"
+    app:cornerRadius="12dp"
+    app:icon="@drawable/ic_clock"
+    app:iconGravity="end"
+    app:iconPadding="4dp"
+    app:iconTint="@color/home_ink" />
+                        <Spinner
+                            android:id="@+id/reminderLunchSet"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:background="@drawable/home_spinner_background"
+                            android:minHeight="48dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="32dp"
+                            android:popupBackground="@color/home_field" />
+                    </LinearLayout>
+                                        <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="4dp" android:layout_marginBottom="4dp" android:background="@color/home_outline" />
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/reminderDinnerEnabled"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reminder_meal_dinner" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+    android:id="@+id/reminderDinnerTime"
+    style="@style/Widget.LuckyShake.Button.Segment"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1.5"
+    android:layout_marginEnd="8dp"
+    android:text="@string/reminder_time_placeholder"
+    android:contentDescription="@string/reminder_time_button_description"
+    app:cornerRadius="12dp"
+    app:icon="@drawable/ic_clock"
+    app:iconGravity="end"
+    app:iconPadding="4dp"
+    app:iconTint="@color/home_ink" />
+                        <Spinner
+                            android:id="@+id/reminderDinnerSet"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:background="@drawable/home_spinner_background"
+                            android:minHeight="48dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="32dp"
+                            android:popupBackground="@color/home_field" />
+                    </LinearLayout>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/settingsTestReminder"
+                        style="@style/Widget.LuckyShake.Button.Segment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/reminder_btn_test" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
             <!-- กดค้างที่เลขเวอร์ชันเพื่อเปิดเครื่องมือซ้อมเดโม (ซ่อนจากผู้ใช้ทั่วไป) -->
             <TextView
                 android:id="@+id/settingsVersion"
@@ -245,3 +367,11 @@
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
+
+
+
+
+
+
+
+
