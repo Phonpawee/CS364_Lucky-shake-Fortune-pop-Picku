@@ -353,6 +353,13 @@
                             android:popupBackground="@color/home_field" />
                     </LinearLayout>
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/settingsAllowNotifications"
+                        style="@style/Widget.LuckyShake.Button.Segment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/reminder_btn_allow_notifications" />
+                    <com.google.android.material.button.MaterialButton
                         android:id="@+id/settingsTestReminder"
                         style="@style/Widget.LuckyShake.Button.Segment"
                         android:layout_width="match_parent"

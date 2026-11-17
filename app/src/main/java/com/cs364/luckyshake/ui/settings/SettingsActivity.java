@@ -50,7 +50,10 @@ public class SettingsActivity extends AppCompatActivity {
 
     private final ActivityResultLauncher<String> reminderPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
-                if (mealReminderSettings != null) mealReminderSettings.onPermissionResult(granted);
+                if (mealReminderSettings != null && mealReminderSettings.onPermissionResult(granted)) return;
+                Toast.makeText(this, granted ? R.string.reminder_msg_permission_granted
+                                : R.string.reminder_msg_permission_denied,
+                        granted ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG).show();
             });
 
     /** ขอสิทธิ์แจ้งเตือนจากปุ่มเดโม ได้สิทธิ์แล้วค่อยตั้งแจ้งเตือน */
@@ -76,6 +79,7 @@ public class SettingsActivity extends AppCompatActivity {
         preferences = getSharedPreferences(PrefKeys.PREFS_NAME, MODE_PRIVATE);
         mealReminderSettings = new MealReminderSettings(this, reminderPermissionLauncher);
         mealReminderSettings.attach(root);
+        findViewById(R.id.settingsAllowNotifications).setOnClickListener(v -> requestNotificationPermission());
         findViewById(R.id.settingsTestReminder).setOnClickListener(v -> fireDemoReminder());
         findViewById(R.id.settingsClearAll).setOnClickListener(v -> confirmClearAllData());
 
@@ -216,6 +220,17 @@ public class SettingsActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.settings_btn_clear_all,
                         (dialog, which) -> clearAllData())
                 .show();
+    }
+
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                == PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, R.string.reminder_msg_permission_granted,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        reminderPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
     }
 
     private void clearAllData() {
