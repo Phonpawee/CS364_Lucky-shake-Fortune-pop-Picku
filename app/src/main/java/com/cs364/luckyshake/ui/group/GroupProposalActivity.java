@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs364.luckyshake.R;
+import com.cs364.luckyshake.ui.nav.BackNavigation;
 import com.cs364.luckyshake.fortune.FortuneProvider;
 import com.cs364.luckyshake.logic.GameConfig;
 import com.cs364.luckyshake.sensor.ShakeDetector;
@@ -66,6 +68,7 @@ public class GroupProposalActivity extends AppCompatActivity {
     private TextView tallyWinner;
     private GroupTallyAdapter tallyAdapter;
     private ShakeDetector shakeDetector;
+    private AlertDialog exitDialog;
 
     private ProposalMethod proposalMethod = ProposalMethod.FOOD_TYPE;
 
@@ -125,7 +128,11 @@ public class GroupProposalActivity extends AppCompatActivity {
         tallyWinner = findViewById(R.id.group_tally_winner);
 
         shakeDetector = ShakeDetector.create(this);
-        shakeDetector.setOnShakeListener(() -> viewModel.drawWinner());
+        shakeDetector.setOnShakeListener(() -> {
+            if (exitDialog == null && !isFinishing()) {
+                viewModel.drawWinner();
+            }
+        });
 
         if (tallyBtnDraw != null) {
             tallyBtnDraw.setOnClickListener(v -> viewModel.drawWinner());
@@ -177,6 +184,18 @@ public class GroupProposalActivity extends AppCompatActivity {
 
         observeViewModel();
         viewModel.init(count, proposalMethod);
+        BackNavigation.register(this, this::requestExit);
+    }
+
+    private void requestExit() {
+        GroupPhase phase = viewModel.getPhase().getValue();
+        if (phase == GroupPhase.COLLECT || phase == GroupPhase.FINAL) {
+            exitDialog = BackNavigation.confirmDiscard(this, R.string.back_group_title,
+                    R.string.back_group_message, () -> BackNavigation.goHome(this));
+            exitDialog.setOnDismissListener(dialog -> exitDialog = null);
+        } else {
+            BackNavigation.goHome(this);
+        }
     }
 
     private void observeViewModel() {

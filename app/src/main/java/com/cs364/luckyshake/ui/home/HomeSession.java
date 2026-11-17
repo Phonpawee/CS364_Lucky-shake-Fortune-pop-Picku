@@ -116,6 +116,13 @@ public class HomeSession {
         return Collections.unmodifiableList(new ArrayList<>(recentIds));
     }
 
+    public void discardPendingResult() {
+        if (state.hasPendingResult()) {
+            round.discard();
+            state = DrawState.IDLE;
+        }
+    }
+
     public DrawState getState() {
         return state;
     }

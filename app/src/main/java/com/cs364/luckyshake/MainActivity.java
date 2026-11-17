@@ -23,7 +23,9 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.content.ContextCompat;
 
@@ -46,6 +48,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.cs364.luckyshake.ui.nav.BottomNav;
+import com.cs364.luckyshake.ui.nav.BackNavigation;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 
 public class MainActivity extends AppCompatActivity {
@@ -74,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private View stick;
     private long pendingMenuId;
     private AnimatorSet drawAnimation;
+    private AlertDialog exitDialog;
     private boolean openingResult;
 
     @Override
@@ -134,6 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button permissionButton = findViewById(R.id.reminder_permission_button);
         permissionButton.setOnClickListener(v -> requestNotificationPermission());
+        BackNavigation.register(this, this::requestExit);
     }
 
     @Override
@@ -146,7 +151,11 @@ public class MainActivity extends AppCompatActivity {
                 .getInt(PrefKeys.REROLL_QUOTA, GameConfig.MAX_REDRAWS));
         openingResult = false;
         shakeDetector.start();
-        if (pendingMenuId != 0L) {
+        resumePendingDraw();
+    }
+
+    private void resumePendingDraw() {
+        if (exitDialog == null && pendingMenuId != 0L) {
             DrawState pending = viewModel.currentState();
             if (pending.menu != null && pending.menu.id == pendingMenuId) {
                 animateDraw();
@@ -159,12 +168,36 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         shakeDetector.stop();
+        cancelDrawAnimation();
+        super.onPause();
+    }
+
+    private void cancelDrawAnimation() {
         if (drawAnimation != null) {
             drawAnimation.removeAllListeners();
             drawAnimation.cancel();
             resetDrawAnimation();
         }
-        super.onPause();
+    }
+
+    private void requestExit() {
+        if (!viewModel.currentState().hasPendingResult()) {
+            finish();
+            return;
+        }
+        cancelDrawAnimation();
+        exitDialog = BackNavigation.confirmDiscard(this, R.string.back_draw_title,
+                R.string.back_draw_message, () -> {
+                    pendingMenuId = 0;
+                    viewModel.discardPendingResult();
+                    finish();
+                });
+        exitDialog.setOnDismissListener(dialog -> {
+            exitDialog = null;
+            if (!isFinishing() && getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                resumePendingDraw();
+            }
+        });
     }
 
     @Override
@@ -174,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void draw() {
-        if (openingResult || pendingMenuId != 0L) {
+        if (exitDialog != null || openingResult || pendingMenuId != 0L) {
             return;
         }
 

@@ -118,6 +118,11 @@ public class HomeViewModel extends AndroidViewModel {
         return accepted;
     }
 
+    public void discardPendingResult() {
+        session.discardPendingResult();
+        publish(session.getState());
+    }
+
     private DrawState publish(DrawState s) {
         state.setValue(s);
         return s;
