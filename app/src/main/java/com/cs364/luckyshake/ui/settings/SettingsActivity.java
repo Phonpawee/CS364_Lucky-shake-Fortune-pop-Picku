@@ -1,6 +1,7 @@
 package com.cs364.luckyshake.ui.settings;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -249,7 +250,8 @@ public class SettingsActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
 
         Toast.makeText(this, R.string.settings_clear_done, Toast.LENGTH_SHORT).show();
-        recreate();
+        startActivity(new Intent(this, SettingsActivity.class));
+        finish();
     }
     // ------------------------------------------------------------ demo tools
 

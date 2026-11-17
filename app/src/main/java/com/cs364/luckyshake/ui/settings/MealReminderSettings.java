@@ -75,11 +75,15 @@ final class MealReminderSettings {
         long savedSetId = preferences.getLong(key + "set", sets.isEmpty() ? -1 : sets.get(0).id);
         for (int j = 0; j < sets.size(); j++) if (sets.get(j).id == savedSetId) spinner.setSelection(j);
         toggle.setChecked(preferences.getBoolean(key + "enabled", false));
-        time.setOnClickListener(v -> new TimePickerDialog(activity, (picker, h, m) -> {
-            setTimeLabel(time, h, m);
-            preferences.edit().putInt(key + "hour", h).putInt(key + "minute", m).apply();
-            if (toggle.isChecked()) schedule(id, true);
-        }, hour, minute, false).show());
+        time.setOnClickListener(v -> {
+            int currentHour = preferences.getInt(key + "hour", DEFAULT_HOURS[index]);
+            int currentMinute = preferences.getInt(key + "minute", DEFAULT_MINUTES[index]);
+            new TimePickerDialog(activity, (picker, h, m) -> {
+                setTimeLabel(time, h, m);
+                preferences.edit().putInt(key + "hour", h).putInt(key + "minute", m).apply();
+                if (toggle.isChecked()) schedule(id, true);
+            }, currentHour, currentMinute, false).show();
+        });
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             boolean initial = true;
             @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long itemId) {
