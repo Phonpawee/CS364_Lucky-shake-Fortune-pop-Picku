@@ -102,6 +102,9 @@
 
     <string name="reminder_btn_allow_notifications">อนุญาตการแจ้งเตือน</string>
     <string name="reminder_msg_permission_granted">อนุญาตการแจ้งเตือนแล้ว</string>
+    <string name="settings_notification_disabled_title">ปิดการแจ้งเตือนไว้</string>
+    <string name="settings_notification_disabled_message">เปิดการแจ้งเตือนของ LuckyShake ในการตั้งค่าระบบเพื่อรับการเตือนมื้ออาหาร</string>
+    <string name="settings_notification_open">เปิดการตั้งค่า</string>
     <string name="reminder_msg_permission_not_required">Android เวอร์ชันนี้ไม่ต้องขอสิทธิ์แจ้งเตือน</string>
 
     <string name="settings_title">ตั้งค่า</string>

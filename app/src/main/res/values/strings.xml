@@ -102,6 +102,9 @@
 
     <string name="reminder_btn_allow_notifications">Allow notifications</string>
     <string name="reminder_msg_permission_granted">Notification permission granted.</string>
+    <string name="settings_notification_disabled_title">Notifications are turned off</string>
+    <string name="settings_notification_disabled_message">Allow notifications for LuckyShake in system settings to receive meal reminders.</string>
+    <string name="settings_notification_open">Open settings</string>
     <string name="reminder_msg_permission_not_required">This Android version does not require notification permission.</string>
 
     <string name="settings_title">Settings</string>

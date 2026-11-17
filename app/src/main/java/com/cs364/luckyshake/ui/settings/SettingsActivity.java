@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.SeekBar;
@@ -19,6 +20,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.content.ContextCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.os.LocaleListCompat;
 
 import com.cs364.luckyshake.R;
@@ -51,10 +53,22 @@ public class SettingsActivity extends AppCompatActivity {
 
     private final ActivityResultLauncher<String> reminderPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
-                if (mealReminderSettings != null && mealReminderSettings.onPermissionResult(granted)) return;
-                Toast.makeText(this, granted ? R.string.reminder_msg_permission_granted
-                                : R.string.reminder_msg_permission_denied,
-                        granted ? Toast.LENGTH_SHORT : Toast.LENGTH_LONG).show();
+                boolean notificationsEnabled =
+                        NotificationManagerCompat.from(this).areNotificationsEnabled();
+                if (mealReminderSettings != null
+                        && mealReminderSettings.onPermissionResult(granted, notificationsEnabled)) {
+                    if (granted && !notificationsEnabled) showNotificationSettingsPrompt();
+                    return;
+                }
+                if (granted && notificationsEnabled) {
+                    Toast.makeText(this, R.string.reminder_msg_permission_granted,
+                            Toast.LENGTH_SHORT).show();
+                } else if (granted) {
+                    showNotificationSettingsPrompt();
+                } else {
+                    Toast.makeText(this, R.string.reminder_msg_permission_denied,
+                            Toast.LENGTH_LONG).show();
+                }
             });
 
     /** ขอสิทธิ์แจ้งเตือนจากปุ่มเดโม ได้สิทธิ์แล้วค่อยตั้งแจ้งเตือน */
@@ -224,14 +238,32 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                == PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this, R.string.reminder_msg_permission_granted,
-                    Toast.LENGTH_SHORT).show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            reminderPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
             return;
         }
-        reminderPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+        if (!NotificationManagerCompat.from(this).areNotificationsEnabled()) {
+            showNotificationSettingsPrompt();
+            return;
+        }
+        Toast.makeText(this, R.string.reminder_msg_permission_granted,
+                Toast.LENGTH_SHORT).show();
+    }
+
+    private void showNotificationSettingsPrompt() {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.settings_notification_disabled_title)
+                .setMessage(R.string.settings_notification_disabled_message)
+                .setNegativeButton(R.string.common_btn_cancel, null)
+                .setPositiveButton(R.string.settings_notification_open,
+                        (dialog, which) -> {
+                            Intent intent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                                    .putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
+                            startActivity(intent);
+                        })
+                .show();
     }
 
     private void clearAllData() {

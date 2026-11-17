@@ -49,15 +49,18 @@ final class MealReminderSettings {
         for (int i = 0; i < IDS.length; i++) bindMeal(root, i, sets, names);
     }
 
-    boolean onPermissionResult(boolean granted) {
+    boolean onPermissionResult(boolean granted, boolean notificationsEnabled) {
         if (pendingId < 0) return false;
         int id = pendingId;
         pendingId = -1;
-        if (granted) schedule(id, true);
+        if (granted && notificationsEnabled) schedule(id, true);
         else {
             ((SwitchCompat) activity.findViewById(SWITCH_IDS[id - 1])).setChecked(false);
             preferences.edit().putBoolean(key(id) + "enabled", false).apply();
-            Toast.makeText(activity, R.string.reminder_msg_permission_denied, Toast.LENGTH_LONG).show();
+            if (!granted) {
+                Toast.makeText(activity, R.string.reminder_msg_permission_denied,
+                        Toast.LENGTH_LONG).show();
+            }
         }
         return true;
     }
