@@ -1,0 +1,14 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="48dp"
+    android:background="@color/home_paper">
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/app_back_button"
+        android:layout_width="48dp" android:layout_height="48dp"
+        android:layout_gravity="start|center_vertical"
+        android:layout_marginStart="8dp"
+        android:padding="12dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/back_navigate"
+        app:srcCompat="@drawable/ic_back" app:tint="@color/home_accent" />
+</FrameLayout>
