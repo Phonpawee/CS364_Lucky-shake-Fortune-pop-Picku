@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     android:theme="@style/ThemeOverlay.LuckyShake.Home">
     <ImageView
-        style="@style/Widget.LuckyShake.TabPage.Sky" />
+        style="@style/Widget.LuckyShake.TabPage.Sky"
+        android:importantForAccessibility="no" />
 
     <LinearLayout
         android:id="@+id/menu_list_root"
@@ -74,24 +75,24 @@
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
+                        <Spinner
+                            android:id="@+id/menu_list_set_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:contentDescription="@string/menu_list_label_set"
+                            android:minHeight="48dp"
+                            android:background="@drawable/home_spinner_background"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="30dp"
+                            android:popupBackground="@color/home_field" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:gravity="center_vertical"
+                            android:gravity="end|center_vertical"
                             android:orientation="horizontal">
-                            <Spinner
-                                android:id="@+id/menu_list_set_spinner"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="@dimen/spacing_sm"
-                                android:layout_weight="1"
-                                android:contentDescription="@string/menu_list_label_set"
-                                android:minHeight="48dp"
-                                android:background="@drawable/home_spinner_background"
-                                android:paddingStart="10dp"
-                                android:paddingEnd="30dp"
-                                android:popupBackground="@color/home_field" />
 
                             <ImageButton
                                 android:id="@+id/menu_sets_btn_add"
