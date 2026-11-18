@@ -1,0 +1,6 @@
+<resources>
+    <color name="welcome_base">#6F302C</color>
+    <string name="welcome_brand" translatable="false">Lucky\nShake</string>
+    <string name="welcome_tagline">A little luck for your next meal</string>
+    <string name="welcome_start">Let’s pick a dish</string>
+</resources>
