@@ -44,7 +44,7 @@
     <string name="group_proposal_msg_pass_phone">ส่งมือถือให้คนถัดไป</string>
     <string name="group_proposal_msg_all_done">ทุกคนเสนอครบแล้ว</string>
 
-    <!-- Group Tally & Draw (#37) -->
+    <!-- Group Tally & Draw (#37, #38) -->
     <string name="group_tally_title">สรุปผลโหวต</string>
     <string name="group_tally_votes">×%1$d</string>
     <string name="group_tally_proposers">เสนอโดย %1$s</string>
@@ -53,6 +53,10 @@
     <string name="group_tally_btn_draw">เขย่าสุ่มผู้ชนะ</string>
     <string name="group_tally_winner">ผู้ชนะ: %1$s (×%2$d)</string>
     <string name="group_tally_msg_all_skipped">ไม่มีใครเสนอเลย ลองตั้งค่าใหม่อีกครั้ง</string>
+    <string name="group_cancel_title">ยกเลิกรอบนี้?</string>
+    <string name="group_cancel_msg">สิ่งที่ทุกคนเสนอไว้จะหายทั้งหมด</string>
+    <string name="group_cancel_btn_discard">ยกเลิกรอบ</string>
+    <string name="group_cancel_btn_stay">อยู่ต่อ</string>
 
     <!-- Fortune Provider (#27) -->
     <string name="fortune_msg_level_1_1">วันนี้อาจมีเรื่องเล็ก ๆ มาทำให้ยิ้ม ขอให้อร่อยกับ %1$s</string>

@@ -11,24 +11,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs364.luckyshake.R;
-import com.cs364.luckyshake.ui.nav.BackNavigation;
 import com.cs364.luckyshake.fortune.FortuneProvider;
 import com.cs364.luckyshake.logic.GameConfig;
 import com.cs364.luckyshake.sensor.ShakeDetector;
+import com.cs364.luckyshake.ui.nav.BackNavigation;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -36,8 +40,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.Arrays;
 
 /**
- * Screen for collecting restaurant or food group proposals per participant (#36, #35)
- * and rendering vote summary tally and drawing weighted winner (#37).
+ * Screen for collecting restaurant or food group proposals per participant (#36, #35),
+ * rendering vote summary tally and drawing weighted winner (#37), and managing Back confirmation (#38).
  */
 public class GroupProposalActivity extends AppCompatActivity {
     public static final String EXTRA_PARTICIPANT_COUNT = "extra_participant_count";
@@ -68,9 +72,9 @@ public class GroupProposalActivity extends AppCompatActivity {
     private TextView tallyWinner;
     private GroupTallyAdapter tallyAdapter;
     private ShakeDetector shakeDetector;
-    private AlertDialog exitDialog;
 
     private ProposalMethod proposalMethod = ProposalMethod.FOOD_TYPE;
+    private AlertDialog cancelDialog;
 
     public static Intent newIntent(Context context, int participantCount, ProposalMethod proposalMethod) {
         Intent intent = new Intent(context, GroupProposalActivity.class);
@@ -106,6 +110,20 @@ public class GroupProposalActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(GroupProposalViewModel.class);
 
+        // #14: Back navigation (Mind) can call requestCancel() / hasUnsavedProgress()
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                requestCancel();
+            }
+        });
+
+        getLifecycle().addObserver((LifecycleEventObserver) (source, event) -> {
+            if (event == Lifecycle.Event.ON_RESUME) {
+                maybeStartShakeDetection();
+            }
+        });
+
         titleTurn = findViewById(R.id.group_proposal_title_turn);
         instructions = findViewById(R.id.group_proposal_instructions);
         inputCard = findViewById(R.id.group_proposal_input_card);
@@ -129,7 +147,7 @@ public class GroupProposalActivity extends AppCompatActivity {
 
         shakeDetector = ShakeDetector.create(this);
         shakeDetector.setOnShakeListener(() -> {
-            if (exitDialog == null && !isFinishing()) {
+            if ((cancelDialog == null || !cancelDialog.isShowing()) && !isFinishing() && !viewModel.isExitConfirmShowing()) {
                 viewModel.drawWinner();
             }
         });
@@ -184,17 +202,75 @@ public class GroupProposalActivity extends AppCompatActivity {
 
         observeViewModel();
         viewModel.init(count, proposalMethod);
-        BackNavigation.register(this, this::requestExit);
+
+        if (viewModel.isExitConfirmShowing()) {
+            requestCancel();
+        }
     }
 
-    private void requestExit() {
-        GroupPhase phase = viewModel.getPhase().getValue();
-        if (phase == GroupPhase.COLLECT || phase == GroupPhase.FINAL) {
-            exitDialog = BackNavigation.confirmDiscard(this, R.string.back_group_title,
-                    R.string.back_group_message, () -> BackNavigation.goHome(this));
-            exitDialog.setOnDismissListener(dialog -> exitDialog = null);
-        } else {
-            BackNavigation.goHome(this);
+    /**
+     * Handles Back button / cancellation confirmation dialog (#38).
+     */
+    public void requestCancel() {
+        if (!viewModel.hasUnsavedProgress()) {
+            if (viewModel.getPhase().getValue() == GroupPhase.DONE) {
+                BackNavigation.goHome(this);
+            } else {
+                finish();
+            }
+            return;
+        }
+
+        if (cancelDialog != null && cancelDialog.isShowing()) {
+            return;
+        }
+
+        if (shakeDetector != null) {
+            shakeDetector.stop();
+        }
+
+        viewModel.setExitConfirmShowing(true);
+        AlertDialog dialogToBuild = new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.group_cancel_title)
+                .setMessage(R.string.group_cancel_msg)
+                .setPositiveButton(R.string.group_cancel_btn_discard, (dialog, which) -> {
+                    if (cancelDialog == dialog) {
+                        viewModel.setExitConfirmShowing(false);
+                        viewModel.cancelRound();
+                        finish();
+                    }
+                })
+                .setNegativeButton(R.string.group_cancel_btn_stay, (dialog, which) -> {
+                    if (cancelDialog == dialog) {
+                        viewModel.setExitConfirmShowing(false);
+                        maybeStartShakeDetection();
+                    }
+                })
+                .setOnCancelListener(dialog -> {
+                    if (cancelDialog == dialog) {
+                        viewModel.setExitConfirmShowing(false);
+                        maybeStartShakeDetection();
+                    }
+                })
+                .show();
+
+        cancelDialog = dialogToBuild;
+    }
+
+    private void maybeStartShakeDetection() {
+        if (!getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+            return;
+        }
+        if (viewModel.isExitConfirmShowing()) {
+            return;
+        }
+        if (viewModel.getWinner().getValue() != null) {
+            return;
+        }
+        GroupPhase currentPhase = viewModel.getPhase().getValue();
+        if ((currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
+                && shakeDetector != null) {
+            shakeDetector.start();
         }
     }
 
@@ -238,9 +314,7 @@ public class GroupProposalActivity extends AppCompatActivity {
                     }
                 }
 
-                if (viewModel.getWinner().getValue() == null) {
-                    shakeDetector.start();
-                }
+                maybeStartShakeDetection();
             }
         });
 
@@ -334,11 +408,6 @@ public class GroupProposalActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         FontSizeHelper.apply(this, root);
-        GroupPhase currentPhase = viewModel.getPhase().getValue();
-        if ((currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
-                && viewModel.getWinner().getValue() == null) {
-            shakeDetector.start();
-        }
     }
 
     @Override
@@ -346,6 +415,18 @@ public class GroupProposalActivity extends AppCompatActivity {
         super.onPause();
         if (shakeDetector != null) {
             shakeDetector.stop();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (shakeDetector != null) {
+            shakeDetector.stop();
+        }
+        if (cancelDialog != null && cancelDialog.isShowing()) {
+            cancelDialog.dismiss();
+            cancelDialog = null;
         }
     }
 }

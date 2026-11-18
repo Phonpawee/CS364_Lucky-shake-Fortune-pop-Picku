@@ -9,6 +9,7 @@ import com.cs364.luckyshake.logic.GameConfig;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -192,5 +193,67 @@ public class GroupSessionTest {
         assertEquals(ProposalMethod.RESTAURANT_NAME, session.getProposalMethod());
         assertEquals(0, session.getCurrentTurnIndex());
         assertTrue(session.getProposals().isEmpty());
+    }
+
+    @Test
+    public void testRestoreSuccess() {
+        List<List<String>> props = Arrays.asList(
+                Arrays.asList("KFC", "MK"),
+                Collections.singletonList("Pizza"),
+                Collections.emptyList(),
+                Collections.emptyList()
+        );
+
+        assertTrue(session.restore(4, ProposalMethod.RESTAURANT_NAME, GroupPhase.COLLECT, 2, props));
+
+        assertEquals(4, session.getParticipantCount());
+        assertEquals(ProposalMethod.RESTAURANT_NAME, session.getProposalMethod());
+        assertEquals(GroupPhase.COLLECT, session.getPhase());
+        assertEquals(2, session.getCurrentTurnIndex());
+        assertEquals(3, session.getCurrentTurnNumber());
+        assertEquals(4, session.getProposals().size());
+        assertEquals(Arrays.asList("KFC", "MK"), session.getProposals().get(0));
+        assertEquals(Collections.singletonList("Pizza"), session.getProposals().get(1));
+    }
+
+    @Test
+    public void testRestoreDeepCopy() {
+        List<String> innerList = new ArrayList<>(Collections.singletonList("Sushi"));
+
+        assertTrue(session.restore(2, ProposalMethod.FOOD_TYPE, GroupPhase.COLLECT, 0, Arrays.asList(innerList, Collections.emptyList())));
+
+        // Modify local list after restore
+        innerList.add("Ramen");
+
+        assertEquals(1, session.getProposals().get(0).size());
+        assertEquals("Sushi", session.getProposals().get(0).get(0));
+    }
+
+    @Test
+    public void testRestoreInvalidParametersReturnsFalse() {
+        List<List<String>> validProps = Arrays.asList(
+                Collections.singletonList("A"),
+                Collections.singletonList("B")
+        );
+
+        // Count out of bounds (< 2 or > 8)
+        assertFalse(session.restore(1, ProposalMethod.FOOD_TYPE, GroupPhase.COLLECT, 0, validProps));
+        assertFalse(session.restore(9, ProposalMethod.FOOD_TYPE, GroupPhase.COLLECT, 0, validProps));
+
+        // Size mismatch
+        assertFalse(session.restore(3, ProposalMethod.FOOD_TYPE, GroupPhase.COLLECT, 0, validProps));
+
+        // Turn index out of bounds
+        assertFalse(session.restore(2, ProposalMethod.FOOD_TYPE, GroupPhase.COLLECT, -1, validProps));
+        assertFalse(session.restore(2, ProposalMethod.FOOD_TYPE, GroupPhase.COLLECT, 2, validProps));
+
+        // Nulls
+        assertFalse(session.restore(2, null, GroupPhase.COLLECT, 0, validProps));
+        assertFalse(session.restore(2, ProposalMethod.FOOD_TYPE, null, 0, validProps));
+        assertFalse(session.restore(2, ProposalMethod.FOOD_TYPE, GroupPhase.COLLECT, 0, null));
+
+        // State remains untouched (default setup)
+        assertEquals(GameConfig.MIN_GROUP_PLAYERS, session.getParticipantCount());
+        assertEquals(GroupPhase.SETUP, session.getPhase());
     }
 }
