@@ -15,9 +15,6 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -80,15 +77,7 @@ public class JournalActivity extends AppCompatActivity {
         setContentView(R.layout.activity_journal);
 
         root = findViewById(R.id.journal_root);
-        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
-            Insets bars = insets.getInsets(
-                    WindowInsetsCompat.Type.systemBars()
-                            | WindowInsetsCompat.Type.displayCutout()
-                            | WindowInsetsCompat.Type.ime());
-            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
-            return insets;
-        });
-        BottomNav.attach(this, R.id.nav_journal);
+        BottomNav.attach(this, R.id.nav_journal, root);
 
         Locale locale = getResources().getConfiguration().getLocales().get(0);
         boolean thai = "th".equals(locale.getLanguage());

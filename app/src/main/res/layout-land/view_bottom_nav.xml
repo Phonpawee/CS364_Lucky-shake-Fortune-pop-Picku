@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Landscape: a shorter bar with icons only, to leave room for the screen. -->
-<com.google.android.material.bottomnavigation.BottomNavigationView
+<com.google.android.material.navigationrail.NavigationRailView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_nav"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:minHeight="56dp"
+    android:layout_width="72dp"
+    android:layout_height="match_parent"
+    app:itemMinHeight="48dp"
     app:labelVisibilityMode="unlabeled"
-    app:menu="@menu/bottom_nav" />
+    app:menu="@menu/bottom_nav"
+    app:menuGravity="center" />

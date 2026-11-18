@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs364.luckyshake.R;
+import com.cs364.luckyshake.ui.nav.BackNavigation;
 import com.cs364.luckyshake.fortune.FortuneProvider;
 import com.cs364.luckyshake.logic.GameConfig;
 import com.cs364.luckyshake.sensor.ShakeDetector;
@@ -69,6 +70,7 @@ public class GroupProposalActivity extends AppCompatActivity {
     private TextView tallyWinner;
     private GroupTallyAdapter tallyAdapter;
     private ShakeDetector shakeDetector;
+    private AlertDialog exitDialog;
 
     private ProposalMethod proposalMethod = ProposalMethod.FOOD_TYPE;
     private AlertDialog cancelDialog;
@@ -137,7 +139,11 @@ public class GroupProposalActivity extends AppCompatActivity {
         tallyWinner = findViewById(R.id.group_tally_winner);
 
         shakeDetector = ShakeDetector.create(this);
-        shakeDetector.setOnShakeListener(() -> viewModel.drawWinner());
+        shakeDetector.setOnShakeListener(() -> {
+            if (exitDialog == null && !isFinishing()) {
+                viewModel.drawWinner();
+            }
+        });
 
         if (tallyBtnDraw != null) {
             tallyBtnDraw.setOnClickListener(v -> viewModel.drawWinner());

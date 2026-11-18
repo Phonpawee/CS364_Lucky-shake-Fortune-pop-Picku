@@ -95,6 +95,11 @@ public class ReminderReceiver extends BroadcastReceiver {
                     });
         }
 
+        // แจ้งเตือนจากปุ่มเดโมยิงครั้งเดียว ไม่ต้องตั้งรอบถัดไป
+        if (intent.getBooleanExtra(ReminderScheduler.EXTRA_ONE_SHOT, false)) {
+            return;
+        }
+
         // ตั้งเตือนรอบถัดไปของมื้อเดิม
         ReminderScheduler.rescheduleDailyIfCurrent(
                 context, reminderId, hour, minute, menuSetId, menuSetName, generation);

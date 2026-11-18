@@ -18,9 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -93,15 +90,7 @@ public class MenuListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_menu_list);
 
         root = findViewById(R.id.menu_list_root);
-        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
-            Insets bars = insets.getInsets(
-                    WindowInsetsCompat.Type.systemBars()
-                            | WindowInsetsCompat.Type.displayCutout()
-                            | WindowInsetsCompat.Type.ime());
-            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
-            return insets;
-        });
-        BottomNav.attach(this, R.id.nav_menu);
+        BottomNav.attach(this, R.id.nav_menu, root);
 
         menus = new MenuRepository(this);
         setSpinner = findViewById(R.id.menu_list_set_spinner);
@@ -228,7 +217,7 @@ public class MenuListActivity extends AppCompatActivity {
                 found = true;
             }
         }
-        setSpinner.setAdapter(FontSizeHelper.spinnerAdapter(this, names));
+        setSpinner.setAdapter(FontSizeHelper.spinnerAdapter(setSpinner.getContext(), names));
 
         if (sets.isEmpty()) {
             currentSetId = -1;

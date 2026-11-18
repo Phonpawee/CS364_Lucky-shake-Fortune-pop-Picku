@@ -5,31 +5,22 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
-import android.widget.ArrayAdapter;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Lifecycle;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.cs364.luckyshake.data.MenuRepository;
 import com.cs364.luckyshake.data.Menu;
@@ -50,6 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.cs364.luckyshake.ui.nav.BottomNav;
+import com.cs364.luckyshake.ui.nav.BackNavigation;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 
 public class MainActivity extends AppCompatActivity {
@@ -65,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
     private View clearFilters;
     private TextView filterCount;
 
-    private ActivityResultLauncher<String> notificationPermissionLauncher;
-
     private HomeViewModel viewModel;
     private MenuRepository menuRepository;
     private List<MenuSet> sets = new ArrayList<>();
@@ -78,33 +68,21 @@ public class MainActivity extends AppCompatActivity {
     private View stick;
     private long pendingMenuId;
     private AnimatorSet drawAnimation;
+    private AlertDialog exitDialog;
     private boolean openingResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        notificationPermissionLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                granted -> {
-                    if (!granted) {
-                        Toast.makeText(
-                                this,
-                                R.string.reminder_msg_permission_denied,
-                                Toast.LENGTH_LONG
-                        ).show();
-                    }
-                }
-        );
-
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-        BottomNav.attach(this, R.id.nav_home);
+        View landscapeScroll = findViewById(R.id.home_landscape_scroll);
+        if (landscapeScroll == null) {
+            BottomNav.attach(this, R.id.nav_home);
+        } else {
+            BottomNav.attach(this, R.id.nav_home, landscapeScroll);
+        }
 
         viewModel = HomeViewModel.get(this);
         menuRepository = new MenuRepository(this);
@@ -136,8 +114,7 @@ public class MainActivity extends AppCompatActivity {
         tube.setOnClickListener(view -> draw());
         tube.setFocusable(true);
 
-        Button permissionButton = findViewById(R.id.reminder_permission_button);
-        permissionButton.setOnClickListener(v -> requestNotificationPermission());
+        BackNavigation.register(this, this::requestExit);
     }
 
     @Override
@@ -150,7 +127,11 @@ public class MainActivity extends AppCompatActivity {
                 .getInt(PrefKeys.REROLL_QUOTA, GameConfig.MAX_REDRAWS));
         openingResult = false;
         shakeDetector.start();
-        if (pendingMenuId != 0L) {
+        resumePendingDraw();
+    }
+
+    private void resumePendingDraw() {
+        if (exitDialog == null && pendingMenuId != 0L) {
             DrawState pending = viewModel.currentState();
             if (pending.menu != null && pending.menu.id == pendingMenuId) {
                 animateDraw();
@@ -163,12 +144,36 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         shakeDetector.stop();
+        cancelDrawAnimation();
+        super.onPause();
+    }
+
+    private void cancelDrawAnimation() {
         if (drawAnimation != null) {
             drawAnimation.removeAllListeners();
             drawAnimation.cancel();
             resetDrawAnimation();
         }
-        super.onPause();
+    }
+
+    private void requestExit() {
+        if (!viewModel.currentState().hasPendingResult()) {
+            finish();
+            return;
+        }
+        cancelDrawAnimation();
+        exitDialog = BackNavigation.confirmDiscard(this, R.string.back_draw_title,
+                R.string.back_draw_message, () -> {
+                    pendingMenuId = 0;
+                    viewModel.discardPendingResult();
+                    finish();
+                });
+        exitDialog.setOnDismissListener(dialog -> {
+            exitDialog = null;
+            if (!isFinishing() && getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+                resumePendingDraw();
+            }
+        });
     }
 
     @Override
@@ -178,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void draw() {
-        if (openingResult || pendingMenuId != 0L) {
+        if (exitDialog != null || openingResult || pendingMenuId != 0L) {
             return;
         }
 
@@ -209,6 +214,8 @@ public class MainActivity extends AppCompatActivity {
         setFilterControlsEnabled(false);
 
         float density = getResources().getDisplayMetrics().density;
+        tube.setPivotX(tube.getWidth() / 2f);
+        tube.setPivotY(tube.getHeight() * 0.72f);
         AnimatorSet shake = new AnimatorSet();
         shake.playTogether(
                 ObjectAnimator.ofFloat(tube, View.ROTATION,
@@ -221,9 +228,9 @@ public class MainActivity extends AppCompatActivity {
 
         AnimatorSet launchStick = new AnimatorSet();
         launchStick.playTogether(
-                ObjectAnimator.ofFloat(stick, View.TRANSLATION_Y, 0f, -74f * density),
-                ObjectAnimator.ofFloat(stick, View.TRANSLATION_X, 0f, 22f * density),
-                ObjectAnimator.ofFloat(stick, View.ROTATION, 0f, -28f),
+                ObjectAnimator.ofFloat(stick, View.TRANSLATION_Y, 0f, -68f * density),
+                ObjectAnimator.ofFloat(stick, View.TRANSLATION_X, 0f, 39f * density),
+                ObjectAnimator.ofFloat(stick, View.ROTATION, 0f, 32f),
                 ObjectAnimator.ofFloat(stick, View.SCALE_Y, 0.12f, 1f));
         launchStick.setDuration(320);
         launchStick.setInterpolator(new DecelerateInterpolator());
@@ -289,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
                 selected = i;
             }
         }
-        setPicker.setAdapter(FontSizeHelper.spinnerAdapter(this, names));
+        setPicker.setAdapter(FontSizeHelper.spinnerAdapter(setPicker.getContext(), names));
         if (sets.isEmpty()) {
             viewModel.selectSet(HomeSession.NO_SET);
         } else {
@@ -311,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
         for (String type : MENU_TYPES.subList(1, MENU_TYPES.size())) {
             typeNames.add(MenuLabels.type(this, type));
         }
-        bindSpinner(typePicker, typeNames);
+        typePicker.setAdapter(FontSizeHelper.spinnerAdapter(typePicker.getContext(), typeNames));
         typePicker.setSelection(Math.max(0,
                 MENU_TYPES.indexOf(filterPreferences.getString(PrefKeys.FILTER_TYPE, null))));
         noFried.setChecked(filterPreferences.getBoolean(PrefKeys.FILTER_NO_FRIED, false));
@@ -336,13 +343,6 @@ public class MainActivity extends AppCompatActivity {
             noSpicy.setChecked(false);
             applyFilters();
         });
-    }
-
-    private void bindSpinner(Spinner spinner, List<String> labels) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, labels);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
     }
 
     private MenuFilter currentFilter() {
@@ -375,13 +375,4 @@ public class MainActivity extends AppCompatActivity {
         clearFilters.setEnabled(enabled);
     }
 
-    private void requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-                && ContextCompat.checkSelfPermission(
-                        this, Manifest.permission.POST_NOTIFICATIONS)
-                        != PackageManager.PERMISSION_GRANTED) {
-            notificationPermissionLauncher.launch(
-                    Manifest.permission.POST_NOTIFICATIONS);
-        }
-    }
 }

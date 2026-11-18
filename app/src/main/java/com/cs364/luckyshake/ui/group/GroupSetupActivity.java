@@ -9,9 +9,6 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.cs364.luckyshake.R;
@@ -47,15 +44,7 @@ public class GroupSetupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_setup);
 
         root = findViewById(R.id.group_setup_root);
-        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
-            Insets bars = insets.getInsets(
-                    WindowInsetsCompat.Type.systemBars()
-                            | WindowInsetsCompat.Type.displayCutout()
-                            | WindowInsetsCompat.Type.ime());
-            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
-            return insets;
-        });
-        BottomNav.attach(this, R.id.nav_group);
+        BottomNav.attach(this, R.id.nav_group, root);
 
         viewModel = new ViewModelProvider(this).get(GroupViewModel.class);
 

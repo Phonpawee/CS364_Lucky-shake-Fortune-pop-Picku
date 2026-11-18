@@ -78,6 +78,20 @@ public class HomeSessionTest {
     // ----------------------------------------------------------------- state
 
     @Test
+    public void discardPendingResultClearsDrawWithoutChangingHistoryOrWeight() {
+        HomeSession session = newSession(3);
+        assertTrue(session.draw().hasPendingResult());
+        assertEquals(2, session.redraw().redrawsLeft);
+
+        session.discardPendingResult();
+
+        assertSame(DrawState.IDLE, session.getState());
+        assertEquals(1, recorded.size());
+        assertEquals(1, history.size());
+        assertEquals(3, session.draw().redrawsLeft);
+    }
+
+    @Test
     public void initialState_isIdle() {
         DrawState s = newSession(3).getState();
         assertSame(DrawState.IDLE, s);

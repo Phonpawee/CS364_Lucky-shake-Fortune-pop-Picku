@@ -1,0 +1,7 @@
+<resources>
+    <string name="back_stay">อยู่ต่อ</string>
+    <string name="back_draw_title">ทิ้งผลเซียมซีหรือไม่?</string>
+    <string name="back_draw_message">ผลที่สุ่มไว้จะหายไป</string>
+    <string name="back_group_title">ออกจากรอบกลุ่มหรือไม่?</string>
+    <string name="back_group_message">ข้อเสนอในรอบนี้จะหายไป</string>
+</resources>

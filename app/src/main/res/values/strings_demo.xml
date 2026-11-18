@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_label_version">Version %1$s</string>
+
+    <!-- Hidden demo tools (long-press the version in Settings) -->
+    <string name="demo_title_tools">Demo tools</string>
+    <string name="demo_btn_fill_history">Fill sample history</string>
+    <string name="demo_btn_fire_reminder">Fire a reminder now</string>
+    <string name="demo_msg_history_filled">Added %1$d sample entries to the journal.</string>
+    <string name="demo_msg_no_menus">No dishes yet. Add a dish first.</string>
+    <string name="demo_msg_reminder_scheduled">A reminder will appear in about %1$d seconds.</string>
+</resources>

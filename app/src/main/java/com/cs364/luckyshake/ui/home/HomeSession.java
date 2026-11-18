@@ -116,6 +116,23 @@ public class HomeSession {
         return Collections.unmodifiableList(new ArrayList<>(recentIds));
     }
 
+    public void discardPendingResult() {
+        if (state.hasPendingResult()) {
+            round.discard();
+            state = DrawState.IDLE;
+        }
+    }
+
+    /** Reset in-memory game state after the user clears all app data. */
+    public void reset() {
+        round.discard();
+        setId = NO_SET;
+        filter = MenuFilter.none();
+        recentIds.clear();
+        round.setMaxRedraws(GameConfig.MAX_REDRAWS);
+        state = DrawState.IDLE;
+    }
+
     public DrawState getState() {
         return state;
     }

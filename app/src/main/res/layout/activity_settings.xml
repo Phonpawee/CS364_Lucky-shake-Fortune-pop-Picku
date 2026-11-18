@@ -1,199 +1,386 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/settings_root"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:theme="@style/ThemeOverlay.LuckyShake.Home">
 
-    <LinearLayout
+    <ImageView
+        style="@style/Widget.LuckyShake.TabPage.Sky" />
+
+    <ScrollView
+        android:id="@+id/settings_root"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/spacing_md">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/settings_title"
-            android:textAppearance="@style/TextAppearance.LuckyShake.Heading"
-            android:layout_marginBottom="@dimen/spacing_md" />
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_md">
 
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_md"
-            app:cardBackgroundColor="?attr/colorSurface"
-            app:cardCornerRadius="@dimen/corner_md"
-            app:strokeColor="?attr/colorOutline">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/Widget.LuckyShake.TabBanner">
 
-            <LinearLayout
+                <TextView
+                    style="@style/Widget.LuckyShake.TabBanner.Title"
+                    android:text="@string/settings_title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tab_banner_art"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.cs364.luckyshake.ui.home.ShadowImageView
+                    android:id="@+id/tab_banner_art"
+                    style="@style/Widget.LuckyShake.TabBanner.Art"
+                    app:srcCompat="@drawable/home_maple"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.LuckyShake.Card.Tab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_md">
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_language"
-                    android:textColor="?attr/colorOnSurface" />
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_md">
 
-                <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/languageGroup"
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_language"
+                        android:textColor="@color/home_ink"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/languageGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_md"
+                        app:singleSelection="true"
+                        app:selectionRequired="true"
+                        app:checkedButton="@id/languageThai">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/languageThai"
+                            style="@style/Widget.LuckyShake.Button.Segment"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settings_language_thai" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/languageEnglish"
+                            style="@style/Widget.LuckyShake.Button.Segment"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settings_language_english" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_theme"
+                        android:textColor="@color/home_ink"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/themeGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_md"
+                        app:singleSelection="true"
+                        app:selectionRequired="true"
+                        app:checkedButton="@id/themeSystem">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/themeLight"
+                            style="@style/Widget.LuckyShake.Button.Segment"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settings_theme_light" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/themeDark"
+                            style="@style/Widget.LuckyShake.Button.Segment"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settings_theme_dark" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/themeSystem"
+                            style="@style/Widget.LuckyShake.Button.Segment"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settings_theme_system" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/settings_font_size"
+                        android:textColor="@color/home_ink"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/fontSizeGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:singleSelection="true"
+                        app:selectionRequired="true"
+                        app:checkedButton="@id/fontSizeNormal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/fontSizeSmall"
+                            style="@style/Widget.LuckyShake.Button.Segment"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settings_font_size_small" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/fontSizeNormal"
+                            style="@style/Widget.LuckyShake.Button.Segment"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settings_font_size_normal" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/fontSizeLarge"
+                            style="@style/Widget.LuckyShake.Button.Segment"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settings_font_size_large" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/fontSizeExtraLarge"
+                            style="@style/Widget.LuckyShake.Button.Segment"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/settings_font_size_extra_large" />
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.LuckyShake.Card.Tab"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_md"
-                    app:singleSelection="true"
-                    app:selectionRequired="true"
-                    app:checkedButton="@id/languageThai">
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_md">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/languageThai"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/shakeSensitivityLabel"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/settings_language_thai" />
+                        android:text="@string/settings_shake_sensitivity"
+                        android:textColor="@color/home_ink"
+                        android:textStyle="bold" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/languageEnglish"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
+                    <SeekBar
+                        android:id="@+id/shakeSensitivitySeekBar"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/settings_language_english" />
-                </com.google.android.material.button.MaterialButtonToggleGroup>
+                        android:max="9"
+                        android:minHeight="48dp"
+                        android:progressTint="@color/home_accent"
+                        android:progressBackgroundTint="@color/home_outline"
+                        android:thumbTint="@color/home_accent"
+                        android:contentDescription="@string/settings_shake_sensitivity" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_theme"
-                    android:textColor="?attr/colorOnSurface" />
-
-                <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/themeGroup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_md"
-                    app:singleSelection="true"
-                    app:selectionRequired="true"
-                    app:checkedButton="@id/themeSystem">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/themeLight"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/settings_theme_light" />
+                        android:text="@string/settings_reroll_quota"
+                        android:textColor="@color/home_ink"
+                        android:textStyle="bold" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/themeDark"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
+                    <Spinner
+                        android:id="@+id/rerollQuotaSpinner"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/settings_theme_dark" />
+                        android:entries="@array/settings_reroll_quota_options"
+                        android:spinnerMode="dropdown"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/home_spinner_background"
+                        android:minHeight="48dp"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="32dp"
+                        android:popupBackground="@color/home_field" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/themeSystem"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/settings_theme_system" />
-                </com.google.android.material.button.MaterialButtonToggleGroup>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_font_size"
-                    android:textColor="?attr/colorOnSurface" />
-
-                <com.google.android.material.button.MaterialButtonToggleGroup
-                    android:id="@+id/fontSizeGroup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:singleSelection="true"
-                    app:selectionRequired="true"
-                    app:checkedButton="@id/fontSizeNormal">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/fontSizeSmall"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/settings_font_size_small" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/fontSizeNormal"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/settings_font_size_normal" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/fontSizeLarge"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/settings_font_size_large" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/fontSizeExtraLarge"
-                        style="@style/Widget.Material3.Button.OutlinedButton"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/settings_font_size_extra_large" />
-                </com.google.android.material.button.MaterialButtonToggleGroup>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="?attr/colorSurface"
-            app:cardCornerRadius="@dimen/corner_md"
-            app:strokeColor="?attr/colorOutline">
-
-            <LinearLayout
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.LuckyShake.Card.Tab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/spacing_md">
-
-                <TextView
-                    android:id="@+id/shakeSensitivityLabel"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/settings_shake_sensitivity"
-                    android:textColor="?attr/colorOnSurface" />
-
-                <SeekBar
-                    android:id="@+id/shakeSensitivitySeekBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="9"
-                    android:contentDescription="@string/settings_shake_sensitivity" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/settings_reroll_quota"
-                    android:textColor="?attr/colorOnSurface" />
-
-                <Spinner
-                    android:id="@+id/rerollQuotaSpinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/settings_reroll_quota_options"
-                    android:spinnerMode="dropdown" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-    </LinearLayout>
-</ScrollView>
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_md">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reminder_settings_title"
+                        android:textColor="@color/home_ink"
+                        android:textStyle="bold" />
+                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="4dp" android:layout_marginBottom="4dp" android:background="@color/home_outline" />
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/reminderBreakfastEnabled"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reminder_meal_breakfast" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+    android:id="@+id/reminderBreakfastTime"
+    style="@style/Widget.LuckyShake.Button.Segment"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1.5"
+    android:layout_marginEnd="8dp"
+    android:text="@string/reminder_time_placeholder"
+    android:contentDescription="@string/reminder_time_button_description"
+    app:cornerRadius="12dp"
+    app:icon="@drawable/ic_clock"
+    app:iconGravity="end"
+    app:iconPadding="4dp"
+    app:iconTint="@color/home_ink" />
+                        <Spinner
+                            android:id="@+id/reminderBreakfastSet"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:background="@drawable/home_spinner_background"
+                            android:minHeight="48dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="32dp"
+                            android:popupBackground="@color/home_field" />
+                    </LinearLayout>
+                                        <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="4dp" android:layout_marginBottom="4dp" android:background="@color/home_outline" />
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/reminderLunchEnabled"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reminder_meal_lunch" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+    android:id="@+id/reminderLunchTime"
+    style="@style/Widget.LuckyShake.Button.Segment"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1.5"
+    android:layout_marginEnd="8dp"
+    android:text="@string/reminder_time_placeholder"
+    android:contentDescription="@string/reminder_time_button_description"
+    app:cornerRadius="12dp"
+    app:icon="@drawable/ic_clock"
+    app:iconGravity="end"
+    app:iconPadding="4dp"
+    app:iconTint="@color/home_ink" />
+                        <Spinner
+                            android:id="@+id/reminderLunchSet"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:background="@drawable/home_spinner_background"
+                            android:minHeight="48dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="32dp"
+                            android:popupBackground="@color/home_field" />
+                    </LinearLayout>
+                                        <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="4dp" android:layout_marginBottom="4dp" android:background="@color/home_outline" />
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/reminderDinnerEnabled"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reminder_meal_dinner" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+                        <com.google.android.material.button.MaterialButton
+    android:id="@+id/reminderDinnerTime"
+    style="@style/Widget.LuckyShake.Button.Segment"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1.5"
+    android:layout_marginEnd="8dp"
+    android:text="@string/reminder_time_placeholder"
+    android:contentDescription="@string/reminder_time_button_description"
+    app:cornerRadius="12dp"
+    app:icon="@drawable/ic_clock"
+    app:iconGravity="end"
+    app:iconPadding="4dp"
+    app:iconTint="@color/home_ink" />
+                        <Spinner
+                            android:id="@+id/reminderDinnerSet"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:background="@drawable/home_spinner_background"
+                            android:minHeight="48dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="32dp"
+                            android:popupBackground="@color/home_field" />
+                    </LinearLayout>
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/settingsAllowNotifications"
+                        style="@style/Widget.LuckyShake.Button.Segment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/reminder_btn_allow_notifications" />
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/settingsTestReminder"
+                        style="@style/Widget.LuckyShake.Button.Segment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="@string/reminder_btn_test" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+            <!-- กดค้างที่เลขเวอร์ชันเพื่อเปิดเครื่องมือซ้อมเดโม (ซ่อนจากผู้ใช้ทั่วไป) -->
+            <com.google.android.material.button.MaterialButton
+    android:id="@+id/settingsClearAll"
+    style="@style/Widget.LuckyShake.Button.Segment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="8dp"
+    android:text="@string/settings_btn_clear_all"
+    android:textColor="@color/home_accent"
+    app:strokeColor="@color/home_accent" />
+            <TextView
+                android:id="@+id/settingsVersion"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/home_filter_card"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_md"
+                android:gravity="center"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="6dp"
+                android:textColor="@color/home_ink" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

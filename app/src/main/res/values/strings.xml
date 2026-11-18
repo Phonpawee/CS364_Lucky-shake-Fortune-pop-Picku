@@ -106,6 +106,9 @@
 
     <string name="reminder_btn_allow_notifications">Allow notifications</string>
     <string name="reminder_msg_permission_granted">Notification permission granted.</string>
+    <string name="settings_notification_disabled_title">Notifications are turned off</string>
+    <string name="settings_notification_disabled_message">Allow notifications for LuckyShake in system settings to receive meal reminders.</string>
+    <string name="settings_notification_open">Open settings</string>
     <string name="reminder_msg_permission_not_required">This Android version does not require notification permission.</string>
 
     <string name="settings_title">Settings</string>
@@ -158,4 +161,19 @@
     <string name="result_btn_redraw">Draw again</string>
     <string name="result_msg_accepted">Accepted</string>
     <string name="result_msg_quota_empty">You have used all your redraws.</string>
+    <string name="home_shake_hint">Shake to pick a dish</string>
+    <string name="reminder_settings_title">Meal reminders</string>
+    <string name="reminder_meal_breakfast">Breakfast</string>
+    <string name="reminder_meal_lunch">Lunch</string>
+    <string name="reminder_meal_dinner">Dinner</string>
+    <string name="reminder_time_format">%1$02d:%2$02d</string>
+    <string name="reminder_no_sets">Create a menu set first.</string>
+    <string name="reminder_btn_test">Test reminder (5 seconds)</string>
+    <string name="reminder_time_button_description">Set reminder time</string>
+    <string name="reminder_time_description">Reminder time %1$s</string>
+    <string name="reminder_time_placeholder">07:30</string>
+    <string name="settings_btn_clear_all">Clear all data</string>
+    <string name="settings_clear_title">Clear all data?</string>
+    <string name="settings_clear_message">This deletes menus, history, and app preferences, and cancels all meal reminders.</string>
+    <string name="settings_clear_done">All app data was cleared.</string>
 </resources>

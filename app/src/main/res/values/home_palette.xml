@@ -1,0 +1,13 @@
+<resources>
+    <color name="home_paper">#FFF5E5</color>
+    <color name="home_ink">#472820</color>
+    <color name="home_accent">#922E23</color>
+    <color name="home_outline">#BD8D52</color>
+    <color name="home_field">#FFFAEF</color>
+    <color name="home_title">#551E1B</color>
+    <color name="home_button">#9D291F</color>
+    <color name="home_button_disabled">#724139</color>
+    <color name="home_thumb">#FFF4DD</color>
+    <color name="home_track_off">#967C70</color>
+    <color name="home_selected">#F5DBB6</color>
+</resources>

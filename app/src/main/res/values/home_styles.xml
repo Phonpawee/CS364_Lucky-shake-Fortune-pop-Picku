@@ -1,0 +1,8 @@
+<resources>
+    <style name="ThemeOverlay.LuckyShake.Home" parent="">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColorPrimary">@color/home_ink</item>
+        <item name="android:textColorSecondary">@color/home_ink</item>
+        <item name="colorOnSurface">@color/home_ink</item>
+    </style>
+</resources>
