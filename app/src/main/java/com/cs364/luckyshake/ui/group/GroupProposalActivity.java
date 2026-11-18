@@ -19,6 +19,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleEventObserver;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -114,6 +115,12 @@ public class GroupProposalActivity extends AppCompatActivity {
             @Override
             public void handleOnBackPressed() {
                 requestCancel();
+            }
+        });
+
+        getLifecycle().addObserver((LifecycleEventObserver) (source, event) -> {
+            if (event == Lifecycle.Event.ON_RESUME) {
+                maybeStartShakeDetection();
             }
         });
 
@@ -223,23 +230,31 @@ public class GroupProposalActivity extends AppCompatActivity {
         }
 
         viewModel.setExitConfirmShowing(true);
-        cancelDialog = new MaterialAlertDialogBuilder(this)
+        AlertDialog dialogToBuild = new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.group_cancel_title)
                 .setMessage(R.string.group_cancel_msg)
                 .setPositiveButton(R.string.group_cancel_btn_discard, (dialog, which) -> {
-                    viewModel.setExitConfirmShowing(false);
-                    viewModel.cancelRound();
-                    finish();
+                    if (cancelDialog == dialog) {
+                        viewModel.setExitConfirmShowing(false);
+                        viewModel.cancelRound();
+                        finish();
+                    }
                 })
                 .setNegativeButton(R.string.group_cancel_btn_stay, (dialog, which) -> {
-                    viewModel.setExitConfirmShowing(false);
-                    maybeStartShakeDetection();
+                    if (cancelDialog == dialog) {
+                        viewModel.setExitConfirmShowing(false);
+                        maybeStartShakeDetection();
+                    }
                 })
                 .setOnCancelListener(dialog -> {
-                    viewModel.setExitConfirmShowing(false);
-                    maybeStartShakeDetection();
+                    if (cancelDialog == dialog) {
+                        viewModel.setExitConfirmShowing(false);
+                        maybeStartShakeDetection();
+                    }
                 })
                 .show();
+
+        cancelDialog = dialogToBuild;
     }
 
     private void maybeStartShakeDetection() {
@@ -393,7 +408,6 @@ public class GroupProposalActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         FontSizeHelper.apply(this, root);
-        maybeStartShakeDetection();
     }
 
     @Override
