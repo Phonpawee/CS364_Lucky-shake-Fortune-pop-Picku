@@ -22,7 +22,7 @@ import java.util.Locale;
 public class GroupProposalViewModel extends ViewModel {
 
     public interface HistoryRecorder {
-        void add(HistoryEntry entry);
+        boolean add(HistoryEntry entry);
     }
 
     private static final String KEY_COUNT = "count";
@@ -51,7 +51,7 @@ public class GroupProposalViewModel extends ViewModel {
     private final MutableLiveData<VoteOption> winner = new MutableLiveData<>(null);
 
     private DrawEngine drawEngine = DrawEngine.create();
-    private HistoryRecorder historyRecorder = entry -> {};
+    private HistoryRecorder historyRecorder = entry -> false;
     private FortuneProvider fortuneProvider;
 
     public GroupProposalViewModel() {
@@ -223,8 +223,10 @@ public class GroupProposalViewModel extends ViewModel {
             }
 
             HistoryEntry entry = GroupWinnerEntry.create(nameTh, nameEn, drawLevel, stickNo, System.currentTimeMillis());
-            historyRecorder.add(entry);
-            savedStateHandle.set(KEY_HISTORY_LOGGED, true);
+            boolean success = historyRecorder.add(entry);
+            if (success) {
+                savedStateHandle.set(KEY_HISTORY_LOGGED, true);
+            }
         }
 
         winner.setValue(picked);

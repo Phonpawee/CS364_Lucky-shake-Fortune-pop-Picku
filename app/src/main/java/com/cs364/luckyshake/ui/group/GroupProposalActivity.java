@@ -109,7 +109,7 @@ public class GroupProposalActivity extends AppCompatActivity {
         }
 
         viewModel = new ViewModelProvider(this).get(GroupProposalViewModel.class);
-        viewModel.setHistoryRecorder(entry -> new com.cs364.luckyshake.data.HistoryRepository(this).add(entry));
+        viewModel.setHistoryRecorder(entry -> new com.cs364.luckyshake.data.HistoryRepository(this).add(entry) > 0);
         viewModel.setFortuneProvider(new FortuneProvider(this));
 
         // #14: Back navigation (Mind) can call requestCancel() / hasUnsavedProgress()

@@ -58,7 +58,7 @@
     <string name="group_cancel_btn_discard">Cancel round</string>
     <string name="group_cancel_btn_stay">Keep going</string>
     <string name="group_winner_title">Group winner</string>
-    <string name="group_winner_votes">%1$d votes</string>
+    <string name="group_winner_votes">Votes: %1$d</string>
     <string name="group_winner_btn_new_round">Start a new round</string>
 
     <!-- Fortune Provider (#27) -->
