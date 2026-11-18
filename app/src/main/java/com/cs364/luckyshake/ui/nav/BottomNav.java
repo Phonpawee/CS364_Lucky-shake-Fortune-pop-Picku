@@ -128,7 +128,6 @@ public final class BottomNav {
         });
 
         if (selectedId != R.id.nav_home) {
-            BackNavigation.attachBackButton(activity);
             activity.getOnBackPressedDispatcher().addCallback(activity,
                     new OnBackPressedCallback(true) {
                         @Override

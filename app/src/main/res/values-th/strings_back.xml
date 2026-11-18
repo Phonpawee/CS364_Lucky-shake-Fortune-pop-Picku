@@ -4,5 +4,4 @@
     <string name="back_draw_message">ผลที่สุ่มไว้จะหายไป</string>
     <string name="back_group_title">ออกจากรอบกลุ่มหรือไม่?</string>
     <string name="back_group_message">ข้อเสนอในรอบนี้จะหายไป</string>
-    <string name="back_navigate">ย้อนกลับ</string>
 </resources>
