@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -71,16 +70,13 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:id="@+id/home_picker_row">
-
+                    android:orientation="horizontal">
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginEnd="10dp"
                         android:orientation="vertical">
-
                         <TextView
                             android:id="@+id/home_label_set"
                             android:layout_width="match_parent"
@@ -88,7 +84,6 @@
                             android:labelFor="@id/home_spinner_set"
                             android:text="@string/home_label_set"
                             android:textStyle="bold" />
-
                         <Spinner
                             android:id="@+id/home_spinner_set"
                             android:layout_width="match_parent"
@@ -100,13 +95,11 @@
                             android:background="@drawable/home_spinner_background"
                             android:popupBackground="@color/home_field" />
                     </LinearLayout>
-
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical">
-
                         <TextView
                             android:id="@+id/home_label_type"
                             android:layout_width="match_parent"
@@ -114,7 +107,6 @@
                             android:labelFor="@id/home_spinner_type"
                             android:text="@string/home_label_filter_type"
                             android:textStyle="bold" />
-
                         <Spinner
                             android:id="@+id/home_spinner_type"
                             android:layout_width="match_parent"
@@ -136,7 +128,6 @@
                     android:text="@string/home_label_no_fried"
                     app:thumbTint="@color/home_thumb"
                     app:trackTint="@color/home_switch_track" />
-
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/home_switch_no_spicy"
                     android:layout_width="match_parent"
@@ -156,8 +147,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:id="@+id/home_filter_footer">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/home_label_filter_count"
@@ -198,7 +188,6 @@
                     android:importantForAccessibility="no"
                     android:scaleType="fitCenter"
                     app:srcCompat="@drawable/home_sakura" />
-
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="36dp"
                     android:layout_height="36dp"
@@ -208,7 +197,6 @@
                     android:importantForAccessibility="no"
                     android:scaleType="fitCenter"
                     app:srcCompat="@drawable/home_maple" />
-
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="37dp"
                     android:layout_height="37dp"
@@ -217,7 +205,6 @@
                     android:importantForAccessibility="no"
                     android:scaleType="fitCenter"
                     app:srcCompat="@drawable/home_star" />
-
                 <com.cs364.luckyshake.ui.home.ShadowImageView
                     android:layout_width="135dp"
                     android:layout_height="150dp"
@@ -226,7 +213,6 @@
                     android:importantForAccessibility="no"
                     android:scaleType="fitCenter"
                     app:srcCompat="@drawable/home_fox" />
-
                 <com.cs364.luckyshake.ui.home.ShadowImageView
                     android:id="@+id/home_image_tube"
                     android:layout_width="120dp"
@@ -236,7 +222,6 @@
                     android:contentDescription="@string/home_label_tube"
                     android:scaleType="fitCenter"
                     app:srcCompat="@drawable/home_tube" />
-
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/home_image_stick"
                     android:layout_width="11dp"
