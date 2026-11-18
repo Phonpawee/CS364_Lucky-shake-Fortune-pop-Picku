@@ -1,8 +1,11 @@
 package com.cs364.luckyshake.fortune;
 
 import android.content.Context;
+import android.content.res.Configuration;
 
 import com.cs364.luckyshake.R;
+
+import java.util.Locale;
 
 public class FortuneProvider {
     private final Context context;
@@ -34,15 +37,26 @@ public class FortuneProvider {
     }
 
     public String getFoodTypeName(String key) {
+        return getFoodTypeName(key, null);
+    }
+
+    public String getFoodTypeName(String key, Locale locale) {
         if (key == null) {
             return null;
         }
 
-        int resourceId = context.getResources().getIdentifier(
-                key, "string", context.getPackageName()
+        Context targetContext = context;
+        if (locale != null) {
+            Configuration config = new Configuration(context.getResources().getConfiguration());
+            config.setLocale(locale);
+            targetContext = context.createConfigurationContext(config);
+        }
+
+        int resourceId = targetContext.getResources().getIdentifier(
+                key, "string", targetContext.getPackageName()
         );
 
-        return resourceId == 0 ? null : context.getString(resourceId);
+        return resourceId == 0 ? null : targetContext.getString(resourceId);
     }
 
     public String getDisclaimer() {

@@ -109,6 +109,8 @@ public class GroupProposalActivity extends AppCompatActivity {
         }
 
         viewModel = new ViewModelProvider(this).get(GroupProposalViewModel.class);
+        viewModel.setHistoryRecorder(entry -> new com.cs364.luckyshake.data.HistoryRepository(this).add(entry));
+        viewModel.setFortuneProvider(new FortuneProvider(this));
 
         // #14: Back navigation (Mind) can call requestCancel() / hasUnsavedProgress()
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -319,26 +321,15 @@ public class GroupProposalActivity extends AppCompatActivity {
         });
 
         viewModel.getWinner().observe(this, winner -> {
-            if (winner != null) {
+            if (winner != null && !isFinishing()) {
                 shakeDetector.stop();
-                if (tallyBtnDraw != null) {
-                    tallyBtnDraw.setVisibility(View.GONE);
+                int[] proposers = new int[winner.proposers.size()];
+                for (int i = 0; i < proposers.length; i++) {
+                    proposers[i] = winner.proposers.get(i);
                 }
-
-                String displayName = winner.label;
-                if (proposalMethod == ProposalMethod.FOOD_TYPE) {
-                    String translated = new FortuneProvider(this).getFoodTypeName(winner.label);
-                    if (translated != null && !translated.isEmpty()) {
-                        displayName = translated;
-                    }
-                }
-
-                if (tallyWinner != null) {
-                    tallyWinner.setText(getString(R.string.group_tally_winner, displayName, winner.votes));
-                    tallyWinner.setVisibility(View.VISIBLE);
-                }
-
-                // TODO(#39): open the group winner screen (fortune, history log, play again)
+                startActivity(GroupWinnerActivity.newIntent(this, proposalMethod, winner.label,
+                        winner.votes, proposers, viewModel.getDrawLevel(), viewModel.getStickNo()));
+                finish();
             }
         });
     }
