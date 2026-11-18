@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -80,7 +79,6 @@
                     android:textColor="@color/home_accent"
                     android:textSize="14sp"
                     android:textStyle="bold" />
-
                 <TextView
                     android:id="@+id/result_label_menu"
                     android:layout_width="match_parent"
@@ -91,7 +89,6 @@
                     android:layout_marginTop="4dp"
                     android:textStyle="bold"
                     android:fontFamily="sans-serif" />
-
                 <TextView
                     android:id="@+id/result_label_type_tags"
                     android:layout_width="match_parent"
@@ -100,7 +97,6 @@
                     android:textColor="@color/home_ink"
                     android:textSize="14sp"
                     android:layout_marginTop="5dp" />
-
                 <TextView
                     android:id="@+id/result_label_stars"
                     android:layout_width="match_parent"
@@ -126,7 +122,6 @@
                     android:textColor="@color/home_ink"
                     android:textSize="15sp"
                     android:layout_marginTop="8dp" />
-
                 <TextView
                     android:id="@+id/result_msg_disclaimer"
                     android:layout_width="match_parent"
@@ -158,7 +153,6 @@
                     android:textColor="@color/home_ink"
                     android:textSize="13sp"
                     android:layout_marginTop="3dp" />
-
                 <TextView
                     android:id="@+id/result_label_status"
                     android:layout_width="match_parent"
@@ -173,8 +167,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:id="@+id/result_action_row">
+                    android:orientation="horizontal">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/result_btn_accept"
@@ -190,7 +183,6 @@
                         app:cornerRadius="26dp"
                         app:strokeColor="@color/home_outline"
                         app:strokeWidth="1dp" />
-
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/result_btn_redraw"
                         android:layout_marginStart="6dp"
@@ -207,7 +199,6 @@
                         app:cornerRadius="26dp"
                         app:strokeColor="@color/home_outline"
                         app:strokeWidth="1dp" />
-
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/result_btn_home"
                         android:layout_width="0dp"
@@ -225,7 +216,6 @@
                         app:strokeWidth="1dp" />
                 </LinearLayout>
             </LinearLayout>
-
             <Space
                 android:layout_width="1dp"
                 android:layout_height="0dp"

@@ -4,9 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/ThemeOverlay.LuckyShake.Home"
-    android:id="@+id/result_landscape_root">
-
+    android:theme="@style/ThemeOverlay.LuckyShake.Home">
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,30 +12,30 @@
         android:scaleType="centerCrop"
         android:src="@drawable/result_sky" />
 
-    <LinearLayout
+    <ScrollView
+        android:id="@+id/result_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:baselineAligned="false"
-        android:padding="12dp"
-        android:id="@+id/result_landscape_content">
-
-        <ScrollView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.8"
-            android:fillViewport="true"
-            android:clipToPadding="false">
-
+        android:fillViewport="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingStart="20dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="12dp"
+            android:baselineAligned="false">
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="6dp">
-
+                android:layout_weight="0.8"
+                android:layout_marginEnd="14dp">
                 <TextView
                     android:id="@+id/result_title_fortune"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/result_title_background"
                     android:elevation="4dp"
@@ -49,15 +47,12 @@
                     android:textColor="@color/home_thumb"
                     android:textSize="25sp"
                     android:textStyle="bold"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginEnd="0dp" />
+                    android:layout_gravity="center_horizontal" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="210dp"
                     android:clipChildren="false">
-
                     <com.cs364.luckyshake.ui.home.ShadowImageView
                         android:id="@+id/result_image_stick"
                         android:layout_width="33dp"
@@ -67,21 +62,12 @@
                         app:srcCompat="@drawable/home_stick" />
                 </FrameLayout>
             </LinearLayout>
-        </ScrollView>
-
-        <ScrollView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1.2"
-            android:fillViewport="true"
-            android:clipToPadding="false">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="6dp">
-
+                android:layout_weight="1.2">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -90,7 +76,6 @@
                     android:orientation="vertical"
                     android:paddingHorizontal="14dp"
                     android:paddingVertical="11dp">
-
                     <TextView
                         android:id="@+id/result_label_stick"
                         android:layout_width="match_parent"
@@ -168,7 +153,6 @@
                     android:paddingTop="6dp"
                     android:paddingEnd="12dp"
                     android:paddingBottom="6dp">
-
                     <TextView
                         android:id="@+id/result_label_quota"
                         android:layout_width="match_parent"
@@ -192,9 +176,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:id="@+id/result_action_row">
-
+                        android:orientation="horizontal">
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/result_btn_accept"
                             android:layout_width="0dp"
@@ -245,6 +227,6 @@
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </FrameLayout>

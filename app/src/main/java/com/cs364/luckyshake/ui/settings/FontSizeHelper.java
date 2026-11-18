@@ -27,13 +27,8 @@ public final class FontSizeHelper {
      * once is not enough.
      */
     public static ArrayAdapter<String> spinnerAdapter(Context context, List<String> items) {
-        return spinnerAdapter(context, items, android.R.layout.simple_spinner_item);
-    }
-
-    public static ArrayAdapter<String> spinnerAdapter(
-            Context context, List<String> items, int rowLayout) {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                context, rowLayout, items) {
+                context, android.R.layout.simple_spinner_item, items) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
@@ -48,8 +43,7 @@ public final class FontSizeHelper {
                 return view;
             }
         };
-        adapter.setDropDownViewResource(rowLayout == android.R.layout.simple_spinner_item
-                ? android.R.layout.simple_spinner_dropdown_item : rowLayout);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         return adapter;
     }
 

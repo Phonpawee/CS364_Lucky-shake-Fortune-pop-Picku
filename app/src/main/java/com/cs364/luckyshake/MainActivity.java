@@ -37,7 +37,6 @@ import com.cs364.luckyshake.data.PrefKeys;
 import com.cs364.luckyshake.logic.DrawStatus;
 import com.cs364.luckyshake.logic.GameConfig;
 import com.cs364.luckyshake.ui.home.DrawState;
-import com.cs364.luckyshake.ui.home.ResponsiveLayout;
 import com.cs364.luckyshake.ui.home.HomeSession;
 import com.cs364.luckyshake.ui.home.HomeViewModel;
 import com.cs364.luckyshake.ui.menu.MenuLabels;
@@ -100,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        View landscapeScroll = findViewById(R.id.home_landscape_content);
+        View landscapeScroll = findViewById(R.id.home_landscape_scroll);
         if (landscapeScroll == null) {
             BottomNav.attach(this, R.id.nav_home);
         } else {
@@ -146,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         FontSizeHelper.apply(this, findViewById(R.id.main));
-        ResponsiveLayout.applyHome(this);
         reloadSets();   // sets may have been added/renamed/deleted on the Dishes tab
         refreshFilterCount();
         viewModel.setMaxRedraws(getSharedPreferences(PrefKeys.PREFS_NAME, MODE_PRIVATE)
@@ -322,7 +320,7 @@ public class MainActivity extends AppCompatActivity {
                 selected = i;
             }
         }
-        setPicker.setAdapter(FontSizeHelper.spinnerAdapter(setPicker.getContext(), names, R.layout.home_spinner_text));
+        setPicker.setAdapter(FontSizeHelper.spinnerAdapter(setPicker.getContext(), names));
         if (sets.isEmpty()) {
             viewModel.selectSet(HomeSession.NO_SET);
         } else {
@@ -344,7 +342,7 @@ public class MainActivity extends AppCompatActivity {
         for (String type : MENU_TYPES.subList(1, MENU_TYPES.size())) {
             typeNames.add(MenuLabels.type(this, type));
         }
-        typePicker.setAdapter(FontSizeHelper.spinnerAdapter(typePicker.getContext(), typeNames, R.layout.home_spinner_text));
+        typePicker.setAdapter(FontSizeHelper.spinnerAdapter(typePicker.getContext(), typeNames));
         typePicker.setSelection(Math.max(0,
                 MENU_TYPES.indexOf(filterPreferences.getString(PrefKeys.FILTER_TYPE, null))));
         noFried.setChecked(filterPreferences.getBoolean(PrefKeys.FILTER_NO_FRIED, false));
