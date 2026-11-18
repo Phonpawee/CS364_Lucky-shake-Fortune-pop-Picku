@@ -1,7 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="result_save_image">บันทึกภาพผลเซียมซี</string>
-    <string name="result_save_success">บันทึกภาพเรียบร้อยแล้ว</string>
+    <string name="result_save_success">บันทึกภาพใน Pictures/LuckyShake เรียบร้อยแล้ว</string>
     <string name="result_save_cancelled">ยกเลิกการบันทึกภาพ</string>
     <string name="result_save_error">บันทึกภาพไม่สำเร็จ กรุณาลองอีกครั้ง</string>
+    <string name="result_gallery_save">บันทึกลงแกลเลอรี</string>
+    <string name="result_preview_title">ตัวอย่างภาพผลเซียมซี</string>
+    <string name="result_preview_cancel">ยกเลิก</string>
+    <string name="result_save_permission_denied">กรุณาอนุญาตการเข้าถึงพื้นที่เก็บข้อมูลเพื่อบันทึกภาพบน Android รุ่นนี้</string>
 </resources>
