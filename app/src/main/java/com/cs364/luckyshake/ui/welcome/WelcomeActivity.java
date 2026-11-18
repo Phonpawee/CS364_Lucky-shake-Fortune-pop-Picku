@@ -15,11 +15,13 @@ import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 /** Illustrated app entrance; it never creates or changes a draw. */
 public class WelcomeActivity extends AppCompatActivity {
     private boolean entering;
+    private SakuraPetalsView petals;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_welcome);
+        petals = findViewById(R.id.welcome_petals);
         View content = findViewById(R.id.welcome_content);
         if (content == null) content = findViewById(R.id.welcome_landscape_content);
         int left = content.getPaddingLeft(), top = content.getPaddingTop();
@@ -41,4 +43,16 @@ public class WelcomeActivity extends AppCompatActivity {
             finish();
         });
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (petals != null) petals.setActive(true);
+    }
+
+    @Override
+    protected void onPause() {
+        if (petals != null) petals.setActive(false);
+        super.onPause();
+    }
+
 }

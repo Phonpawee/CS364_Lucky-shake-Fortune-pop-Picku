@@ -5,6 +5,10 @@
         android:src="@drawable/welcome_scene" android:scaleType="centerCrop" android:importantForAccessibility="no" />
     <View android:layout_width="match_parent" android:layout_height="match_parent"
         android:background="@drawable/welcome_shade" android:importantForAccessibility="no" />
+    <com.cs364.luckyshake.ui.welcome.SakuraPetalsView
+        android:id="@+id/welcome_petals" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:importantForAccessibility="no"
+        android:clickable="false" android:focusable="false" />
     <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent" android:layout_height="match_parent">
         <ScrollView android:id="@+id/welcome_content" android:layout_width="0dp" android:layout_height="match_parent"
             android:fillViewport="true" android:paddingHorizontal="24dp" android:paddingVertical="24dp"

@@ -3,6 +3,10 @@
     <ImageView android:layout_width="match_parent" android:layout_height="match_parent"
         android:src="@drawable/welcome_scene" android:scaleType="centerCrop" android:alpha="0.25"
         android:importantForAccessibility="no" />
+    <com.cs364.luckyshake.ui.welcome.SakuraPetalsView
+        android:id="@+id/welcome_petals" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:importantForAccessibility="no"
+        android:clickable="false" android:focusable="false" />
     <LinearLayout android:id="@+id/welcome_landscape_content" android:layout_width="match_parent" android:layout_height="match_parent"
         android:orientation="horizontal" android:baselineAligned="false"
         android:paddingHorizontal="24dp" android:paddingVertical="12dp">
