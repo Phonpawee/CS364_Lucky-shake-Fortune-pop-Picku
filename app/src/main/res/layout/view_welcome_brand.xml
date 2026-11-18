@@ -12,12 +12,14 @@
         android:layout_marginTop="12dp" android:paddingHorizontal="18dp" android:paddingVertical="8dp"
         android:background="@drawable/welcome_caption" android:text="@string/welcome_tagline"
         android:textSize="16sp" android:textColor="#FFF4D8" android:gravity="center" />
-    <com.google.android.material.button.MaterialButton android:id="@+id/welcome_start"
+    <androidx.appcompat.widget.AppCompatButton android:id="@+id/welcome_start"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:minWidth="220dp" android:minHeight="56dp" android:layout_marginTop="16dp"
-        android:paddingHorizontal="32dp" android:paddingVertical="12dp"
-        android:text="@string/welcome_start" android:textSize="20sp" android:textStyle="bold"
-        android:textColor="#FFF4D8" app:backgroundTint="#A52F23"
-        app:cornerRadius="30dp" app:strokeColor="#F1C77E" app:strokeWidth="2dp"
-        android:elevation="6dp" />
+        android:minWidth="220dp" android:minHeight="64dp" android:layout_marginTop="16dp"
+        android:paddingHorizontal="32dp" android:paddingTop="10dp" android:paddingBottom="14dp"
+        android:text="@string/welcome_start" android:textSize="26sp" android:textStyle="bold"
+        android:fontFamily="sans-serif" android:textAllCaps="false" android:gravity="center"
+        android:textColor="#FFF4D8" android:background="@drawable/welcome_start_button"
+        app:backgroundTint="@null" android:backgroundTint="@null"
+        android:shadowColor="#80300000" android:shadowDy="1" android:shadowRadius="2"
+        android:stateListAnimator="@null" android:elevation="6dp" />
 </LinearLayout>
