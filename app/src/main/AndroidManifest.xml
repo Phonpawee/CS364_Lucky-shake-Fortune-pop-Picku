@@ -38,6 +38,10 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".ui.weights.MenuWeightsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".ui.group.GroupSetupActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />

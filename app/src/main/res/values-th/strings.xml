@@ -61,6 +61,25 @@
     <string name="group_winner_votes">%1$d เสียง</string>
     <string name="group_winner_btn_new_round">เริ่มรอบใหม่</string>
 
+    <!-- Menu Weights (#42) -->
+    <string name="weights_title">แอปคิดยังไง</string>
+    <string name="weights_rules_title">กติกาการปรับน้ำหนัก</string>
+    <string name="weights_rule_accept">ยอมรับ: +%1$d</string>
+    <string name="weights_rule_redraw">ขอใหม่: %1$d</string>
+    <string name="weights_rule_decay">ไม่ถูกแตะครบสัปดาห์: ขยับกลับหา %2$d ทีละ %1$d</string>
+    <string name="weights_rule_range">น้ำหนักอยู่ระหว่าง 1–10 ยิ่งสูงยิ่งมีโอกาสถูกสุ่ม เมนูไม่หายไปถาวร</string>
+    <string name="weights_value">%1$d/%2$d</string>
+    <string name="weights_label_liked">ชอบ</string>
+    <string name="weights_label_neutral">ปกติ</string>
+    <string name="weights_label_disliked">ไม่ค่อยชอบ</string>
+    <string name="weights_btn_reset">รีเซ็ตน้ำหนักทั้งชุด</string>
+    <string name="weights_reset_title">รีเซ็ตน้ำหนักทั้งชุด?</string>
+    <string name="weights_reset_message">น้ำหนักของทุกเมนูในชุดนี้จะกลับเป็น 5</string>
+    <string name="weights_msg_reset_done">รีเซ็ตแล้ว</string>
+    <string name="weights_empty">ไม่มีเมนูในชุดนี้</string>
+    <string name="weights_bar_description">%1$s น้ำหนัก %2$d จาก %3$d</string>
+    <string name="menu_sets_btn_weights">แอปคิดยังไง</string>
+
     <!-- Fortune Provider (#27) -->
     <string name="fortune_msg_level_1_1">วันนี้อาจมีเรื่องเล็ก ๆ มาทำให้ยิ้ม ขอให้อร่อยกับ %1$s</string>
     <string name="fortune_msg_level_1_2">เมนูเรียบง่ายก็เติมช่วงเวลาดี ๆ ได้ ลอง %1$s ดูนะ</string>
