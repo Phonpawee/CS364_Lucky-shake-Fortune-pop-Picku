@@ -24,6 +24,7 @@
     <string name="group_setup_desc_increment">Increase participants</string>
     <string name="group_setup_label_method">Proposal method</string>
     <string name="group_setup_label_method_food_type">Pick food group</string>
+    <string name="group_setup_label_food_type_selected">%1$s (%2$s)</string>
     <string name="group_setup_label_method_restaurant_name">Enter restaurants</string>
     <string name="group_setup_msg_method_food_type">Each person picks one food group, e.g. BBQ, shabu or noodles. Groups picked by more people have a better chance to win.</string>
     <string name="group_setup_msg_method_restaurant">Each person types up to 3 restaurants. Restaurants suggested by more people have a better chance to win.</string>
