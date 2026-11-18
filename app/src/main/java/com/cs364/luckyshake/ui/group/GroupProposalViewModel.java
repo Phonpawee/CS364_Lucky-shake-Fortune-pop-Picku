@@ -36,6 +36,7 @@ public class GroupProposalViewModel extends ViewModel {
     private static final String KEY_DRAW_LEVEL = "drawLevel";
     private static final String KEY_STICK_NO = "stickNo";
     private static final String KEY_HISTORY_LOGGED = "historyLogged";
+    private static final String KEY_PENDING_WINNER_LABEL = "pendingWinnerLabel";
 
     private final GroupSession session;
     private final SavedStateHandle savedStateHandle;
@@ -184,6 +185,7 @@ public class GroupProposalViewModel extends ViewModel {
         savedStateHandle.remove(KEY_DRAW_LEVEL);
         savedStateHandle.remove(KEY_STICK_NO);
         savedStateHandle.remove(KEY_HISTORY_LOGGED);
+        savedStateHandle.remove(KEY_PENDING_WINNER_LABEL);
 
         updateLiveData();
     }
@@ -191,7 +193,7 @@ public class GroupProposalViewModel extends ViewModel {
     /**
      * Draws the winning option weighted by votes (#37, #39).
      * Logs history entry exactly once and persists draw level and stick number.
-     * Returns false if a winner was already drawn or if the tally is empty.
+     * Returns false if a winner was already drawn, if history save fails, or if the tally is empty.
      */
     public boolean drawWinner() {
         if (winner.getValue() != null || isTallyEmpty()) {
@@ -201,7 +203,21 @@ public class GroupProposalViewModel extends ViewModel {
         if (currentTally == null || currentTally.isEmpty()) {
             return false;
         }
-        VoteOption picked = VoteTally.draw(currentTally, drawEngine);
+
+        String pendingLabel = savedStateHandle.get(KEY_PENDING_WINNER_LABEL);
+        VoteOption picked = null;
+        if (pendingLabel != null) {
+            for (VoteOption opt : currentTally) {
+                if (opt.label.equals(pendingLabel)) {
+                    picked = opt;
+                    break;
+                }
+            }
+        }
+        if (picked == null) {
+            picked = VoteTally.draw(currentTally, drawEngine);
+            savedStateHandle.set(KEY_PENDING_WINNER_LABEL, picked.label);
+        }
 
         int drawLevel = savedStateHandle.contains(KEY_DRAW_LEVEL) ? getDrawLevel() : drawEngine.pickLevel();
         int stickNo = savedStateHandle.contains(KEY_STICK_NO) ? getStickNo() : (1 + (int) (Math.random() * 28));
@@ -224,9 +240,10 @@ public class GroupProposalViewModel extends ViewModel {
 
             HistoryEntry entry = GroupWinnerEntry.create(nameTh, nameEn, drawLevel, stickNo, System.currentTimeMillis());
             boolean success = historyRecorder.add(entry);
-            if (success) {
-                savedStateHandle.set(KEY_HISTORY_LOGGED, true);
+            if (!success) {
+                return false;
             }
+            savedStateHandle.set(KEY_HISTORY_LOGGED, true);
         }
 
         winner.setValue(picked);
