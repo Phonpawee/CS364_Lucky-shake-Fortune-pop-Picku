@@ -72,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/home_filter_card"
-                    android:elevation="5dp"
+                    android:elevation="9dp"
                     android:orientation="vertical"
                     android:paddingHorizontal="14dp"
                     android:paddingVertical="11dp">
@@ -147,7 +147,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/home_filter_card"
-                    android:elevation="5dp"
+                    android:elevation="9dp"
                     android:orientation="vertical"
                     android:paddingStart="12dp"
                     android:paddingTop="6dp"
@@ -178,7 +178,9 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/result_btn_accept"
+                            android:foreground="@drawable/button_depth_glaze"
+                    android:elevation="6dp"
+                    android:id="@+id/result_btn_accept"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
@@ -210,7 +212,9 @@
                             app:strokeWidth="1dp" />
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/result_btn_home"
+                            android:foreground="@drawable/button_depth_glaze"
+                    android:elevation="6dp"
+                    android:id="@+id/result_btn_home"
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="wrap_content"
