@@ -123,6 +123,16 @@ public class HomeSession {
         }
     }
 
+    /** Reset in-memory game state after the user clears all app data. */
+    public void reset() {
+        round.discard();
+        setId = NO_SET;
+        filter = MenuFilter.none();
+        recentIds.clear();
+        round.setMaxRedraws(GameConfig.MAX_REDRAWS);
+        state = DrawState.IDLE;
+    }
+
     public DrawState getState() {
         return state;
     }

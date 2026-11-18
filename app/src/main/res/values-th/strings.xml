@@ -102,6 +102,9 @@
 
     <string name="reminder_btn_allow_notifications">อนุญาตการแจ้งเตือน</string>
     <string name="reminder_msg_permission_granted">อนุญาตการแจ้งเตือนแล้ว</string>
+    <string name="settings_notification_disabled_title">ปิดการแจ้งเตือนไว้</string>
+    <string name="settings_notification_disabled_message">เปิดการแจ้งเตือนของ LuckyShake ในการตั้งค่าระบบเพื่อรับการเตือนมื้ออาหาร</string>
+    <string name="settings_notification_open">เปิดการตั้งค่า</string>
     <string name="reminder_msg_permission_not_required">Android เวอร์ชันนี้ไม่ต้องขอสิทธิ์แจ้งเตือน</string>
 
     <string name="settings_title">ตั้งค่า</string>
@@ -155,4 +158,18 @@
     <string name="result_msg_accepted">ยอมรับแล้ว</string>
     <string name="result_msg_quota_empty">ใช้โควตาขอใหม่ครบแล้ว</string>
     <string name="home_shake_hint">เขย่าเพื่อสุ่มเมนู</string>
+    <string name="reminder_settings_title">แจ้งเตือนตามมื้อ</string>
+    <string name="reminder_meal_breakfast">มื้อเช้า</string>
+    <string name="reminder_meal_lunch">มื้อกลางวัน</string>
+    <string name="reminder_meal_dinner">มื้อเย็น</string>
+    <string name="reminder_time_format">%1$02d:%2$02d น.</string>
+    <string name="reminder_no_sets">กรุณาสร้างชุดเมนูก่อน</string>
+    <string name="reminder_btn_test">ทดสอบแจ้งเตือน (5 วินาที)</string>
+    <string name="reminder_time_button_description">ตั้งเวลาแจ้งเตือน</string>
+    <string name="reminder_time_description">เวลาแจ้งเตือน %1$s</string>
+    <string name="reminder_time_placeholder">07:30 น.</string>
+    <string name="settings_btn_clear_all">ล้างข้อมูลทั้งหมด</string>
+    <string name="settings_clear_title">ล้างข้อมูลทั้งหมดหรือไม่</string>
+    <string name="settings_clear_message">เมนู ประวัติ และการตั้งค่าในแอปจะถูกลบ พร้อมยกเลิกการแจ้งเตือนทุกมื้อ</string>
+    <string name="settings_clear_done">ล้างข้อมูลทั้งหมดแล้ว</string>
 </resources>

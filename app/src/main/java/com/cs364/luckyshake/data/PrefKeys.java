@@ -2,6 +2,7 @@ package com.cs364.luckyshake.data;
 
 public final class PrefKeys {
     public static final String PREFS_NAME = "app_preferences";
+    public static final String MEAL_REMINDER_PREFIX = "meal_reminder_";
 
     public static final String LANGUAGE = "language";
     public static final String THEME_MODE = "theme_mode";
