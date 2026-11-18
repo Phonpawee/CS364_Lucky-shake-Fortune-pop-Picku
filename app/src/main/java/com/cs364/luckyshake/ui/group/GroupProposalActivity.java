@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,6 +28,7 @@ import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.fortune.FortuneProvider;
 import com.cs364.luckyshake.logic.GameConfig;
 import com.cs364.luckyshake.sensor.ShakeDetector;
+import com.cs364.luckyshake.ui.nav.BackNavigation;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -69,7 +71,6 @@ public class GroupProposalActivity extends AppCompatActivity {
     private TextView tallyWinner;
     private GroupTallyAdapter tallyAdapter;
     private ShakeDetector shakeDetector;
-    private AlertDialog exitDialog;
 
     private ProposalMethod proposalMethod = ProposalMethod.FOOD_TYPE;
     private AlertDialog cancelDialog;
@@ -139,7 +140,7 @@ public class GroupProposalActivity extends AppCompatActivity {
 
         shakeDetector = ShakeDetector.create(this);
         shakeDetector.setOnShakeListener(() -> {
-            if (exitDialog == null && !isFinishing()) {
+            if ((cancelDialog == null || !cancelDialog.isShowing()) && !isFinishing() && !viewModel.isExitConfirmShowing()) {
                 viewModel.drawWinner();
             }
         });
@@ -205,7 +206,11 @@ public class GroupProposalActivity extends AppCompatActivity {
      */
     public void requestCancel() {
         if (!viewModel.hasUnsavedProgress()) {
-            finish();
+            if (viewModel.getPhase().getValue() == GroupPhase.DONE) {
+                BackNavigation.goHome(this);
+            } else {
+                finish();
+            }
             return;
         }
 
@@ -228,23 +233,30 @@ public class GroupProposalActivity extends AppCompatActivity {
                 })
                 .setNegativeButton(R.string.group_cancel_btn_stay, (dialog, which) -> {
                     viewModel.setExitConfirmShowing(false);
-                    GroupPhase currentPhase = viewModel.getPhase().getValue();
-                    if (getLifecycle().getCurrentState().isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)
-                            && (currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
-                            && viewModel.getWinner().getValue() == null) {
-                        shakeDetector.start();
-                    }
+                    maybeStartShakeDetection();
                 })
                 .setOnCancelListener(dialog -> {
                     viewModel.setExitConfirmShowing(false);
-                    GroupPhase currentPhase = viewModel.getPhase().getValue();
-                    if (getLifecycle().getCurrentState().isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)
-                            && (currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
-                            && viewModel.getWinner().getValue() == null) {
-                        shakeDetector.start();
-                    }
+                    maybeStartShakeDetection();
                 })
                 .show();
+    }
+
+    private void maybeStartShakeDetection() {
+        if (!getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+            return;
+        }
+        if (viewModel.isExitConfirmShowing()) {
+            return;
+        }
+        if (viewModel.getWinner().getValue() != null) {
+            return;
+        }
+        GroupPhase currentPhase = viewModel.getPhase().getValue();
+        if ((currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
+                && shakeDetector != null) {
+            shakeDetector.start();
+        }
     }
 
     private void observeViewModel() {
@@ -287,9 +299,7 @@ public class GroupProposalActivity extends AppCompatActivity {
                     }
                 }
 
-                if (viewModel.getWinner().getValue() == null && !viewModel.isExitConfirmShowing()) {
-                    shakeDetector.start();
-                }
+                maybeStartShakeDetection();
             }
         });
 
@@ -383,12 +393,7 @@ public class GroupProposalActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         FontSizeHelper.apply(this, root);
-        GroupPhase currentPhase = viewModel.getPhase().getValue();
-        if ((currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
-                && viewModel.getWinner().getValue() == null
-                && !viewModel.isExitConfirmShowing()) {
-            shakeDetector.start();
-        }
+        maybeStartShakeDetection();
     }
 
     @Override
@@ -402,6 +407,9 @@ public class GroupProposalActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (shakeDetector != null) {
+            shakeDetector.stop();
+        }
         if (cancelDialog != null && cancelDialog.isShowing()) {
             cancelDialog.dismiss();
             cancelDialog = null;
