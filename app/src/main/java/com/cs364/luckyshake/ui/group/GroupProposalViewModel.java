@@ -51,9 +51,8 @@ public class GroupProposalViewModel extends ViewModel {
 
         if (savedStateHandle.contains(KEY_PHASE)) {
             restoreState();
-        } else {
-            updateLiveData();
         }
+        updateLiveData();
     }
 
     public void setDrawEngine(DrawEngine drawEngine) {
@@ -266,7 +265,7 @@ public class GroupProposalViewModel extends ViewModel {
                 String winnerLabel = savedStateHandle.get(KEY_WINNER_LABEL);
                 if (winnerLabel != null && computedTally != null) {
                     for (VoteOption opt : computedTally) {
-                        if (opt.label.equalsIgnoreCase(winnerLabel)) {
+                        if (opt.label.equals(winnerLabel)) {
                             winner.setValue(opt);
                             break;
                         }

@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs364.luckyshake.R;
-import com.cs364.luckyshake.ui.nav.BackNavigation;
 import com.cs364.luckyshake.fortune.FortuneProvider;
 import com.cs364.luckyshake.logic.GameConfig;
 import com.cs364.luckyshake.sensor.ShakeDetector;
@@ -230,7 +229,8 @@ public class GroupProposalActivity extends AppCompatActivity {
                 .setNegativeButton(R.string.group_cancel_btn_stay, (dialog, which) -> {
                     viewModel.setExitConfirmShowing(false);
                     GroupPhase currentPhase = viewModel.getPhase().getValue();
-                    if ((currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
+                    if (getLifecycle().getCurrentState().isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)
+                            && (currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
                             && viewModel.getWinner().getValue() == null) {
                         shakeDetector.start();
                     }
@@ -238,7 +238,8 @@ public class GroupProposalActivity extends AppCompatActivity {
                 .setOnCancelListener(dialog -> {
                     viewModel.setExitConfirmShowing(false);
                     GroupPhase currentPhase = viewModel.getPhase().getValue();
-                    if ((currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
+                    if (getLifecycle().getCurrentState().isAtLeast(androidx.lifecycle.Lifecycle.State.RESUMED)
+                            && (currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
                             && viewModel.getWinner().getValue() == null) {
                         shakeDetector.start();
                     }
