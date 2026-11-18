@@ -46,6 +46,10 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".ui.group.GroupWinnerActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".ui.journal.JournalActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />

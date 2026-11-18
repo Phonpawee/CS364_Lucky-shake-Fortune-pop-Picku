@@ -6,17 +6,25 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.SavedStateHandle;
 import androidx.lifecycle.ViewModel;
 
+import com.cs364.luckyshake.data.HistoryEntry;
+import com.cs364.luckyshake.fortune.FortuneProvider;
 import com.cs364.luckyshake.logic.DrawEngine;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 /**
- * ViewModel for the group proposal collection and winner draw screen (#36, #35, #37, #38).
+ * ViewModel for the group proposal collection and winner draw screen (#36, #35, #37, #38, #39).
  * Retains and restores state across process death and screen rotations using {@link SavedStateHandle}.
  */
 public class GroupProposalViewModel extends ViewModel {
+
+    public interface HistoryRecorder {
+        boolean add(HistoryEntry entry);
+    }
+
     private static final String KEY_COUNT = "count";
     private static final String KEY_METHOD = "method";
     private static final String KEY_PHASE = "phase";
@@ -25,6 +33,10 @@ public class GroupProposalViewModel extends ViewModel {
     private static final String KEY_SELECTED_FOOD_TYPE = "selectedFoodType";
     private static final String KEY_WINNER_LABEL = "winnerLabel";
     private static final String KEY_EXIT_CONFIRM_SHOWING = "exitConfirmShowing";
+    private static final String KEY_DRAW_LEVEL = "drawLevel";
+    private static final String KEY_STICK_NO = "stickNo";
+    private static final String KEY_HISTORY_LOGGED = "historyLogged";
+    private static final String KEY_PENDING_WINNER_LABEL = "pendingWinnerLabel";
 
     private final GroupSession session;
     private final SavedStateHandle savedStateHandle;
@@ -40,6 +52,8 @@ public class GroupProposalViewModel extends ViewModel {
     private final MutableLiveData<VoteOption> winner = new MutableLiveData<>(null);
 
     private DrawEngine drawEngine = DrawEngine.create();
+    private HistoryRecorder historyRecorder = entry -> false;
+    private FortuneProvider fortuneProvider;
 
     public GroupProposalViewModel() {
         this(new SavedStateHandle());
@@ -59,6 +73,16 @@ public class GroupProposalViewModel extends ViewModel {
         if (drawEngine != null) {
             this.drawEngine = drawEngine;
         }
+    }
+
+    public void setHistoryRecorder(HistoryRecorder historyRecorder) {
+        if (historyRecorder != null) {
+            this.historyRecorder = historyRecorder;
+        }
+    }
+
+    public void setFortuneProvider(FortuneProvider fortuneProvider) {
+        this.fortuneProvider = fortuneProvider;
     }
 
     /**
@@ -108,6 +132,16 @@ public class GroupProposalViewModel extends ViewModel {
         return winner;
     }
 
+    public int getDrawLevel() {
+        Integer level = savedStateHandle.get(KEY_DRAW_LEVEL);
+        return level != null ? level : 0;
+    }
+
+    public int getStickNo() {
+        Integer stick = savedStateHandle.get(KEY_STICK_NO);
+        return stick != null ? stick : 1;
+    }
+
     public boolean isTallyEmpty() {
         List<VoteOption> list = tally.getValue();
         return list == null || list.isEmpty();
@@ -148,13 +182,18 @@ public class GroupProposalViewModel extends ViewModel {
         savedStateHandle.remove(KEY_SELECTED_FOOD_TYPE);
         savedStateHandle.remove(KEY_WINNER_LABEL);
         savedStateHandle.remove(KEY_EXIT_CONFIRM_SHOWING);
+        savedStateHandle.remove(KEY_DRAW_LEVEL);
+        savedStateHandle.remove(KEY_STICK_NO);
+        savedStateHandle.remove(KEY_HISTORY_LOGGED);
+        savedStateHandle.remove(KEY_PENDING_WINNER_LABEL);
 
         updateLiveData();
     }
 
     /**
-     * Draws the winning option weighted by votes.
-     * Returns false if a winner was already drawn or if the tally is empty.
+     * Draws the winning option weighted by votes (#37, #39).
+     * Logs history entry exactly once and persists draw level and stick number.
+     * Returns false if a winner was already drawn, if history save fails, or if the tally is empty.
      */
     public boolean drawWinner() {
         if (winner.getValue() != null || isTallyEmpty()) {
@@ -164,7 +203,49 @@ public class GroupProposalViewModel extends ViewModel {
         if (currentTally == null || currentTally.isEmpty()) {
             return false;
         }
-        VoteOption picked = VoteTally.draw(currentTally, drawEngine);
+
+        String pendingLabel = savedStateHandle.get(KEY_PENDING_WINNER_LABEL);
+        VoteOption picked = null;
+        if (pendingLabel != null) {
+            for (VoteOption opt : currentTally) {
+                if (opt.label.equals(pendingLabel)) {
+                    picked = opt;
+                    break;
+                }
+            }
+        }
+        if (picked == null) {
+            picked = VoteTally.draw(currentTally, drawEngine);
+            savedStateHandle.set(KEY_PENDING_WINNER_LABEL, picked.label);
+        }
+
+        int drawLevel = savedStateHandle.contains(KEY_DRAW_LEVEL) ? getDrawLevel() : drawEngine.pickLevel();
+        int stickNo = savedStateHandle.contains(KEY_STICK_NO) ? getStickNo() : (1 + (int) (Math.random() * 28));
+
+        savedStateHandle.set(KEY_DRAW_LEVEL, drawLevel);
+        savedStateHandle.set(KEY_STICK_NO, stickNo);
+
+        if (!Boolean.TRUE.equals(savedStateHandle.get(KEY_HISTORY_LOGGED))) {
+            String nameTh;
+            String nameEn;
+            if (session.getProposalMethod() == ProposalMethod.FOOD_TYPE && fortuneProvider != null) {
+                String th = fortuneProvider.getFoodTypeName(picked.label, Locale.forLanguageTag("th"));
+                String en = fortuneProvider.getFoodTypeName(picked.label, Locale.ENGLISH);
+                nameTh = th != null ? th : picked.label;
+                nameEn = en != null ? en : picked.label;
+            } else {
+                nameTh = picked.label;
+                nameEn = picked.label;
+            }
+
+            HistoryEntry entry = GroupWinnerEntry.create(nameTh, nameEn, drawLevel, stickNo, System.currentTimeMillis());
+            boolean success = historyRecorder.add(entry);
+            if (!success) {
+                return false;
+            }
+            savedStateHandle.set(KEY_HISTORY_LOGGED, true);
+        }
+
         winner.setValue(picked);
         session.setPhase(GroupPhase.DONE);
         saveState();

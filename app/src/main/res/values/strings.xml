@@ -44,7 +44,7 @@
     <string name="group_proposal_msg_pass_phone">Pass the phone to the next person</string>
     <string name="group_proposal_msg_all_done">Everyone has proposed</string>
 
-    <!-- Group Tally & Draw (#37, #38) -->
+    <!-- Group Tally & Draw (#37, #38, #39) -->
     <string name="group_tally_title">Vote summary</string>
     <string name="group_tally_votes">×%1$d</string>
     <string name="group_tally_proposers">Proposed by %1$s</string>
@@ -57,6 +57,9 @@
     <string name="group_cancel_msg">Everything proposed so far will be lost.</string>
     <string name="group_cancel_btn_discard">Cancel round</string>
     <string name="group_cancel_btn_stay">Keep going</string>
+    <string name="group_winner_title">Group winner</string>
+    <string name="group_winner_votes">Votes: %1$d</string>
+    <string name="group_winner_btn_new_round">Start a new round</string>
 
     <!-- Fortune Provider (#27) -->
     <string name="fortune_msg_level_1_1">A little surprise may brighten your day. Enjoy %1$s.</string>
