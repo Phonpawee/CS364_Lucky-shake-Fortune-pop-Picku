@@ -5,29 +5,22 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.content.ContextCompat;
 
 import com.cs364.luckyshake.data.MenuRepository;
 import com.cs364.luckyshake.data.Menu;
@@ -65,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
     private View clearFilters;
     private TextView filterCount;
 
-    private ActivityResultLauncher<String> notificationPermissionLauncher;
-
     private HomeViewModel viewModel;
     private MenuRepository menuRepository;
     private List<MenuSet> sets = new ArrayList<>();
@@ -84,19 +75,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        notificationPermissionLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                granted -> {
-                    if (!granted) {
-                        Toast.makeText(
-                                this,
-                                R.string.reminder_msg_permission_denied,
-                                Toast.LENGTH_LONG
-                        ).show();
-                    }
-                }
-        );
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
@@ -137,8 +115,6 @@ public class MainActivity extends AppCompatActivity {
         tube.setOnClickListener(view -> draw());
         tube.setFocusable(true);
 
-        Button permissionButton = findViewById(R.id.reminder_permission_button);
-        permissionButton.setOnClickListener(v -> requestNotificationPermission());
         BackNavigation.register(this, this::requestExit);
     }
 
@@ -401,13 +377,4 @@ public class MainActivity extends AppCompatActivity {
         clearFilters.setEnabled(enabled);
     }
 
-    private void requestNotificationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-                && ContextCompat.checkSelfPermission(
-                        this, Manifest.permission.POST_NOTIFICATIONS)
-                        != PackageManager.PERMISSION_GRANTED) {
-            notificationPermissionLauncher.launch(
-                    Manifest.permission.POST_NOTIFICATIONS);
-        }
-    }
 }
