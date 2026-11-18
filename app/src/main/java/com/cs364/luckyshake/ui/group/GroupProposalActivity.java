@@ -11,7 +11,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -27,6 +29,7 @@ import com.cs364.luckyshake.logic.GameConfig;
 import com.cs364.luckyshake.sensor.ShakeDetector;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -34,8 +37,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.Arrays;
 
 /**
- * Screen for collecting restaurant or food group proposals per participant (#36, #35)
- * and rendering vote summary tally and drawing weighted winner (#37).
+ * Screen for collecting restaurant or food group proposals per participant (#36, #35),
+ * rendering vote summary tally and drawing weighted winner (#37), and managing Back confirmation (#38).
  */
 public class GroupProposalActivity extends AppCompatActivity {
     public static final String EXTRA_PARTICIPANT_COUNT = "extra_participant_count";
@@ -68,6 +71,7 @@ public class GroupProposalActivity extends AppCompatActivity {
     private ShakeDetector shakeDetector;
 
     private ProposalMethod proposalMethod = ProposalMethod.FOOD_TYPE;
+    private AlertDialog cancelDialog;
 
     public static Intent newIntent(Context context, int participantCount, ProposalMethod proposalMethod) {
         Intent intent = new Intent(context, GroupProposalActivity.class);
@@ -102,6 +106,14 @@ public class GroupProposalActivity extends AppCompatActivity {
         }
 
         viewModel = new ViewModelProvider(this).get(GroupProposalViewModel.class);
+
+        // #14: Back navigation (Mind) can call requestCancel() / hasUnsavedProgress()
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                requestCancel();
+            }
+        });
 
         titleTurn = findViewById(R.id.group_proposal_title_turn);
         instructions = findViewById(R.id.group_proposal_instructions);
@@ -177,6 +189,55 @@ public class GroupProposalActivity extends AppCompatActivity {
 
         observeViewModel();
         viewModel.init(count, proposalMethod);
+
+        if (viewModel.isExitConfirmShowing()) {
+            requestCancel();
+        }
+    }
+
+    /**
+     * Handles Back button / cancellation confirmation dialog (#38).
+     */
+    public void requestCancel() {
+        if (!viewModel.hasUnsavedProgress()) {
+            finish();
+            return;
+        }
+
+        if (cancelDialog != null && cancelDialog.isShowing()) {
+            return;
+        }
+
+        if (shakeDetector != null) {
+            shakeDetector.stop();
+        }
+
+        viewModel.setExitConfirmShowing(true);
+        cancelDialog = new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.group_cancel_title)
+                .setMessage(R.string.group_cancel_msg)
+                .setPositiveButton(R.string.group_cancel_btn_discard, (dialog, which) -> {
+                    viewModel.setExitConfirmShowing(false);
+                    viewModel.cancelRound();
+                    finish();
+                })
+                .setNegativeButton(R.string.group_cancel_btn_stay, (dialog, which) -> {
+                    viewModel.setExitConfirmShowing(false);
+                    GroupPhase currentPhase = viewModel.getPhase().getValue();
+                    if ((currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
+                            && viewModel.getWinner().getValue() == null) {
+                        shakeDetector.start();
+                    }
+                })
+                .setOnCancelListener(dialog -> {
+                    viewModel.setExitConfirmShowing(false);
+                    GroupPhase currentPhase = viewModel.getPhase().getValue();
+                    if ((currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
+                            && viewModel.getWinner().getValue() == null) {
+                        shakeDetector.start();
+                    }
+                })
+                .show();
     }
 
     private void observeViewModel() {
@@ -219,7 +280,7 @@ public class GroupProposalActivity extends AppCompatActivity {
                     }
                 }
 
-                if (viewModel.getWinner().getValue() == null) {
+                if (viewModel.getWinner().getValue() == null && !viewModel.isExitConfirmShowing()) {
                     shakeDetector.start();
                 }
             }
@@ -317,7 +378,8 @@ public class GroupProposalActivity extends AppCompatActivity {
         FontSizeHelper.apply(this, root);
         GroupPhase currentPhase = viewModel.getPhase().getValue();
         if ((currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
-                && viewModel.getWinner().getValue() == null) {
+                && viewModel.getWinner().getValue() == null
+                && !viewModel.isExitConfirmShowing()) {
             shakeDetector.start();
         }
     }
@@ -327,6 +389,15 @@ public class GroupProposalActivity extends AppCompatActivity {
         super.onPause();
         if (shakeDetector != null) {
             shakeDetector.stop();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (cancelDialog != null && cancelDialog.isShowing()) {
+            cancelDialog.dismiss();
+            cancelDialog = null;
         }
     }
 }

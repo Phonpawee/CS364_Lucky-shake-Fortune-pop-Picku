@@ -152,4 +152,38 @@ public class GroupSession {
         currentTurnIndex = 0;
         proposals.clear();
     }
+
+    /**
+     * Restores session state after process death or configuration change.
+     * Performs deep copy and validates all parameters before applying.
+     * Returns false if any validation fails and leaves current state untouched.
+     */
+    public boolean restore(int participantCount, ProposalMethod method, GroupPhase phase,
+                           int currentTurnIndex, List<List<String>> proposals) {
+        if (participantCount < GameConfig.MIN_GROUP_PLAYERS || participantCount > GameConfig.MAX_GROUP_PLAYERS) {
+            return false;
+        }
+        if (method == null || phase == null || proposals == null) {
+            return false;
+        }
+        if (proposals.size() != participantCount) {
+            return false;
+        }
+        if (currentTurnIndex < 0 || currentTurnIndex >= participantCount) {
+            return false;
+        }
+
+        List<List<String>> deepCopy = new ArrayList<>(participantCount);
+        for (List<String> list : proposals) {
+            deepCopy.add(list != null ? new ArrayList<>(list) : new ArrayList<>());
+        }
+
+        this.participantCount = participantCount;
+        this.proposalMethod = method;
+        this.phase = phase;
+        this.currentTurnIndex = currentTurnIndex;
+        this.proposals.clear();
+        this.proposals.addAll(deepCopy);
+        return true;
+    }
 }
