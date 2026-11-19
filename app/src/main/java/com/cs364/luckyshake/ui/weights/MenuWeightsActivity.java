@@ -52,6 +52,8 @@ public class MenuWeightsActivity extends AppCompatActivity {
     public static final String EXTRA_SET_ID = "extra_set_id";
     private static final String STATE_SET_ID = "state_set_id";
     private static final String STATE_SIMULATION_SHOWING = "state_simulation_showing";
+    private static final String STATE_SIM_MENU_IDS = "state_sim_menu_ids";
+    private static final String STATE_SIM_COUNTS = "state_sim_counts";
 
     private MenuRepository menuRepository;
     private MenuWeightsAdapter adapter;
@@ -62,10 +64,12 @@ public class MenuWeightsActivity extends AppCompatActivity {
     private RecyclerView recycler;
     private View emptyGroup;
 
-    // Simulation Card Views
+    // Simulation Card Views & Snapshot
     private View simulationCard;
     private LinearLayout simulationRowsContainer;
     private boolean isSimulationShowing = false;
+    private long[] simMenuIds;
+    private int[] simCounts;
 
     private List<MenuSet> sets = new ArrayList<>();
     private long setId = -1;
@@ -84,6 +88,8 @@ public class MenuWeightsActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             setId = savedInstanceState.getLong(STATE_SET_ID, -1L);
             isSimulationShowing = savedInstanceState.getBoolean(STATE_SIMULATION_SHOWING, false);
+            simMenuIds = savedInstanceState.getLongArray(STATE_SIM_MENU_IDS);
+            simCounts = savedInstanceState.getIntArray(STATE_SIM_COUNTS);
         } else {
             setId = getIntent().getLongExtra(EXTRA_SET_ID, -1L);
         }
@@ -170,6 +176,10 @@ public class MenuWeightsActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putLong(STATE_SET_ID, setId);
         outState.putBoolean(STATE_SIMULATION_SHOWING, isSimulationShowing);
+        if (simMenuIds != null && simCounts != null) {
+            outState.putLongArray(STATE_SIM_MENU_IDS, simMenuIds);
+            outState.putIntArray(STATE_SIM_COUNTS, simCounts);
+        }
     }
 
     @Override
@@ -275,6 +285,8 @@ public class MenuWeightsActivity extends AppCompatActivity {
 
     private void hideSimulation() {
         isSimulationShowing = false;
+        simMenuIds = null;
+        simCounts = null;
         if (simulationCard != null) {
             simulationCard.setVisibility(View.GONE);
         }
@@ -284,6 +296,8 @@ public class MenuWeightsActivity extends AppCompatActivity {
     }
 
     private void simulateDraws() {
+        simMenuIds = null;
+        simCounts = null;
         if (!renderSimulationRows()) {
             return;
         }
@@ -313,27 +327,44 @@ public class MenuWeightsActivity extends AppCompatActivity {
             totalWeight += m.weight;
         }
 
-        List<Candidate> candidates = new ArrayList<>(filteredMenus.size());
-        List<Double> weights = new ArrayList<>(filteredMenus.size());
         Map<Long, Integer> counts = new HashMap<>();
 
-        for (Menu m : filteredMenus) {
-            candidates.add(new Candidate(m.id, m.weight));
-            weights.add((double) m.weight);
-            counts.put(m.id, 0);
-        }
+        if (simMenuIds != null && simCounts != null && simMenuIds.length == simCounts.length) {
+            for (int i = 0; i < simMenuIds.length; i++) {
+                counts.put(simMenuIds[i], simCounts[i]);
+            }
+        } else {
+            List<Candidate> candidates = new ArrayList<>(filteredMenus.size());
+            List<Double> weights = new ArrayList<>(filteredMenus.size());
 
-        DrawEngine engine = DrawEngine.create();
-        int totalRuns = 1000;
+            for (Menu m : filteredMenus) {
+                candidates.add(new Candidate(m.id, m.weight));
+                weights.add((double) m.weight);
+                counts.put(m.id, 0);
+            }
 
-        for (int i = 0; i < totalRuns; i++) {
-            Candidate picked = engine.weightedPick(candidates, weights);
-            if (picked != null) {
-                Integer current = counts.get(picked.id);
-                counts.put(picked.id, (current != null ? current : 0) + 1);
+            DrawEngine engine = DrawEngine.create();
+            int totalRuns = 1000;
+
+            for (int i = 0; i < totalRuns; i++) {
+                Candidate picked = engine.weightedPick(candidates, weights);
+                if (picked != null) {
+                    Integer current = counts.get(picked.id);
+                    counts.put(picked.id, (current != null ? current : 0) + 1);
+                }
+            }
+
+            simMenuIds = new long[filteredMenus.size()];
+            simCounts = new int[filteredMenus.size()];
+            for (int i = 0; i < filteredMenus.size(); i++) {
+                long id = filteredMenus.get(i).id;
+                simMenuIds[i] = id;
+                Integer cnt = counts.get(id);
+                simCounts[i] = cnt != null ? cnt : 0;
             }
         }
 
+        int totalRuns = 1000;
         if (simulationRowsContainer != null) {
             simulationRowsContainer.removeAllViews();
             boolean thai = isThai();
