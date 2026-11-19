@@ -132,7 +132,7 @@ public class MenuFormActivity extends AppCompatActivity {
         for (String type : TYPES) {
             typeNames.add(MenuLabels.type(this, type));
         }
-        typeSpinner.setAdapter(FontSizeHelper.spinnerAdapter(this, typeNames));
+        typeSpinner.setAdapter(FontSizeHelper.spinnerAdapter(typeSpinner.getContext(), typeNames));
 
         if (savedInstanceState == null) {
             fillFromDish();
