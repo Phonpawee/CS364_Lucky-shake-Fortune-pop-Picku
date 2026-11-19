@@ -141,6 +141,7 @@ public class GroupWinnerActivity extends AppCompatActivity {
             btnNewRound.setOnClickListener(v -> finish());
         }
 
+        findViewById(R.id.group_winner_btn_home).setOnClickListener(v -> BackNavigation.goHome(this));
         BackNavigation.register(this, () -> BackNavigation.goHome(this));
     }
 
