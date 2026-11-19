@@ -24,6 +24,7 @@
     <string name="group_setup_desc_increment">เพิ่มจำนวนคน</string>
     <string name="group_setup_label_method">วิธีเสนอ</string>
     <string name="group_setup_label_method_food_type">เลือกกลุ่มอาหาร</string>
+    <string name="group_setup_label_food_type_selected">%1$s (%2$s)</string>
     <string name="group_setup_label_method_restaurant_name">ใส่ชื่อร้าน</string>
     <string name="group_setup_msg_method_food_type">แต่ละคนเลือกกลุ่มอาหารที่อยากกิน 1 กลุ่ม เช่น ปิ้งย่าง ชาบู ก๋วยเตี๋ยว กลุ่มที่มีคนเลือกซ้ำจะมีโอกาสชนะมากขึ้น</string>
     <string name="group_setup_msg_method_restaurant">แต่ละคนพิมพ์ชื่อร้านที่อยากกินได้สูงสุด 3 ร้าน ร้านที่มีคนเสนอซ้ำจะมีโอกาสชนะมากขึ้น</string>
@@ -44,7 +45,7 @@
     <string name="group_proposal_msg_pass_phone">ส่งมือถือให้คนถัดไป</string>
     <string name="group_proposal_msg_all_done">ทุกคนเสนอครบแล้ว</string>
 
-    <!-- Group Tally & Draw (#37) -->
+    <!-- Group Tally & Draw (#37, #38, #39) -->
     <string name="group_tally_title">สรุปผลโหวต</string>
     <string name="group_tally_votes">×%1$d</string>
     <string name="group_tally_proposers">เสนอโดย %1$s</string>
@@ -53,6 +54,32 @@
     <string name="group_tally_btn_draw">เขย่าสุ่มผู้ชนะ</string>
     <string name="group_tally_winner">ผู้ชนะ: %1$s (×%2$d)</string>
     <string name="group_tally_msg_all_skipped">ไม่มีใครเสนอเลย ลองตั้งค่าใหม่อีกครั้ง</string>
+    <string name="group_cancel_title">ยกเลิกรอบนี้?</string>
+    <string name="group_cancel_msg">สิ่งที่ทุกคนเสนอไว้จะหายทั้งหมด</string>
+    <string name="group_cancel_btn_discard">ยกเลิกรอบ</string>
+    <string name="group_cancel_btn_stay">อยู่ต่อ</string>
+    <string name="group_winner_title">ผลของกลุ่ม</string>
+    <string name="group_winner_votes">%1$d เสียง</string>
+    <string name="group_winner_btn_new_round">เริ่มรอบใหม่</string>
+
+    <!-- Menu Weights (#42) -->
+    <string name="weights_title">แอปคิดยังไง</string>
+    <string name="weights_rules_title">กติกาการปรับน้ำหนัก</string>
+    <string name="weights_rule_accept">ยอมรับ: +%1$d</string>
+    <string name="weights_rule_redraw">ขอใหม่: %1$d</string>
+    <string name="weights_rule_decay">ไม่ถูกแตะครบสัปดาห์: ขยับกลับหา %2$d ทีละ %1$d</string>
+    <string name="weights_rule_range">น้ำหนักอยู่ระหว่าง 1–10 ยิ่งสูงยิ่งมีโอกาสถูกสุ่ม เมนูไม่หายไปถาวร</string>
+    <string name="weights_value">%1$d/%2$d</string>
+    <string name="weights_label_liked">ชอบ</string>
+    <string name="weights_label_neutral">ปกติ</string>
+    <string name="weights_label_disliked">ไม่ค่อยชอบ</string>
+    <string name="weights_btn_reset">รีเซ็ตน้ำหนักทั้งชุด</string>
+    <string name="weights_reset_title">รีเซ็ตน้ำหนักทั้งชุด?</string>
+    <string name="weights_reset_message">น้ำหนักของทุกเมนูในชุดนี้จะกลับเป็น 5</string>
+    <string name="weights_msg_reset_done">รีเซ็ตแล้ว</string>
+    <string name="weights_empty">ไม่มีเมนูในชุดนี้</string>
+    <string name="weights_bar_description">%1$s น้ำหนัก %2$d จาก %3$d</string>
+    <string name="menu_sets_btn_weights">แอปคิดยังไง</string>
 
     <!-- Fortune Provider (#27) -->
     <string name="fortune_msg_level_1_1">วันนี้อาจมีเรื่องเล็ก ๆ มาทำให้ยิ้ม ขอให้อร่อยกับ %1$s</string>
@@ -164,7 +191,6 @@
     <string name="reminder_meal_dinner">มื้อเย็น</string>
     <string name="reminder_time_format">%1$02d:%2$02d น.</string>
     <string name="reminder_no_sets">กรุณาสร้างชุดเมนูก่อน</string>
-    <string name="reminder_btn_test">ทดสอบแจ้งเตือน (5 วินาที)</string>
     <string name="reminder_time_button_description">ตั้งเวลาแจ้งเตือน</string>
     <string name="reminder_time_description">เวลาแจ้งเตือน %1$s</string>
     <string name="reminder_time_placeholder">07:30 น.</string>

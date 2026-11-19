@@ -1,12 +1,10 @@
 package com.cs364.luckyshake.reminder;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 
 import java.util.Calendar;
 
@@ -19,12 +17,6 @@ public final class ReminderScheduler {
     public static final String EXTRA_HOUR = "hour";
     public static final String EXTRA_MINUTE = "minute";
     public static final String EXTRA_GENERATION = "generation";
-    /** true = แจ้งเตือนครั้งเดียว (ปุ่มเดโม) ไม่ต้องตั้งรอบถัดไป */
-    public static final String EXTRA_ONE_SHOT = "one_shot";
-
-    /** id ของแจ้งเตือนจากปุ่มเดโม แยกจาก id ของมื้อจริงเพื่อไม่ไปยกเลิก/ทับกัน */
-    public static final int DEMO_REMINDER_ID = 9_000;
-
     private static final String PREFERENCES_NAME = "meal_reminder_state";
     private static final String KEY_ENABLED_PREFIX = "enabled_";
     private static final String KEY_GENERATION_PREFIX = "generation_";
@@ -75,66 +67,6 @@ public final class ReminderScheduler {
             return;
         }
         scheduleAlarm(context, reminderId, hour, minute, menuSetId, menuSetName, generation);
-    }
-
-    /**
-     * แจ้งเตือนครั้งเดียวในอีก {@code delaySeconds} วินาที สำหรับซ้อมเดโม (เมนูลับในหน้าตั้งค่า)
-     * ใช้ทางเดียวกับการเตือนจริง (AlarmManager → ReminderReceiver) แต่ไม่ตั้งรอบถัดไป
-     */
-    public static synchronized void scheduleDemo(
-            Context context,
-            int delaySeconds,
-            long menuSetId,
-            String menuSetName
-    ) {
-        AlarmManager alarmManager =
-                (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        if (alarmManager == null) {
-            return;
-        }
-
-        SharedPreferences preferences = getPreferences(context);
-        String generationKey = generationKey(DEMO_REMINDER_ID);
-        long generation = preferences.getLong(generationKey, 0L) + 1L;
-        preferences.edit()
-                .putBoolean(enabledKey(DEMO_REMINDER_ID), true)
-                .putLong(generationKey, generation)
-                .apply();
-
-        Calendar at = Calendar.getInstance();
-        at.add(Calendar.SECOND, Math.max(1, delaySeconds));
-        Intent intent = reminderIntent(context, DEMO_REMINDER_ID,
-                at.get(Calendar.HOUR_OF_DAY), at.get(Calendar.MINUTE),
-                menuSetId, menuSetName, generation);
-        intent.putExtra(EXTRA_ONE_SHOT, true);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                context,
-                DEMO_REMINDER_ID,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
-
-        // ใช้ exact เมื่อเครื่องอนุญาต (ต่ำกว่า Android 12 ไม่ต้องขอสิทธิ์) ไม่งั้นใช้แบบเดียวกับ
-        // การเตือนจริง ซึ่งตอนแอปเปิดอยู่ระบบมักยิงภายในไม่กี่วินาที
-        boolean exact = Build.VERSION.SDK_INT < Build.VERSION_CODES.S
-                || alarmManager.canScheduleExactAlarms();
-        if (exact) {
-            try {
-                setExact(alarmManager, at.getTimeInMillis(), pendingIntent);
-                return;
-            } catch (SecurityException ignored) {
-                // สิทธิ์ถูกถอนระหว่างทาง ใช้แบบไม่ exact แทน
-            }
-        }
-        alarmManager.setAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP, at.getTimeInMillis(), pendingIntent);
-    }
-
-    /** เรียกเฉพาะเมื่อเช็กแล้วว่าตั้ง exact ได้ (ดู {@link #scheduleDemo}) */
-    @SuppressLint("MissingPermission")
-    private static void setExact(AlarmManager alarmManager, long at, PendingIntent pendingIntent) {
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pendingIntent);
     }
 
     private static Intent reminderIntent(

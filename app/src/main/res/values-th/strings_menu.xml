@@ -2,6 +2,7 @@
     <!-- หน้ารายการเมนู (issue #22) -->
     <string name="menu_list_title_main">เมนูของฉัน</string>
     <string name="menu_list_label_set">ชุดเมนู</string>
+    <string name="menu_weights_label_set_name">ชุดเมนู: %1$s</string>
     <string name="menu_list_hint_search">ค้นหาเมนู</string>
     <string name="menu_list_btn_add">เพิ่มเมนู</string>
     <string name="menu_list_btn_delete">ลบ</string>

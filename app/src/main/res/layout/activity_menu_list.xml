@@ -97,6 +97,16 @@
                         app:tint="@color/home_accent" />
 
                     <ImageButton
+                        android:id="@+id/menu_sets_btn_weights"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/menu_sets_btn_weights"
+                        android:src="@drawable/ic_weights"
+                        android:tooltipText="@string/menu_sets_btn_weights"
+                        app:tint="@color/home_accent" />
+
+                    <ImageButton
                         android:id="@+id/menu_sets_btn_rename"
                         android:layout_width="48dp"
                         android:layout_height="48dp"

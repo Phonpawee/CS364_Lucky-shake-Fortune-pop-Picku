@@ -24,6 +24,7 @@
     <string name="group_setup_desc_increment">Increase participants</string>
     <string name="group_setup_label_method">Proposal method</string>
     <string name="group_setup_label_method_food_type">Pick food group</string>
+    <string name="group_setup_label_food_type_selected">%1$s (%2$s)</string>
     <string name="group_setup_label_method_restaurant_name">Enter restaurants</string>
     <string name="group_setup_msg_method_food_type">Each person picks one food group, e.g. BBQ, shabu or noodles. Groups picked by more people have a better chance to win.</string>
     <string name="group_setup_msg_method_restaurant">Each person types up to 3 restaurants. Restaurants suggested by more people have a better chance to win.</string>
@@ -44,7 +45,7 @@
     <string name="group_proposal_msg_pass_phone">Pass the phone to the next person</string>
     <string name="group_proposal_msg_all_done">Everyone has proposed</string>
 
-    <!-- Group Tally & Draw (#37) -->
+    <!-- Group Tally & Draw (#37, #38, #39) -->
     <string name="group_tally_title">Vote summary</string>
     <string name="group_tally_votes">×%1$d</string>
     <string name="group_tally_proposers">Proposed by %1$s</string>
@@ -53,6 +54,32 @@
     <string name="group_tally_btn_draw">Draw the winner</string>
     <string name="group_tally_winner">Winner: %1$s (×%2$d)</string>
     <string name="group_tally_msg_all_skipped">Nobody proposed anything. Please set up again.</string>
+    <string name="group_cancel_title">Cancel this round?</string>
+    <string name="group_cancel_msg">Everything proposed so far will be lost.</string>
+    <string name="group_cancel_btn_discard">Cancel round</string>
+    <string name="group_cancel_btn_stay">Keep going</string>
+    <string name="group_winner_title">Group winner</string>
+    <string name="group_winner_votes">Votes: %1$d</string>
+    <string name="group_winner_btn_new_round">Start a new round</string>
+
+    <!-- Menu Weights (#42) -->
+    <string name="weights_title">How the app thinks</string>
+    <string name="weights_rules_title">Weight Adjustment Rules</string>
+    <string name="weights_rule_accept">Accept: +%1$d</string>
+    <string name="weights_rule_redraw">Ask again: %1$d</string>
+    <string name="weights_rule_decay">Not touched for a week: moves %1$d step back toward %2$d</string>
+    <string name="weights_rule_range">Weight is between 1–10. Higher means a better chance. Dishes never vanish permanently.</string>
+    <string name="weights_value">%1$d/%2$d</string>
+    <string name="weights_label_liked">Liked</string>
+    <string name="weights_label_neutral">Neutral</string>
+    <string name="weights_label_disliked">Disliked</string>
+    <string name="weights_btn_reset">Reset set weights</string>
+    <string name="weights_reset_title">Reset all weights in set?</string>
+    <string name="weights_reset_message">All menu weights in this set will be set back to 5.</string>
+    <string name="weights_msg_reset_done">Weights reset</string>
+    <string name="weights_empty">No dishes in this set</string>
+    <string name="weights_bar_description">%1$s, weight %2$d of %3$d</string>
+    <string name="menu_sets_btn_weights">How the app thinks</string>
 
     <!-- Fortune Provider (#27) -->
     <string name="fortune_msg_level_1_1">A little surprise may brighten your day. Enjoy %1$s.</string>
@@ -164,7 +191,6 @@
     <string name="reminder_meal_dinner">Dinner</string>
     <string name="reminder_time_format">%1$02d:%2$02d</string>
     <string name="reminder_no_sets">Create a menu set first.</string>
-    <string name="reminder_btn_test">Test reminder (5 seconds)</string>
     <string name="reminder_time_button_description">Set reminder time</string>
     <string name="reminder_time_description">Reminder time %1$s</string>
     <string name="reminder_time_placeholder">07:30</string>
