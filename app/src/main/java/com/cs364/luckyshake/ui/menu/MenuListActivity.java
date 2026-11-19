@@ -26,6 +26,7 @@ import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.data.Menu;
 import com.cs364.luckyshake.data.MenuRepository;
 import com.cs364.luckyshake.data.MenuSet;
+import com.cs364.luckyshake.ui.home.HomeViewModel;
 import com.cs364.luckyshake.ui.nav.BottomNav;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -112,7 +113,10 @@ public class MenuListActivity extends AppCompatActivity {
                 }
             }
         } else {
-            currentSetId = getIntent().getLongExtra(EXTRA_SET_ID, -1L);
+            long requested = getIntent().getLongExtra(EXTRA_SET_ID, -1L);
+            // Opened from the tab bar (no set requested): keep the set the user picked last,
+            // here or on Home, instead of falling back to the first set every time.
+            currentSetId = requested > 0 ? requested : HomeViewModel.get(this).getSelectedSetId();
         }
 
         adapter = new MenuListAdapter(isThai(), new MenuListAdapter.Listener() {
@@ -142,6 +146,7 @@ public class MenuListActivity extends AppCompatActivity {
                 long newId = sets.get(position).id;
                 if (newId != currentSetId) {   // ignore the call that comes from our own setSelection
                     currentSetId = newId;
+                    HomeViewModel.get(MenuListActivity.this).selectSet(newId);
                     refreshList();
                 }
             }
@@ -169,6 +174,7 @@ public class MenuListActivity extends AppCompatActivity {
         View.OnClickListener addListener = v -> openMenuForm(null);
         findViewById(R.id.menu_list_add_button).setOnClickListener(addListener);
         emptyAddButton.setOnClickListener(addListener);
+        findViewById(R.id.menu_list_restore_button).setOnClickListener(v -> restoreStarterMenus());
 
         findViewById(R.id.menu_sets_btn_add).setOnClickListener(v -> showSetNameDialog(null));
         findViewById(R.id.menu_sets_btn_weights).setOnClickListener(v -> {
@@ -235,6 +241,8 @@ public class MenuListActivity extends AppCompatActivity {
             currentSetId = sets.get(selected).id;
             setSpinner.setSelection(selected);
         }
+        // Home shares this choice, so both screens always show the same set.
+        HomeViewModel.get(this).selectSet(currentSetId);
     }
 
     /** Loads the dishes of the current set (filtered by the search text) into the list. */
@@ -261,6 +269,22 @@ public class MenuListActivity extends AppCompatActivity {
             // The "add" button inside the empty state only makes sense for an empty set.
             emptyAddButton.setVisibility(currentSetId >= 0 && !searching ? View.VISIBLE : View.GONE);
         }
+    }
+
+    /** Puts back the starter sets and dishes that are missing; the user's own ones stay. */
+    private void restoreStarterMenus() {
+        int added = menus.restoreStarterMenus();
+        if (added < 0) {
+            BottomNav.show(this, Snackbar.make(root, R.string.menu_list_msg_restore_failed, Snackbar.LENGTH_LONG));
+            return;
+        }
+        searchInput.setText("");
+        reloadSets();
+        refreshList();
+        String message = added == 0
+                ? getString(R.string.menu_list_msg_restore_none)
+                : getString(R.string.menu_list_msg_restored, added);
+        BottomNav.show(this, Snackbar.make(root, message, Snackbar.LENGTH_SHORT));
     }
 
     private void confirmDelete(Menu menu) {

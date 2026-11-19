@@ -65,6 +65,28 @@ public class RepositoriesInstrumentedTest {
     }
 
     @Test
+    public void restoreStarterMenus_bringsBackDeletedDishesAndKeepsUserOnes() {
+        List<MenuSet> sets = menus.getSets();
+        long lunch = sets.get(0).id;
+        Menu mine = new Menu();
+        mine.setId = lunch;
+        mine.nameTh = "ข้าวขาหมู";
+        mine.type = Menu.TYPE_RICE;
+        assertTrue(menus.addMenu(mine) > 0);
+        for (Menu m : menus.getMenus(lunch, null, null)) {
+            if (!"ข้าวขาหมู".equals(m.nameTh)) {
+                menus.deleteMenu(m.id);
+            }
+        }
+        menus.deleteSet(sets.get(2).id);
+
+        assertEquals(10 + 6, menus.restoreStarterMenus());   // lunch dishes + the deleted sweets set
+        assertEquals(3, menus.countSets());
+        assertEquals(11, menus.countMenus(lunch, null));      // 10 starters + the user's own dish
+        assertEquals(0, menus.restoreStarterMenus());         // nothing is missing the second time
+    }
+
+    @Test
     public void filters_removeFriedSpicyAndOtherTypes() {
         long lunch = menus.getSets().get(0).id;
         assertEquals(8, menus.countMenus(lunch, new MenuFilter(null, true, false)));   // 2 fried
