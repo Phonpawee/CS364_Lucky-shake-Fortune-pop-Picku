@@ -54,6 +54,14 @@ public class MenuRepository {
         }
     }
 
+    /**
+     * Adds back the starter sets and dishes that are missing. The user's own sets and dishes
+     * are not touched. Returns how many dishes were added.
+     */
+    public int restoreStarterMenus() {
+        return SeedData.restoreMissing(helper.getWritableDatabase());
+    }
+
     public int countSets() {
         return (int) DatabaseUtils.queryNumEntries(helper.getReadableDatabase(), DbHelper.T_SET);
     }
