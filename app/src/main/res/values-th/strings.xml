@@ -190,7 +190,6 @@
     <string name="reminder_meal_dinner">มื้อเย็น</string>
     <string name="reminder_time_format">%1$02d:%2$02d น.</string>
     <string name="reminder_no_sets">กรุณาสร้างชุดเมนูก่อน</string>
-    <string name="reminder_btn_test">ทดสอบแจ้งเตือน (5 วินาที)</string>
     <string name="reminder_time_button_description">ตั้งเวลาแจ้งเตือน</string>
     <string name="reminder_time_description">เวลาแจ้งเตือน %1$s</string>
     <string name="reminder_time_placeholder">07:30 น.</string>
