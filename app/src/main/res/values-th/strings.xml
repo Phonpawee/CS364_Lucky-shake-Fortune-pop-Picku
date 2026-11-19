@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">LuckyShake</string>
     <string name="home_title_main">เซียมซีกินอะไรดี</string>
-    <string name="home_btn_draw">สุ่มเลย</string>
     <string name="home_btn_draw">หรือแตะเพื่อสุ่ม</string>
-    <string name="home_btn_filter">กรองเมนู</string>
     <string name="result_title_fortune">คำทำนายของคุณ</string>
     <string name="result_label_menu">เมนูวันนี้: %1$s</string>
     <string name="result_msg_disclaimer">เพื่อความบันเทิงเท่านั้น</string>

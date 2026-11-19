@@ -1,9 +1,7 @@
 <resources>
     <string name="app_name">LuckyShake</string>
     <string name="home_title_main">Lucky Shake</string>
-    <string name="home_btn_draw">Draw now</string>
     <string name="home_btn_draw">Or tap to draw</string>
-    <string name="home_btn_filter">Filter menus</string>
     <string name="result_title_fortune">Your fortune</string>
     <string name="result_label_menu">Menu for today: %1$s</string>
     <string name="result_msg_disclaimer">For entertainment purposes only.</string>
