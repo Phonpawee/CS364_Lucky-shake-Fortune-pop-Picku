@@ -24,11 +24,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.data.Menu;
+import com.cs364.luckyshake.data.MenuFilter;
 import com.cs364.luckyshake.data.MenuRepository;
 import com.cs364.luckyshake.data.MenuSet;
 import com.cs364.luckyshake.logic.Candidate;
 import com.cs364.luckyshake.logic.DrawEngine;
 import com.cs364.luckyshake.logic.GameConfig;
+import com.cs364.luckyshake.ui.home.HomeViewModel;
 import com.cs364.luckyshake.ui.nav.BackNavigation;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
 import com.google.android.material.button.MaterialButton;
@@ -180,6 +182,9 @@ public class MenuWeightsActivity extends AppCompatActivity {
         refreshList();
         if (isSimulationShowing) {
             renderSimulationRows();
+            if (simulationCard != null) {
+                simulationCard.setVisibility(View.VISIBLE);
+            }
         } else {
             hideSimulation();
         }
@@ -244,7 +249,7 @@ public class MenuWeightsActivity extends AppCompatActivity {
             btnSimulate.setEnabled(!menusList.isEmpty());
         }
 
-        if (allDefault || !isSimulationShowing) {
+        if (!isSimulationShowing) {
             hideSimulation();
         }
 
@@ -295,22 +300,23 @@ public class MenuWeightsActivity extends AppCompatActivity {
     }
 
     private void renderSimulationRows() {
-        List<Menu> menusList = menuRepository.getMenus(setId, null, null);
-        if (menusList.isEmpty()) {
+        MenuFilter homeFilter = HomeViewModel.get(this).getFilter();
+        List<Menu> filteredMenus = menuRepository.getMenus(setId, homeFilter, null);
+        if (filteredMenus.isEmpty()) {
             hideSimulation();
             return;
         }
 
         double totalWeight = 0;
-        for (Menu m : menusList) {
+        for (Menu m : filteredMenus) {
             totalWeight += m.weight;
         }
 
-        List<Candidate> candidates = new ArrayList<>(menusList.size());
-        List<Double> weights = new ArrayList<>(menusList.size());
+        List<Candidate> candidates = new ArrayList<>(filteredMenus.size());
+        List<Double> weights = new ArrayList<>(filteredMenus.size());
         Map<Long, Integer> counts = new HashMap<>();
 
-        for (Menu m : menusList) {
+        for (Menu m : filteredMenus) {
             candidates.add(new Candidate(m.id, m.weight));
             weights.add((double) m.weight);
             counts.put(m.id, 0);
@@ -332,7 +338,7 @@ public class MenuWeightsActivity extends AppCompatActivity {
             boolean thai = isThai();
             LayoutInflater inflater = LayoutInflater.from(this);
 
-            for (Menu m : menusList) {
+            for (Menu m : filteredMenus) {
                 View row = inflater.inflate(R.layout.item_menu_simulation_row, simulationRowsContainer, false);
                 TextView textName = row.findViewById(R.id.text_sim_name);
                 TextView textExpected = row.findViewById(R.id.text_sim_expected);
