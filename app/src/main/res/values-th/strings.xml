@@ -73,13 +73,18 @@
     <string name="weights_label_liked">ชอบ</string>
     <string name="weights_label_neutral">ปกติ</string>
     <string name="weights_label_disliked">ไม่ค่อยชอบ</string>
-    <string name="weights_btn_reset">รีเซ็ตน้ำหนักทั้งชุด</string>
+    <string name="weights_btn_reset">รีเซ็ตน้ำหนัก</string>
+    <string name="weights_btn_simulate">จำลองสุ่ม 1,000 ครั้ง</string>
+    <string name="weights_simulate_card_title">ผลจำลอง (ตามตัวกรองปัจจุบัน)</string>
+    <string name="weights_simulate_header_name">เมนู</string>
+    <string name="weights_simulate_header_expected">คาดหวัง</string>
+    <string name="weights_simulate_header_simulated">จำลอง</string>
+    <string name="weights_simulate_footer">ค่าจำลองควรใกล้ค่าคาดหวัง</string>
     <string name="weights_reset_title">รีเซ็ตน้ำหนักทั้งชุด?</string>
     <string name="weights_reset_message">น้ำหนักของทุกเมนูในชุดนี้จะกลับเป็น 5</string>
     <string name="weights_msg_reset_done">รีเซ็ตแล้ว</string>
     <string name="weights_empty">ไม่มีเมนูในชุดนี้</string>
     <string name="weights_bar_description">%1$s น้ำหนัก %2$d จาก %3$d</string>
-    <string name="menu_sets_btn_weights">แอปคิดยังไง</string>
 
     <!-- Fortune Provider (#27) -->
     <string name="fortune_msg_level_1_1">วันนี้อาจมีเรื่องเล็ก ๆ มาทำให้ยิ้ม ขอให้อร่อยกับ %1$s</string>
@@ -135,6 +140,8 @@
     <string name="reminder_msg_permission_not_required">Android เวอร์ชันนี้ไม่ต้องขอสิทธิ์แจ้งเตือน</string>
 
     <string name="settings_title">ตั้งค่า</string>
+    <string name="settings_btn_menu_weights">แอปคิดอย่างไร (น้ำหนักเมนู)</string>
+    <string name="settings_msg_no_menu_set">ยังไม่มีชุดเมนู เพิ่มชุดเมนูก่อนนะ</string>
     <string name="settings_language">ภาษา</string>
     <string name="settings_theme">ธีม</string>
     <string name="settings_font_size">ขนาดตัวอักษร</string>

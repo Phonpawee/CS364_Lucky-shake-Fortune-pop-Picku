@@ -83,6 +83,7 @@ public class SettingsActivity extends AppCompatActivity {
         mealReminderSettings.attach(root);
         findViewById(R.id.settingsAllowNotifications).setOnClickListener(v -> requestNotificationPermission());
         findViewById(R.id.settingsClearAll).setOnClickListener(v -> confirmClearAllData());
+        findViewById(R.id.settingsMenuWeights).setOnClickListener(v -> openMenuWeights());
 
         MaterialButtonToggleGroup languageGroup =
                 findViewById(R.id.languageGroup);
@@ -269,6 +270,15 @@ public class SettingsActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.settings_clear_done, Toast.LENGTH_SHORT).show();
         startActivity(new Intent(this, SettingsActivity.class));
         finish();
+    }
+
+    private void openMenuWeights() {
+        MenuSet set = demoSet();
+        if (set == null) {
+            Toast.makeText(this, R.string.settings_msg_no_menu_set, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        startActivity(com.cs364.luckyshake.ui.weights.MenuWeightsActivity.newIntent(this, set.id));
     }
     // ------------------------------------------------------------ demo tools
 

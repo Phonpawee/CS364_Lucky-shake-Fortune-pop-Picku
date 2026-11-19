@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingVertical="5dp">
+
+    <TextView
+        android:id="@+id/text_sim_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif"
+        android:maxLines="2"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="14sp"
+        tools:text="ข้าวมันไก่" />
+
+    <TextView
+        android:id="@+id/text_sim_expected"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:gravity="end"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="14sp"
+        tools:text="10.0%" />
+
+    <TextView
+        android:id="@+id/text_sim_simulated"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:gravity="end"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="14sp"
+        tools:text="11.2%" />
+</LinearLayout>

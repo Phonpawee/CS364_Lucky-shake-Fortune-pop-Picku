@@ -62,16 +62,28 @@
                         android:orientation="vertical"
                         android:padding="@dimen/spacing_md">
 
-                        <!-- Set Name Subtitle -->
+                        <!-- Set Selection Spinner -->
                         <TextView
-                            android:id="@+id/weights_text_set_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:fontFamily="sans-serif"
-                            android:textColor="@color/home_accent"
-                            android:textSize="16sp"
-                            android:textStyle="bold"
-                            tools:text="ชุด: มื้อเที่ยง" />
+                            android:labelFor="@id/weights_set_spinner"
+                            android:text="@string/home_label_set"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/weights_set_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="@dimen/spacing_sm"
+                            android:background="@drawable/home_spinner_background"
+                            android:contentDescription="@string/home_label_set"
+                            android:minHeight="48dp"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="30dp"
+                            android:popupBackground="@color/home_field" />
 
                         <!-- Rules Title -->
                         <TextView
@@ -135,16 +147,43 @@
                             android:textColor="@color/journal_text_muted"
                             android:textSize="13sp" />
 
-                        <!-- Reset All Weights Button -->
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/weights_btn_reset"
-                            style="@style/Widget.LuckyShake.Button.Menu"
+                        <!-- Action Buttons: Reset Weights & Simulate 1,000 Draws -->
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/spacing_md"
-                            android:minHeight="48dp"
-                            android:text="@string/weights_btn_reset"
-                            app:cornerRadius="24dp" />
+                            android:baselineAligned="false"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/weights_btn_reset"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="6dp"
+                                android:layout_weight="1"
+                                android:minHeight="48dp"
+                                android:text="@string/weights_btn_reset"
+                                android:textColor="@color/home_ink"
+                                android:textStyle="bold"
+                                app:backgroundTint="@color/home_paper"
+                                app:cornerRadius="24dp"
+                                app:strokeColor="@color/home_outline"
+                                app:strokeWidth="1dp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/weights_btn_simulate"
+                                style="@style/Widget.LuckyShake.Button.Primary"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:layout_weight="1.2"
+                                android:minHeight="48dp"
+                                android:text="@string/weights_btn_simulate"
+                                android:textStyle="bold"
+                                app:backgroundTint="@color/app_primary"
+                                app:cornerRadius="24dp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -189,6 +228,104 @@
                                 android:textSize="@dimen/text_body" />
                         </LinearLayout>
                     </FrameLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Simulation Results Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/weights_simulation_card"
+                    style="@style/Widget.LuckyShake.Card.Tab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_sm"
+                    android:layout_marginBottom="@dimen/spacing_md"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/spacing_md">
+
+                        <!-- Title -->
+                        <TextView
+                            android:id="@+id/weights_text_sim_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:text="@string/weights_simulate_card_title"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <!-- Table Header Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:fontFamily="sans-serif"
+                                android:text="@string/weights_simulate_header_name"
+                                android:textColor="?attr/colorOnSurface"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif"
+                                android:gravity="end"
+                                android:text="@string/weights_simulate_header_expected"
+                                android:textColor="?attr/colorOnSurface"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="70dp"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif"
+                                android:gravity="end"
+                                android:text="@string/weights_simulate_header_simulated"
+                                android:textColor="?attr/colorOnSurface"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginVertical="4dp"
+                            android:background="@color/home_outline"
+                            android:importantForAccessibility="no" />
+
+                        <!-- Container for Simulation Rows -->
+                        <LinearLayout
+                            android:id="@+id/weights_simulation_rows_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginVertical="6dp"
+                            android:background="@color/home_outline"
+                            android:importantForAccessibility="no" />
+
+                        <!-- Footer Note -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:text="@string/weights_simulate_footer"
+                            android:textColor="@color/journal_text_muted"
+                            android:textSize="13sp" />
+                    </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
             </LinearLayout>
         </LinearLayout>

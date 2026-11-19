@@ -73,13 +73,18 @@
     <string name="weights_label_liked">Liked</string>
     <string name="weights_label_neutral">Neutral</string>
     <string name="weights_label_disliked">Disliked</string>
-    <string name="weights_btn_reset">Reset set weights</string>
+    <string name="weights_btn_reset">Reset weights</string>
+    <string name="weights_btn_simulate">Simulate 1,000 draws</string>
+    <string name="weights_simulate_card_title">Simulation results (current filter)</string>
+    <string name="weights_simulate_header_name">Menu</string>
+    <string name="weights_simulate_header_expected">Expected</string>
+    <string name="weights_simulate_header_simulated">Simulated</string>
+    <string name="weights_simulate_footer">Simulated values should be close to expected values</string>
     <string name="weights_reset_title">Reset all weights in set?</string>
     <string name="weights_reset_message">All menu weights in this set will be set back to 5.</string>
     <string name="weights_msg_reset_done">Weights reset</string>
     <string name="weights_empty">No dishes in this set</string>
     <string name="weights_bar_description">%1$s, weight %2$d of %3$d</string>
-    <string name="menu_sets_btn_weights">How the app thinks</string>
 
     <!-- Fortune Provider (#27) -->
     <string name="fortune_msg_level_1_1">A little surprise may brighten your day. Enjoy %1$s.</string>
@@ -135,6 +140,8 @@
     <string name="reminder_msg_permission_not_required">This Android version does not require notification permission.</string>
 
     <string name="settings_title">Settings</string>
+    <string name="settings_btn_menu_weights">How the app thinks (menu weights)</string>
+    <string name="settings_msg_no_menu_set">Add a menu set first.</string>
     <string name="settings_language">Language</string>
     <string name="settings_theme">Theme</string>
     <string name="settings_font_size">Text size</string>

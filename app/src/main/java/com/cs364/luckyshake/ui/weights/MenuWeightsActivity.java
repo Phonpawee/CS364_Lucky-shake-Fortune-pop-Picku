@@ -3,10 +3,15 @@ package com.cs364.luckyshake.ui.weights;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -21,6 +26,8 @@ import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.data.Menu;
 import com.cs364.luckyshake.data.MenuRepository;
 import com.cs364.luckyshake.data.MenuSet;
+import com.cs364.luckyshake.logic.Candidate;
+import com.cs364.luckyshake.logic.DrawEngine;
 import com.cs364.luckyshake.logic.GameConfig;
 import com.cs364.luckyshake.ui.nav.BackNavigation;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
@@ -30,24 +37,35 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Screen displaying the adaptive weight breakdown of all dishes in a menu set (#42).
- * Shows rules, dish progress bars, categories, and option to reset set weights back to default.
+ * Shows rules, set switcher spinner, dish progress bars, categories, reset weights, and 1,000 draws simulation card.
  */
 public class MenuWeightsActivity extends AppCompatActivity {
     public static final String EXTRA_SET_ID = "extra_set_id";
+    private static final String STATE_SET_ID = "state_set_id";
+    private static final String STATE_SIMULATION_SHOWING = "state_simulation_showing";
 
     private MenuRepository menuRepository;
     private MenuWeightsAdapter adapter;
     private View root;
-    private TextView textSetName;
+    private Spinner setSpinner;
     private MaterialButton btnReset;
+    private MaterialButton btnSimulate;
     private RecyclerView recycler;
     private View emptyGroup;
 
+    // Simulation Card Views
+    private View simulationCard;
+    private LinearLayout simulationRowsContainer;
+    private boolean isSimulationShowing = false;
+
+    private List<MenuSet> sets = new ArrayList<>();
     private long setId = -1;
 
     public static Intent newIntent(Context context, long setId) {
@@ -61,10 +79,20 @@ public class MenuWeightsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         menuRepository = new MenuRepository(this);
 
-        setId = getIntent().getLongExtra(EXTRA_SET_ID, -1L);
+        if (savedInstanceState != null) {
+            setId = savedInstanceState.getLong(STATE_SET_ID, -1L);
+            isSimulationShowing = savedInstanceState.getBoolean(STATE_SIMULATION_SHOWING, false);
+        } else {
+            setId = getIntent().getLongExtra(EXTRA_SET_ID, -1L);
+        }
+
         if (setId < 0 || menuRepository.getSet(setId) == null) {
-            finish();
-            return;
+            List<MenuSet> available = menuRepository.getSets();
+            if (available.isEmpty()) {
+                finish();
+                return;
+            }
+            setId = available.get(0).id;
         }
 
         EdgeToEdge.enable(this);
@@ -81,13 +109,17 @@ public class MenuWeightsActivity extends AppCompatActivity {
 
         boolean thai = isThai();
 
-        textSetName = findViewById(R.id.weights_text_set_name);
+        setSpinner = findViewById(R.id.weights_set_spinner);
         TextView ruleAcceptText = findViewById(R.id.weights_text_rule_accept);
         TextView ruleRedrawText = findViewById(R.id.weights_text_rule_redraw);
         TextView ruleDecayText = findViewById(R.id.weights_text_rule_decay);
         btnReset = findViewById(R.id.weights_btn_reset);
+        btnSimulate = findViewById(R.id.weights_btn_simulate);
         recycler = findViewById(R.id.weights_recycler);
         emptyGroup = findViewById(R.id.weights_empty_group);
+
+        simulationCard = findViewById(R.id.weights_simulation_card);
+        simulationRowsContainer = findViewById(R.id.weights_simulation_rows_container);
 
         ruleAcceptText.setText(getString(R.string.weights_rule_accept, GameConfig.WEIGHT_ACCEPT_DELTA));
         ruleRedrawText.setText(getString(R.string.weights_rule_redraw, GameConfig.WEIGHT_REDRAW_DELTA));
@@ -101,7 +133,41 @@ public class MenuWeightsActivity extends AppCompatActivity {
         divider.setDrawable(ContextCompat.getDrawable(this, R.drawable.divider_menu_item));
         recycler.addItemDecoration(divider);
 
-        btnReset.setOnClickListener(v -> confirmResetWeights());
+        if (setSpinner != null) {
+            setSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    if (position < 0 || position >= sets.size()) {
+                        return;
+                    }
+                    long newId = sets.get(position).id;
+                    if (newId != setId) {
+                        setId = newId;
+                        hideSimulation();
+                        refreshList();
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
+
+        btnReset.setOnClickListener(v -> {
+            hideSimulation();
+            confirmResetWeights();
+        });
+        if (btnSimulate != null) {
+            btnSimulate.setOnClickListener(v -> simulateDraws());
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(STATE_SET_ID, setId);
+        outState.putBoolean(STATE_SIMULATION_SHOWING, isSimulationShowing);
     }
 
     @Override
@@ -110,7 +176,44 @@ public class MenuWeightsActivity extends AppCompatActivity {
         if (root != null) {
             FontSizeHelper.apply(this, root);
         }
+        reloadSets();
         refreshList();
+        if (isSimulationShowing) {
+            renderSimulationRows();
+        } else {
+            hideSimulation();
+        }
+    }
+
+    private void reloadSets() {
+        sets = menuRepository.getSets();
+        if (sets.isEmpty()) {
+            finish();
+            return;
+        }
+
+        boolean thai = isThai();
+        List<String> names = new ArrayList<>();
+        int selected = 0;
+        boolean found = false;
+
+        for (int i = 0; i < sets.size(); i++) {
+            MenuSet s = sets.get(i);
+            names.add(s.getName(thai));
+            if (s.id == setId) {
+                selected = i;
+                found = true;
+            }
+        }
+
+        if (setSpinner != null) {
+            setSpinner.setAdapter(FontSizeHelper.spinnerAdapter(setSpinner.getContext(), names));
+            if (!found) {
+                selected = 0;
+                setId = sets.get(0).id;
+            }
+            setSpinner.setSelection(selected);
+        }
     }
 
     private void refreshList() {
@@ -121,9 +224,6 @@ public class MenuWeightsActivity extends AppCompatActivity {
         }
 
         boolean thai = isThai();
-        textSetName.setText(getString(
-                R.string.menu_weights_label_set_name, set.getName(thai)));
-
         List<Menu> menusList = menuRepository.getMenus(setId, null, null);
         Collections.sort(menusList, (a, b) -> {
             int weightDiff = Integer.compare(b.weight, a.weight); // DESC
@@ -140,6 +240,13 @@ public class MenuWeightsActivity extends AppCompatActivity {
 
         boolean allDefault = WeightLabels.allDefault(weightsList);
         btnReset.setEnabled(!allDefault && !menusList.isEmpty());
+        if (btnSimulate != null) {
+            btnSimulate.setEnabled(!menusList.isEmpty());
+        }
+
+        if (allDefault || !isSimulationShowing) {
+            hideSimulation();
+        }
 
         adapter.submitList(menusList);
 
@@ -155,10 +262,95 @@ public class MenuWeightsActivity extends AppCompatActivity {
                 .setNegativeButton(R.string.common_btn_cancel, null)
                 .setPositiveButton(R.string.weights_btn_reset, (dialog, which) -> {
                     menuRepository.resetWeights(setId);
+                    hideSimulation();
                     refreshList();
                     Snackbar.make(root, R.string.weights_msg_reset_done, Snackbar.LENGTH_SHORT).show();
                 })
                 .show();
+    }
+
+    private void hideSimulation() {
+        isSimulationShowing = false;
+        if (simulationCard != null) {
+            simulationCard.setVisibility(View.GONE);
+        }
+        if (simulationRowsContainer != null) {
+            simulationRowsContainer.removeAllViews();
+        }
+    }
+
+    private void simulateDraws() {
+        renderSimulationRows();
+
+        isSimulationShowing = true;
+        if (simulationCard != null) {
+            simulationCard.setVisibility(View.VISIBLE);
+            simulationCard.post(() -> {
+                View scrollView = findViewById(R.id.weights_root);
+                if (scrollView != null) {
+                    scrollView.scrollTo(0, simulationCard.getBottom());
+                }
+            });
+        }
+    }
+
+    private void renderSimulationRows() {
+        List<Menu> menusList = menuRepository.getMenus(setId, null, null);
+        if (menusList.isEmpty()) {
+            hideSimulation();
+            return;
+        }
+
+        double totalWeight = 0;
+        for (Menu m : menusList) {
+            totalWeight += m.weight;
+        }
+
+        List<Candidate> candidates = new ArrayList<>(menusList.size());
+        List<Double> weights = new ArrayList<>(menusList.size());
+        Map<Long, Integer> counts = new HashMap<>();
+
+        for (Menu m : menusList) {
+            candidates.add(new Candidate(m.id, m.weight));
+            weights.add((double) m.weight);
+            counts.put(m.id, 0);
+        }
+
+        DrawEngine engine = DrawEngine.create();
+        int totalRuns = 1000;
+
+        for (int i = 0; i < totalRuns; i++) {
+            Candidate picked = engine.weightedPick(candidates, weights);
+            if (picked != null) {
+                Integer current = counts.get(picked.id);
+                counts.put(picked.id, (current != null ? current : 0) + 1);
+            }
+        }
+
+        if (simulationRowsContainer != null) {
+            simulationRowsContainer.removeAllViews();
+            boolean thai = isThai();
+            LayoutInflater inflater = LayoutInflater.from(this);
+
+            for (Menu m : menusList) {
+                View row = inflater.inflate(R.layout.item_menu_simulation_row, simulationRowsContainer, false);
+                TextView textName = row.findViewById(R.id.text_sim_name);
+                TextView textExpected = row.findViewById(R.id.text_sim_expected);
+                TextView textSimulated = row.findViewById(R.id.text_sim_simulated);
+
+                double expectedPercent = totalWeight > 0 ? (m.weight * 100.0) / totalWeight : 0.0;
+                Integer cntVal = counts.get(m.id);
+                int count = cntVal != null ? cntVal : 0;
+                double simPercent = (count * 100.0) / totalRuns;
+
+                textName.setText(m.getName(thai));
+                textExpected.setText(String.format(Locale.US, "%.1f%%", expectedPercent));
+                textSimulated.setText(String.format(Locale.US, "%.1f%%", simPercent));
+
+                FontSizeHelper.apply(this, row);
+                simulationRowsContainer.addView(row);
+            }
+        }
     }
 
     private boolean isThai() {
