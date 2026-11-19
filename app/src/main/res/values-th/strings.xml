@@ -24,6 +24,7 @@
     <string name="group_setup_desc_increment">เพิ่มจำนวนคน</string>
     <string name="group_setup_label_method">วิธีเสนอ</string>
     <string name="group_setup_label_method_food_type">เลือกกลุ่มอาหาร</string>
+    <string name="group_setup_label_food_type_selected">%1$s (%2$s)</string>
     <string name="group_setup_label_method_restaurant_name">ใส่ชื่อร้าน</string>
     <string name="group_setup_msg_method_food_type">แต่ละคนเลือกกลุ่มอาหารที่อยากกิน 1 กลุ่ม เช่น ปิ้งย่าง ชาบู ก๋วยเตี๋ยว กลุ่มที่มีคนเลือกซ้ำจะมีโอกาสชนะมากขึ้น</string>
     <string name="group_setup_msg_method_restaurant">แต่ละคนพิมพ์ชื่อร้านที่อยากกินได้สูงสุด 3 ร้าน ร้านที่มีคนเสนอซ้ำจะมีโอกาสชนะมากขึ้น</string>

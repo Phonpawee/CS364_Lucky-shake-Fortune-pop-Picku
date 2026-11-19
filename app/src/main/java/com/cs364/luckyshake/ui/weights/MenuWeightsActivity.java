@@ -121,7 +121,8 @@ public class MenuWeightsActivity extends AppCompatActivity {
         }
 
         boolean thai = isThai();
-        textSetName.setText(getString(R.string.menu_list_label_set) + ": " + set.getName(thai));
+        textSetName.setText(getString(
+                R.string.menu_weights_label_set_name, set.getName(thai)));
 
         List<Menu> menusList = menuRepository.getMenus(setId, null, null);
         Collections.sort(menusList, (a, b) -> {
