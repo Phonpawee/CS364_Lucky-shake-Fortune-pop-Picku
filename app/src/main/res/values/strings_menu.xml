@@ -2,6 +2,7 @@
     <!-- Menu list screen (issue #22) -->
     <string name="menu_list_title_main">My dishes</string>
     <string name="menu_list_label_set">Menu set</string>
+    <string name="menu_weights_label_set_name">Menu set: %1$s</string>
     <string name="menu_list_hint_search">Search dishes</string>
     <string name="menu_list_btn_add">Add dish</string>
     <string name="menu_list_btn_delete">Delete</string>

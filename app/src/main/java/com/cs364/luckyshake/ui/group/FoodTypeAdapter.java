@@ -75,8 +75,13 @@ public class FoodTypeAdapter extends RecyclerView.Adapter<FoodTypeAdapter.ViewHo
         holder.cardView.setChecked(isSelected);
         holder.cardView.setSelected(isSelected);
 
-        String accessibilityDesc = (displayName != null ? displayName : key)
-                + (isSelected ? " (" + context.getString(R.string.group_setup_label_method_food_type) + ")" : "");
+        String accessibleName = displayName != null ? displayName : key;
+        String accessibilityDesc = isSelected
+                ? context.getString(
+                        R.string.group_setup_label_food_type_selected,
+                        accessibleName,
+                        context.getString(R.string.group_setup_label_method_food_type))
+                : accessibleName;
         holder.cardView.setContentDescription(accessibilityDesc);
 
         holder.cardView.setOnClickListener(v -> {

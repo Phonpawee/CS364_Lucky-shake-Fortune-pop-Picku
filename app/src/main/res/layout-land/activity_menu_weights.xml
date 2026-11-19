@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/ThemeOverlay.LuckyShake.Home">
+
+    <ImageView
+        style="@style/Widget.LuckyShake.TabPage.Sky"
+        android:importantForAccessibility="no" />
+
+    <ScrollView
+        android:id="@+id/weights_root"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        tools:context=".ui.weights.MenuWeightsActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/spacing_md">
+
+            <!-- Banner Header -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/Widget.LuckyShake.TabBanner"
+                android:layout_marginHorizontal="@dimen/spacing_md"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:id="@+id/weights_title"
+                    style="@style/Widget.LuckyShake.TabBanner.Title"
+                    android:text="@string/weights_title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- 2-Column Content in Landscape -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/spacing_md"
+                android:paddingTop="10dp">
+
+                <!-- Left Column: Rules Card -->
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.LuckyShake.Card.Tab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/spacing_sm"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/spacing_md">
+
+                        <!-- Set Name Subtitle -->
+                        <TextView
+                            android:id="@+id/weights_text_set_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif"
+                            android:textColor="@color/home_accent"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            tools:text="ชุด: มื้อเที่ยง" />
+
+                        <!-- Rules Title -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:fontFamily="sans-serif"
+                            android:text="@string/weights_rules_title"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <!-- Rule 1: Accept -->
+                        <TextView
+                            android:id="@+id/weights_text_rule_accept"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="14sp"
+                            tools:text="• ยอมรับ: +1" />
+
+                        <!-- Rule 2: Redraw -->
+                        <TextView
+                            android:id="@+id/weights_text_rule_redraw"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="14sp"
+                            tools:text="• ขอใหม่: -1" />
+
+                        <!-- Rule 3: Decay -->
+                        <TextView
+                            android:id="@+id/weights_text_rule_decay"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:fontFamily="sans-serif"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textSize="14sp"
+                            tools:text="• ไม่ถูกแตะครบสัปดาห์: ขยับกลับหา 5 ทีละ 1" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:background="@color/home_outline"
+                            android:importantForAccessibility="no" />
+
+                        <!-- Range / Explanation Footer -->
+                        <TextView
+                            android:id="@+id/weights_text_rule_range"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_sm"
+                            android:fontFamily="sans-serif"
+                            android:text="@string/weights_rule_range"
+                            android:textColor="@color/journal_text_muted"
+                            android:textSize="13sp" />
+
+                        <!-- Reset All Weights Button -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/weights_btn_reset"
+                            style="@style/Widget.LuckyShake.Button.Menu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/spacing_md"
+                            android:minHeight="48dp"
+                            android:text="@string/weights_btn_reset"
+                            app:cornerRadius="24dp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Right Column: Dishes Weights Card -->
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.LuckyShake.Card.Tab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_sm"
+                    android:layout_weight="1">
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/weights_recycler"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clipToPadding="false"
+                            android:nestedScrollingEnabled="false"
+                            android:paddingVertical="@dimen/spacing_sm" />
+
+                        <!-- Empty State -->
+                        <LinearLayout
+                            android:id="@+id/weights_empty_group"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="@dimen/spacing_lg"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:id="@+id/weights_empty_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif"
+                                android:gravity="center"
+                                android:text="@string/weights_empty"
+                                android:textColor="?attr/colorOnSurface"
+                                android:textSize="@dimen/text_body" />
+                        </LinearLayout>
+                    </FrameLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

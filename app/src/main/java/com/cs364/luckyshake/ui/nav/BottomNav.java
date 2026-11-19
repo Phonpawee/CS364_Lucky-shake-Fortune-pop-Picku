@@ -95,6 +95,19 @@ public final class BottomNav {
         // Keep the portrait menu tabs reachable while the search keyboard is open.
         // Move the whole stack up so the list and the bar share the usable height.
         final boolean keepMenuTabsVisible = selectedId == R.id.nav_menu && !sideRail;
+        if (keepMenuTabsVisible) {
+            int navLeft = nav.getPaddingLeft();
+            int navTop = nav.getPaddingTop();
+            int navRight = nav.getPaddingRight();
+            int navBottom = nav.getPaddingBottom();
+            ViewCompat.setOnApplyWindowInsetsListener(nav, (view, insets) -> {
+                Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars()
+                        | WindowInsetsCompat.Type.displayCutout());
+                view.setPadding(navLeft + bars.left, navTop, navRight + bars.right,
+                        navBottom + bars.bottom);
+                return insets;
+            });
+        }
         final int left = insetTarget.getPaddingLeft();
         final int top = insetTarget.getPaddingTop();
         final int right = insetTarget.getPaddingRight();
