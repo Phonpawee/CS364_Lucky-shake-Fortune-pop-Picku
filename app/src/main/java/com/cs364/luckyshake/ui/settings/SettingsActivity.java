@@ -45,9 +45,6 @@ import java.util.List;
 import java.util.Random;
 
 public class SettingsActivity extends AppCompatActivity {
-    /** ปุ่มยิงแจ้งเตือนเดโมจะแจ้งเตือนในอีกกี่วินาที (อิชชูกำหนด 5–10 วินาที) */
-    private static final int DEMO_REMINDER_DELAY_SECONDS = 5;
-
     private SharedPreferences preferences;
     private MealReminderSettings mealReminderSettings;
 
@@ -71,16 +68,6 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
 
-    /** ขอสิทธิ์แจ้งเตือนจากปุ่มเดโม ได้สิทธิ์แล้วค่อยตั้งแจ้งเตือน */
-    private final ActivityResultLauncher<String> demoPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
-                if (granted) {
-                    scheduleDemoReminder();
-                } else {
-                    Toast.makeText(this, R.string.reminder_msg_permission_denied,
-                            Toast.LENGTH_LONG).show();
-                }
-            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +82,6 @@ public class SettingsActivity extends AppCompatActivity {
         mealReminderSettings = new MealReminderSettings(this, reminderPermissionLauncher);
         mealReminderSettings.attach(root);
         findViewById(R.id.settingsAllowNotifications).setOnClickListener(v -> requestNotificationPermission());
-        findViewById(R.id.settingsTestReminder).setOnClickListener(v -> fireDemoReminder());
         findViewById(R.id.settingsClearAll).setOnClickListener(v -> confirmClearAllData());
 
         MaterialButtonToggleGroup languageGroup =
@@ -270,7 +256,6 @@ public class SettingsActivity extends AppCompatActivity {
         for (int reminderId : new int[]{1, 2, 3}) {
             ReminderScheduler.cancel(this, reminderId);
         }
-        ReminderScheduler.cancel(this, ReminderScheduler.DEMO_REMINDER_ID);
 
         DbHelper.closeInstance();
         deleteDatabase(DbHelper.DB_NAME);
@@ -298,19 +283,10 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void showDemoTools() {
-        String[] items = {
-                getString(R.string.demo_btn_fill_history),
-                getString(R.string.demo_btn_fire_reminder)
-        };
         new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.demo_title_tools)
-                .setItems(items, (dialog, which) -> {
-                    if (which == 0) {
-                        fillSampleHistory();
-                    } else {
-                        fireDemoReminder();
-                    }
-                })
+                .setItems(new String[]{getString(R.string.demo_btn_fill_history)},
+                        (dialog, which) -> fillSampleHistory())
                 .show();
     }
 
@@ -335,29 +311,6 @@ public class SettingsActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT).show();
     }
 
-    private void fireDemoReminder() {
-        // ไม่มีสิทธิ์แจ้งเตือน ReminderReceiver จะไม่แสดงอะไร จึงขอสิทธิ์ก่อนแล้วค่อยตั้ง
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
-                && ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                != PackageManager.PERMISSION_GRANTED) {
-            demoPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
-            return;
-        }
-        scheduleDemoReminder();
-    }
-
-    private void scheduleDemoReminder() {
-        MenuSet set = demoSet();
-        if (set == null) {
-            Toast.makeText(this, R.string.demo_msg_no_menus, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        ReminderScheduler.scheduleDemo(this, DEMO_REMINDER_DELAY_SECONDS, set.id,
-                set.getName(isThai()));
-        Toast.makeText(this,
-                getString(R.string.demo_msg_reminder_scheduled, DEMO_REMINDER_DELAY_SECONDS),
-                Toast.LENGTH_SHORT).show();
-    }
 
     /** ชุดที่เลือกอยู่ที่หน้าหลัก ถ้ายังไม่ได้เลือกใช้ชุดแรก */
     private MenuSet demoSet() {
