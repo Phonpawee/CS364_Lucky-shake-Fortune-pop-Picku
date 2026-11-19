@@ -46,10 +46,6 @@ public class FoodTypeAdapter extends RecyclerView.Adapter<FoodTypeAdapter.ViewHo
         }
     }
 
-    public String getSelectedKey() {
-        return selectedKey;
-    }
-
     @Override
     public int getItemCount() {
         return keys.size();

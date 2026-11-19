@@ -28,9 +28,8 @@ public class AccelerometerShakeDetectorTest {
         }
 
         @Override
-        public boolean register(SensorEventListener listener) {
+        public void register(SensorEventListener listener) {
             registers++;
-            return available;
         }
 
         @Override

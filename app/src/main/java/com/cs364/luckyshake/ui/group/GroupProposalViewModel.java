@@ -44,7 +44,6 @@ public class GroupProposalViewModel extends ViewModel {
     private final MutableLiveData<Integer> currentTurnNumber = new MutableLiveData<>();
     private final MutableLiveData<Integer> participantCount = new MutableLiveData<>();
     private final MutableLiveData<GroupPhase> phase = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> isLastTurn = new MutableLiveData<>();
     private final MutableLiveData<List<List<String>>> proposals = new MutableLiveData<>();
     private final MutableLiveData<String> selectedFoodType = new MutableLiveData<>(null);
 
@@ -67,12 +66,6 @@ public class GroupProposalViewModel extends ViewModel {
             restoreState();
         }
         updateLiveData();
-    }
-
-    public void setDrawEngine(DrawEngine drawEngine) {
-        if (drawEngine != null) {
-            this.drawEngine = drawEngine;
-        }
     }
 
     public void setHistoryRecorder(HistoryRecorder historyRecorder) {
@@ -110,10 +103,6 @@ public class GroupProposalViewModel extends ViewModel {
 
     public LiveData<GroupPhase> getPhase() {
         return phase;
-    }
-
-    public LiveData<Boolean> getIsLastTurn() {
-        return isLastTurn;
     }
 
     public LiveData<List<List<String>>> getProposals() {
@@ -383,7 +372,6 @@ public class GroupProposalViewModel extends ViewModel {
         currentTurnNumber.setValue(session.getCurrentTurnNumber());
         participantCount.setValue(session.getParticipantCount());
         proposals.setValue(session.getProposals());
-        isLastTurn.setValue(session.isLastTurn());
         phase.setValue(session.getPhase());
     }
 }

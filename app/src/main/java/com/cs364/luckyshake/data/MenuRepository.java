@@ -248,22 +248,6 @@ public class MenuRepository {
     }
 
     /**
-     * Adds {@code delta} to the weight (clamped to 1..10, after the weekly decay) and stamps
-     * last_touched = now. Returns the new weight, or -1 if the menu does not exist.
-     * Prefer {@link #recordEvent} for accept / ask again.
-     */
-    public int adjustWeight(long menuId, int delta) {
-        long now = System.currentTimeMillis();
-        Menu m = readMenuRow(menuId);
-        if (m == null) {
-            return -1;
-        }
-        int w = clamp(WeightPolicy.decay(m.weight, m.lastTouched, now) + delta);
-        updateWeight(menuId, w, now);
-        return w;
-    }
-
-    /**
      * Sets the weight (clamped to 1..10) and last_touched exactly as given. Used by the
      * weekly decay, which moves last_touched forward by whole weeks.
      */

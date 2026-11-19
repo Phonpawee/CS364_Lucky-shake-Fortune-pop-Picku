@@ -100,12 +100,14 @@ public class SettingsActivity extends AppCompatActivity {
         FontSizeHelper.apply(this, root);
 
         int sensitivity = clamp(
-                preferences.getInt(PrefKeys.SHAKE_SENSITIVITY, 5), 1, 10);
-        shakeSensitivitySeekBar.setMax(9);
-        shakeSensitivitySeekBar.setProgress(sensitivity - 1);
+                preferences.getInt(PrefKeys.SHAKE_SENSITIVITY, GameConfig.DEFAULT_SENSITIVITY),
+                GameConfig.MIN_SENSITIVITY, GameConfig.MAX_SENSITIVITY);
+        shakeSensitivitySeekBar.setMax(GameConfig.MAX_SENSITIVITY - GameConfig.MIN_SENSITIVITY);
+        shakeSensitivitySeekBar.setProgress(sensitivity - GameConfig.MIN_SENSITIVITY);
 
         int quota = clamp(
-                preferences.getInt(PrefKeys.REROLL_QUOTA, GameConfig.MAX_REDRAWS), 1, 5);
+                preferences.getInt(PrefKeys.REROLL_QUOTA, GameConfig.MAX_REDRAWS),
+                GameConfig.MIN_REDRAW_LIMIT, GameConfig.MAX_REDRAW_LIMIT);
         rerollQuotaSpinner.setSelection(quota - 1);
 
         languageGroup.addOnButtonCheckedListener(
@@ -180,7 +182,7 @@ public class SettingsActivity extends AppCompatActivity {
                             preferences.edit()
                                     .putInt(
                                             PrefKeys.SHAKE_SENSITIVITY,
-                                            progress + 1)
+                                            progress + GameConfig.MIN_SENSITIVITY)
                                     .apply();
                         }
                     }
