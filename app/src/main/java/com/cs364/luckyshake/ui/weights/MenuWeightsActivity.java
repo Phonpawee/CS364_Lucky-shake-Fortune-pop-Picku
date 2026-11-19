@@ -30,6 +30,7 @@ import com.cs364.luckyshake.data.MenuSet;
 import com.cs364.luckyshake.logic.Candidate;
 import com.cs364.luckyshake.logic.DrawEngine;
 import com.cs364.luckyshake.logic.GameConfig;
+import com.cs364.luckyshake.logic.WeightPolicy;
 import com.cs364.luckyshake.ui.home.HomeViewModel;
 import com.cs364.luckyshake.ui.nav.BackNavigation;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
@@ -52,8 +53,9 @@ public class MenuWeightsActivity extends AppCompatActivity {
     public static final String EXTRA_SET_ID = "extra_set_id";
     private static final String STATE_SET_ID = "state_set_id";
     private static final String STATE_SIMULATION_SHOWING = "state_simulation_showing";
-    private static final String STATE_SIM_MENU_IDS = "state_sim_menu_ids";
-    private static final String STATE_SIM_COUNTS = "state_sim_counts";
+    private static final String STATE_SIM_NAMES = "state_sim_names";
+    private static final String STATE_SIM_EXPECTED = "state_sim_expected";
+    private static final String STATE_SIM_SIMULATED = "state_sim_simulated";
 
     private MenuRepository menuRepository;
     private MenuWeightsAdapter adapter;
@@ -68,8 +70,9 @@ public class MenuWeightsActivity extends AppCompatActivity {
     private View simulationCard;
     private LinearLayout simulationRowsContainer;
     private boolean isSimulationShowing = false;
-    private long[] simMenuIds;
-    private int[] simCounts;
+    private String[] simNames;
+    private float[] simExpected;
+    private float[] simSimulated;
 
     private List<MenuSet> sets = new ArrayList<>();
     private long setId = -1;
@@ -88,8 +91,9 @@ public class MenuWeightsActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             setId = savedInstanceState.getLong(STATE_SET_ID, -1L);
             isSimulationShowing = savedInstanceState.getBoolean(STATE_SIMULATION_SHOWING, false);
-            simMenuIds = savedInstanceState.getLongArray(STATE_SIM_MENU_IDS);
-            simCounts = savedInstanceState.getIntArray(STATE_SIM_COUNTS);
+            simNames = savedInstanceState.getStringArray(STATE_SIM_NAMES);
+            simExpected = savedInstanceState.getFloatArray(STATE_SIM_EXPECTED);
+            simSimulated = savedInstanceState.getFloatArray(STATE_SIM_SIMULATED);
         } else {
             setId = getIntent().getLongExtra(EXTRA_SET_ID, -1L);
         }
@@ -176,9 +180,10 @@ public class MenuWeightsActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putLong(STATE_SET_ID, setId);
         outState.putBoolean(STATE_SIMULATION_SHOWING, isSimulationShowing);
-        if (simMenuIds != null && simCounts != null) {
-            outState.putLongArray(STATE_SIM_MENU_IDS, simMenuIds);
-            outState.putIntArray(STATE_SIM_COUNTS, simCounts);
+        if (isSimulationShowing && simNames != null && simExpected != null && simSimulated != null) {
+            outState.putStringArray(STATE_SIM_NAMES, simNames);
+            outState.putFloatArray(STATE_SIM_EXPECTED, simExpected);
+            outState.putFloatArray(STATE_SIM_SIMULATED, simSimulated);
         }
     }
 
@@ -266,7 +271,7 @@ public class MenuWeightsActivity extends AppCompatActivity {
 
         boolean empty = menusList.isEmpty();
         recycler.setVisibility(empty ? View.GONE : View.VISIBLE);
-        emptyGroup.setVisibility(empty ? View.VISIBLE : View.GONE);
+        emptyGroup.setVisibility(empty ? View.GONE : View.VISIBLE);
     }
 
     private void confirmResetWeights() {
@@ -285,8 +290,9 @@ public class MenuWeightsActivity extends AppCompatActivity {
 
     private void hideSimulation() {
         isSimulationShowing = false;
-        simMenuIds = null;
-        simCounts = null;
+        simNames = null;
+        simExpected = null;
+        simSimulated = null;
         if (simulationCard != null) {
             simulationCard.setVisibility(View.GONE);
         }
@@ -296,8 +302,9 @@ public class MenuWeightsActivity extends AppCompatActivity {
     }
 
     private void simulateDraws() {
-        simMenuIds = null;
-        simCounts = null;
+        simNames = null;
+        simExpected = null;
+        simSimulated = null;
         if (!renderSimulationRows()) {
             return;
         }
@@ -315,31 +322,34 @@ public class MenuWeightsActivity extends AppCompatActivity {
     }
 
     private boolean renderSimulationRows() {
-        MenuFilter homeFilter = HomeViewModel.get(this).getFilter();
-        List<Menu> filteredMenus = menuRepository.getMenus(setId, homeFilter, null);
-        if (filteredMenus.isEmpty()) {
-            hideSimulation();
-            return false;
-        }
-
-        double totalWeight = 0;
-        for (Menu m : filteredMenus) {
-            totalWeight += m.weight;
-        }
-
-        Map<Long, Integer> counts = new HashMap<>();
-
-        if (simMenuIds != null && simCounts != null && simMenuIds.length == simCounts.length) {
-            for (int i = 0; i < simMenuIds.length; i++) {
-                counts.put(simMenuIds[i], simCounts[i]);
+        if (simNames == null || simExpected == null || simSimulated == null) {
+            MenuFilter homeFilter = HomeViewModel.get(this).getFilter();
+            List<Menu> filteredMenus = menuRepository.getMenus(setId, homeFilter, null);
+            if (filteredMenus.isEmpty()) {
+                hideSimulation();
+                return false;
             }
-        } else {
-            List<Candidate> candidates = new ArrayList<>(filteredMenus.size());
-            List<Double> weights = new ArrayList<>(filteredMenus.size());
 
-            for (Menu m : filteredMenus) {
-                candidates.add(new Candidate(m.id, m.weight));
-                weights.add((double) m.weight);
+            long now = System.currentTimeMillis();
+            int size = filteredMenus.size();
+            int[] decayedWeights = new int[size];
+            double totalWeight = 0;
+
+            for (int i = 0; i < size; i++) {
+                Menu m = filteredMenus.get(i);
+                int w = WeightPolicy.decay(m.weight, m.lastTouched, now);
+                decayedWeights[i] = w;
+                totalWeight += w;
+            }
+
+            List<Candidate> candidates = new ArrayList<>(size);
+            List<Double> weights = new ArrayList<>(size);
+            Map<Long, Integer> counts = new HashMap<>();
+
+            for (int i = 0; i < size; i++) {
+                Menu m = filteredMenus.get(i);
+                candidates.add(new Candidate(m.id, decayedWeights[i]));
+                weights.add((double) decayedWeights[i]);
                 counts.put(m.id, 0);
             }
 
@@ -354,36 +364,34 @@ public class MenuWeightsActivity extends AppCompatActivity {
                 }
             }
 
-            simMenuIds = new long[filteredMenus.size()];
-            simCounts = new int[filteredMenus.size()];
-            for (int i = 0; i < filteredMenus.size(); i++) {
-                long id = filteredMenus.get(i).id;
-                simMenuIds[i] = id;
-                Integer cnt = counts.get(id);
-                simCounts[i] = cnt != null ? cnt : 0;
+            boolean thai = isThai();
+            simNames = new String[size];
+            simExpected = new float[size];
+            simSimulated = new float[size];
+
+            for (int i = 0; i < size; i++) {
+                Menu m = filteredMenus.get(i);
+                simNames[i] = m.getName(thai);
+                simExpected[i] = (float) (totalWeight > 0 ? (decayedWeights[i] * 100.0) / totalWeight : 0.0);
+                Integer cnt = counts.get(m.id);
+                int count = cnt != null ? cnt : 0;
+                simSimulated[i] = (float) ((count * 100.0) / totalRuns);
             }
         }
 
-        int totalRuns = 1000;
         if (simulationRowsContainer != null) {
             simulationRowsContainer.removeAllViews();
-            boolean thai = isThai();
             LayoutInflater inflater = LayoutInflater.from(this);
 
-            for (Menu m : filteredMenus) {
+            for (int i = 0; i < simNames.length; i++) {
                 View row = inflater.inflate(R.layout.item_menu_simulation_row, simulationRowsContainer, false);
                 TextView textName = row.findViewById(R.id.text_sim_name);
                 TextView textExpected = row.findViewById(R.id.text_sim_expected);
                 TextView textSimulated = row.findViewById(R.id.text_sim_simulated);
 
-                double expectedPercent = totalWeight > 0 ? (m.weight * 100.0) / totalWeight : 0.0;
-                Integer cntVal = counts.get(m.id);
-                int count = cntVal != null ? cntVal : 0;
-                double simPercent = (count * 100.0) / totalRuns;
-
-                textName.setText(m.getName(thai));
-                textExpected.setText(String.format(Locale.US, "%.1f%%", expectedPercent));
-                textSimulated.setText(String.format(Locale.US, "%.1f%%", simPercent));
+                textName.setText(simNames[i]);
+                textExpected.setText(String.format(Locale.US, "%.1f%%", simExpected[i]));
+                textSimulated.setText(String.format(Locale.US, "%.1f%%", simSimulated[i]));
 
                 FontSizeHelper.apply(this, row);
                 simulationRowsContainer.addView(row);
