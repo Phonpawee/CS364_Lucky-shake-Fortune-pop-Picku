@@ -177,13 +177,6 @@ public class MenuListActivity extends AppCompatActivity {
         findViewById(R.id.menu_list_restore_button).setOnClickListener(v -> restoreStarterMenus());
 
         findViewById(R.id.menu_sets_btn_add).setOnClickListener(v -> showSetNameDialog(null));
-        findViewById(R.id.menu_sets_btn_weights).setOnClickListener(v -> {
-            if (currentSetId < 0) {
-                BottomNav.show(this, Snackbar.make(root, R.string.menu_list_msg_empty_no_set, Snackbar.LENGTH_SHORT));
-            } else {
-                startActivity(com.cs364.luckyshake.ui.weights.MenuWeightsActivity.newIntent(this, currentSetId));
-            }
-        });
         findViewById(R.id.menu_sets_btn_rename).setOnClickListener(v -> {
             MenuSet set = currentSet();
             if (set == null) {
