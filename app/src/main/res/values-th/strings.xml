@@ -2,14 +2,11 @@
     <string name="app_name">LuckyShake</string>
     <string name="home_title_main">เซียมซีกินอะไรดี</string>
     <string name="home_btn_draw">สุ่มเลย</string>
-    <string name="home_btn_filter">กรองเมนู</string>
     <string name="result_title_fortune">คำทำนายของคุณ</string>
     <string name="result_label_menu">เมนูวันนี้: %1$s</string>
     <string name="result_msg_disclaimer">เพื่อความบันเทิงเท่านั้น</string>
     <string name="menu_form_hint_name">ใส่ชื่อเมนู</string>
     <string name="menu_form_error_name_empty">กรุณาใส่ชื่อเมนูก่อนดำเนินการต่อ</string>
-    <string name="group_title_food_type">เลือกกลุ่มอาหาร</string>
-    <string name="settings_title_language">ภาษา</string>
     <string name="common_btn_cancel">ยกเลิก</string>
     <string name="common_btn_save">บันทึก</string>
 
@@ -43,7 +40,6 @@
     <string name="group_proposal_error_restaurant_empty">กรุณาใส่ชื่อร้านอย่างน้อย 1 ร้าน</string>
     <string name="group_proposal_error_food_empty">กรุณาเลือกกลุ่มอาหาร 1 กลุ่ม</string>
     <string name="group_proposal_msg_pass_phone">ส่งมือถือให้คนถัดไป</string>
-    <string name="group_proposal_msg_all_done">ทุกคนเสนอครบแล้ว</string>
 
     <!-- Group Tally & Draw (#37, #38, #39) -->
     <string name="group_tally_title">สรุปผลโหวต</string>
@@ -52,7 +48,6 @@
     <string name="group_tally_person">คนที่ %1$d</string>
     <string name="group_tally_hint">เขย่ามือถือหรือกดปุ่มเพื่อสุ่มผู้ชนะ</string>
     <string name="group_tally_btn_draw">เขย่าสุ่มผู้ชนะ</string>
-    <string name="group_tally_winner">ผู้ชนะ: %1$s (×%2$d)</string>
     <string name="group_tally_msg_all_skipped">ไม่มีใครเสนอเลย ลองตั้งค่าใหม่อีกครั้ง</string>
     <string name="group_cancel_title">ยกเลิกรอบนี้?</string>
     <string name="group_cancel_msg">สิ่งที่ทุกคนเสนอไว้จะหายทั้งหมด</string>
@@ -110,14 +105,7 @@
     <string name="food_type_dessert_cafe">ของหวาน / คาเฟ่</string>
     <string name="food_type_healthy_vegetarian">อาหารสุขภาพ / เจ</string>
     <string name="home_label_set">ชุดเมนู</string>
-    <string name="home_label_filters">ตัวกรอง: ไม่มี</string>
     <string name="home_label_tube">เขย่ากระบอกเซียมซี</string>
-    <string name="home_label_rice">เมนูข้าว</string>
-    <string name="home_label_noodles">เมนูเส้น</string>
-    <string name="home_label_basil">ข้าวกะเพราไก่</string>
-    <string name="home_label_omelette">ข้าวไข่เจียว</string>
-    <string name="home_label_boat_noodles">ก๋วยเตี๋ยวเรือ</string>
-    <string name="home_label_pad_thai">ผัดไทย</string>
     <string name="result_btn_home">กลับหน้าหลัก</string>
 
     <!-- Meal reminders -->
@@ -132,7 +120,6 @@
     <string name="settings_notification_disabled_title">ปิดการแจ้งเตือนไว้</string>
     <string name="settings_notification_disabled_message">เปิดการแจ้งเตือนของ LuckyShake ในการตั้งค่าระบบเพื่อรับการเตือนมื้ออาหาร</string>
     <string name="settings_notification_open">เปิดการตั้งค่า</string>
-    <string name="reminder_msg_permission_not_required">Android เวอร์ชันนี้ไม่ต้องขอสิทธิ์แจ้งเตือน</string>
 
     <string name="settings_title">ตั้งค่า</string>
     <string name="settings_language">ภาษา</string>
@@ -159,7 +146,6 @@
     <string name="settings_font_size_large">A+</string>
     <string name="settings_font_size_extra_large">A++</string>
 
-    <string name="settings_label_shake_sensitivity">ความไวในการเขย่า</string>
     <string name="nav_shake">เขย่า</string>
     <string name="nav_menu">เมนู</string>
     <string name="nav_group">กลุ่ม</string>

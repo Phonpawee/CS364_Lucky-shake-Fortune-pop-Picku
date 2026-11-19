@@ -5,10 +5,9 @@ import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
-public final class ThemeManager {
-    private static final String PREFS_NAME = "app_preferences";
-    private static final String KEY_THEME_MODE = "theme_mode";
+import com.cs364.luckyshake.data.PrefKeys;
 
+public final class ThemeManager {
     private ThemeManager() {
         // Utility class
     }
@@ -16,11 +15,11 @@ public final class ThemeManager {
     // เรียกตอนเริ่มเปิดแอป เพื่อคืนค่าโหมดที่เลือกไว้
     public static void applySavedMode(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(
-                PREFS_NAME, Context.MODE_PRIVATE
+                PrefKeys.PREFS_NAME, Context.MODE_PRIVATE
         );
 
         int mode = preferences.getInt(
-                KEY_THEME_MODE,
+                PrefKeys.THEME_MODE,
                 AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
         );
 
@@ -35,9 +34,9 @@ public final class ThemeManager {
             throw new IllegalArgumentException("Unsupported theme mode");
         }
 
-        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        context.getSharedPreferences(PrefKeys.PREFS_NAME, Context.MODE_PRIVATE)
                 .edit()
-                .putInt(KEY_THEME_MODE, mode)
+                .putInt(PrefKeys.THEME_MODE, mode)
                 .apply();
 
         AppCompatDelegate.setDefaultNightMode(mode);

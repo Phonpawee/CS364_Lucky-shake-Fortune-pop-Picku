@@ -38,8 +38,10 @@ public class AccelerometerShakeDetector implements ShakeDetector, SensorEventLis
     interface SensorSource {
         boolean isAvailable();
 
-        /** Returns false if the listener could not be registered. */
-        boolean register(SensorEventListener listener);
+        /**
+         * Returns false if the listener could not be registered.
+         */
+        void register(SensorEventListener listener);
 
         void unregister(SensorEventListener listener);
     }
@@ -53,7 +55,7 @@ public class AccelerometerShakeDetector implements ShakeDetector, SensorEventLis
     private double threshold = thresholdFor(GameConfig.DEFAULT_SENSITIVITY);
     private long lastShakeAt = Long.MIN_VALUE;
 
-    /** Uses a monotonic clock, so changing the phone's time does not break the debounce. */
+    /** Uses a monotonic clock, so changing the phone's time does not break the de bounce. */
     public AccelerometerShakeDetector(Context context) {
         this(new AndroidSensorSource(context), () -> System.nanoTime() / 1_000_000L);
     }
@@ -189,9 +191,9 @@ public class AccelerometerShakeDetector implements ShakeDetector, SensorEventLis
         }
 
         @Override
-        public boolean register(SensorEventListener listener) {
+        public void register(SensorEventListener listener) {
             if (sensor == null) {
-                return false;
+                return;
             }
             boolean ok = manager.registerListener(listener, sensor, SensorManager.SENSOR_DELAY_GAME);
             if (ok) {
@@ -199,7 +201,6 @@ public class AccelerometerShakeDetector implements ShakeDetector, SensorEventLis
             } else {
                 Log.w(TAG, "registerListener failed; only simulateShake() will fire");
             }
-            return ok;
         }
 
         @Override

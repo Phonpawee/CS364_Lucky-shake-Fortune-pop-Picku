@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs364.luckyshake.R;
+import com.cs364.luckyshake.data.PrefKeys;
 import com.cs364.luckyshake.fortune.FortuneProvider;
 import com.cs364.luckyshake.logic.GameConfig;
 import com.cs364.luckyshake.sensor.ShakeDetector;
@@ -272,6 +273,8 @@ public class GroupProposalActivity extends AppCompatActivity {
         GroupPhase currentPhase = viewModel.getPhase().getValue();
         if ((currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
                 && shakeDetector != null) {
+            shakeDetector.setSensitivity(getSharedPreferences(PrefKeys.PREFS_NAME, MODE_PRIVATE)
+                    .getInt(PrefKeys.SHAKE_SENSITIVITY, GameConfig.DEFAULT_SENSITIVITY));
             shakeDetector.start();
         }
     }

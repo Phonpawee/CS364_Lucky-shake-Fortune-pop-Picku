@@ -58,8 +58,4 @@ public class FortuneProvider {
 
         return resourceId == 0 ? null : targetContext.getString(resourceId);
     }
-
-    public String getDisclaimer() {
-        return context.getString(R.string.result_msg_disclaimer);
-    }
 }

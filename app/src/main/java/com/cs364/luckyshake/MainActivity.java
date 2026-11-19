@@ -126,6 +126,8 @@ public class MainActivity extends AppCompatActivity {
         viewModel.setMaxRedraws(getSharedPreferences(PrefKeys.PREFS_NAME, MODE_PRIVATE)
                 .getInt(PrefKeys.REROLL_QUOTA, GameConfig.MAX_REDRAWS));
         openingResult = false;
+        shakeDetector.setSensitivity(getSharedPreferences(PrefKeys.PREFS_NAME, MODE_PRIVATE)
+                .getInt(PrefKeys.SHAKE_SENSITIVITY, GameConfig.DEFAULT_SENSITIVITY));
         shakeDetector.start();
         resumePendingDraw();
     }
