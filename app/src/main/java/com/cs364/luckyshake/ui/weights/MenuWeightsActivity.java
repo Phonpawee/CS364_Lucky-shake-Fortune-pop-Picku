@@ -105,6 +105,7 @@ public class MenuWeightsActivity extends AppCompatActivity {
                 return;
             }
             setId = available.get(0).id;
+            hideSimulation();
         }
 
         EdgeToEdge.enable(this);
@@ -230,6 +231,7 @@ public class MenuWeightsActivity extends AppCompatActivity {
             if (!found) {
                 selected = 0;
                 setId = sets.get(0).id;
+                hideSimulation();
             }
             setSpinner.setSelection(selected);
         }
@@ -271,7 +273,7 @@ public class MenuWeightsActivity extends AppCompatActivity {
 
         boolean empty = menusList.isEmpty();
         recycler.setVisibility(empty ? View.GONE : View.VISIBLE);
-        emptyGroup.setVisibility(empty ? View.GONE : View.VISIBLE);
+        emptyGroup.setVisibility(empty ? View.VISIBLE : View.GONE);
     }
 
     private void confirmResetWeights() {
