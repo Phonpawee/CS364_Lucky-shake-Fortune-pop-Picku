@@ -3,4 +3,7 @@
     <string name="welcome_brand" translatable="false">Lucky\nShake</string>
     <string name="welcome_tagline">A little luck for your next meal</string>
     <string name="welcome_start">Start</string>
+    <dimen name="welcome_brand_size">68sp</dimen>
+    <dimen name="welcome_start_size">26sp</dimen>
+    <dimen name="welcome_start_height">64dp</dimen>
 </resources>

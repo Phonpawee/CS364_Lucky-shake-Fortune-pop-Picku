@@ -177,10 +177,12 @@ public class RepositoriesInstrumentedTest {
     public void weights_areClampedAndStamped() {
         long lunch = menus.getSets().get(0).id;
         long id = menus.getMenus(lunch, null, null).get(0).id;
-        assertEquals(10, menus.adjustWeight(id, 10));
-        assertEquals(1, menus.adjustWeight(id, -20));
-        assertEquals(-1, menus.adjustWeight(999999, 1));
         long recent = System.currentTimeMillis() - 1000;
+        assertTrue(menus.updateWeight(id, 99, recent));
+        assertEquals(10, menus.getMenu(id).weight);
+        assertTrue(menus.updateWeight(id, -20, recent));
+        assertEquals(1, menus.getMenu(id).weight);
+        assertFalse(menus.updateWeight(999999, 5, recent));
         assertTrue(menus.updateWeight(id, 7, recent));
         Menu m = menus.getMenu(id);
         assertEquals(7, m.weight);

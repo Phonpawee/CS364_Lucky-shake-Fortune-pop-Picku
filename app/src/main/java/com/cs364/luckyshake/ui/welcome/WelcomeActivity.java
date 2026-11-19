@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowCompat;
 import com.cs364.luckyshake.MainActivity;
 import com.cs364.luckyshake.R;
 import com.cs364.luckyshake.ui.settings.FontSizeHelper;
@@ -23,7 +24,10 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
         petals = findViewById(R.id.welcome_petals);
         View content = findViewById(R.id.welcome_content);
-        if (content == null) content = findViewById(R.id.welcome_landscape_content);
+        if (content == null) {
+            content = findViewById(R.id.welcome_landscape_content);
+            WindowCompat.getInsetsController(getWindow(), content).setAppearanceLightStatusBars(false);
+        }
         int left = content.getPaddingLeft(), top = content.getPaddingTop();
         int right = content.getPaddingRight(), bottom = content.getPaddingBottom();
         ViewCompat.setOnApplyWindowInsetsListener(content, (view, insets) -> {

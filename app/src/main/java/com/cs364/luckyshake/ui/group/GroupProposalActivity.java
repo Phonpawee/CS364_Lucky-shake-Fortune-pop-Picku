@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs364.luckyshake.R;
+import com.cs364.luckyshake.data.PrefKeys;
 import com.cs364.luckyshake.fortune.FortuneProvider;
 import com.cs364.luckyshake.logic.GameConfig;
 import com.cs364.luckyshake.sensor.ShakeDetector;
@@ -69,7 +70,6 @@ public class GroupProposalActivity extends AppCompatActivity {
     private View tallySection;
     private RecyclerView tallyList;
     private MaterialButton tallyBtnDraw;
-    private TextView tallyWinner;
     private GroupTallyAdapter tallyAdapter;
     private ShakeDetector shakeDetector;
 
@@ -145,7 +145,6 @@ public class GroupProposalActivity extends AppCompatActivity {
         tallySection = findViewById(R.id.group_tally_section);
         tallyList = findViewById(R.id.group_tally_list);
         tallyBtnDraw = findViewById(R.id.group_tally_btn_draw);
-        tallyWinner = findViewById(R.id.group_tally_winner);
 
         shakeDetector = ShakeDetector.create(this);
         shakeDetector.setOnShakeListener(() -> {
@@ -272,6 +271,8 @@ public class GroupProposalActivity extends AppCompatActivity {
         GroupPhase currentPhase = viewModel.getPhase().getValue();
         if ((currentPhase == GroupPhase.FINAL || currentPhase == GroupPhase.DONE)
                 && shakeDetector != null) {
+            shakeDetector.setSensitivity(getSharedPreferences(PrefKeys.PREFS_NAME, MODE_PRIVATE)
+                    .getInt(PrefKeys.SHAKE_SENSITIVITY, GameConfig.DEFAULT_SENSITIVITY));
             shakeDetector.start();
         }
     }
@@ -296,6 +297,7 @@ public class GroupProposalActivity extends AppCompatActivity {
         });
 
         viewModel.getPhase().observe(this, phase -> {
+            updateTitleHeader();
             if (phase == GroupPhase.FINAL || phase == GroupPhase.DONE) {
                 if (viewModel.isTallyEmpty()) {
                     Toast.makeText(this, R.string.group_tally_msg_all_skipped, Toast.LENGTH_LONG).show();
@@ -335,6 +337,12 @@ public class GroupProposalActivity extends AppCompatActivity {
     }
 
     private void updateTitleHeader() {
+        GroupPhase phase = viewModel.getPhase().getValue();
+        if (phase == GroupPhase.FINAL || phase == GroupPhase.DONE) {
+            titleTurn.setText(R.string.group_tally_title);
+            return;
+        }
+
         Integer turn = viewModel.getCurrentTurnNumber().getValue();
         Integer total = viewModel.getParticipantCount().getValue();
         if (turn != null && total != null) {

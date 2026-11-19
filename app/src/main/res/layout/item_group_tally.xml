@@ -3,7 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_sm"
+    android:background="@drawable/home_select_field"
     android:gravity="center_vertical"
+    android:paddingHorizontal="@dimen/spacing_md"
     android:orientation="horizontal"
     android:paddingVertical="@dimen/spacing_sm">
 
@@ -19,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
-            android:textColor="@color/app_on_surface"
+            android:textColor="@color/home_ink"
             android:textSize="16sp"
             android:textStyle="bold"
             tools:text="KFC" />
@@ -31,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:fontFamily="sans-serif-medium"
-            android:textColor="@color/journal_text_muted"
+            android:textColor="@color/home_ink"
             android:textSize="14sp"
             tools:text="เสนอโดย คนที่ 1, 2" />
     </LinearLayout>
@@ -45,7 +48,7 @@
         android:fontFamily="sans-serif-medium"
         android:gravity="end"
         android:minWidth="32dp"
-        android:textColor="@color/app_primary"
+        android:textColor="@color/home_accent"
         android:textSize="16sp"
         android:textStyle="bold"
         tools:text="×2" />
