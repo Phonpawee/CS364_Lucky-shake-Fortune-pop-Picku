@@ -60,6 +60,8 @@ public class ResultActivity extends AppCompatActivity {
 
     private static final String STATE_EXPORT = "result_export_snapshot";
     private String pendingSnapshot;
+    private static final String STATE_EXPORT_DESCRIPTION = "result_export_description";
+    private String pendingSnapshotDescription;
     private View saveImage;
     private View resultCard;
     private static final String STATE_PERMISSION = "result_gallery_permission";
@@ -89,6 +91,7 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             pendingSnapshot = savedInstanceState.getString(STATE_EXPORT);
+            pendingSnapshotDescription = savedInstanceState.getString(STATE_EXPORT_DESCRIPTION);
             awaitingPermission = savedInstanceState.getBoolean(STATE_PERMISSION);
         }
         HomeViewModel viewModel = HomeViewModel.get(this);
@@ -173,6 +176,7 @@ public class ResultActivity extends AppCompatActivity {
         super.onSaveInstanceState(state);
         state.putBoolean(STATE_PERMISSION, awaitingPermission);
         state.putString(STATE_EXPORT, pendingSnapshot);
+        state.putString(STATE_EXPORT_DESCRIPTION, pendingSnapshotDescription);
         state.putLong(STATE_MENU_ID, menuId);
         state.putBoolean(STATE_STICK_LANDED, stickLanded);
     }
@@ -224,11 +228,18 @@ public class ResultActivity extends AppCompatActivity {
             snapshot = File.createTempFile("fortune-", ".png", getCacheDir());
             ResultCardImage.capture(resultCard, snapshot);
             pendingSnapshot = snapshot.getName();
+            // Read the localized labels at capture time, not the potentially newer draw.
+            pendingSnapshotDescription = String.join("\n",
+                    ((TextView) findViewById(R.id.result_label_stick)).getText(),
+                    ((TextView) findViewById(R.id.result_label_menu)).getText(),
+                    ((TextView) findViewById(R.id.result_label_stars)).getText(),
+                    ((TextView) findViewById(R.id.result_label_fortune)).getText());
             saveImage.setEnabled(false);
             showImagePreview();
         } catch (IOException | RuntimeException | OutOfMemoryError error) {
             if (snapshot != null) snapshot.delete();
             pendingSnapshot = null;
+            pendingSnapshotDescription = null;
             saveImage.setEnabled(true);
             Toast.makeText(this, R.string.result_save_error, Toast.LENGTH_LONG).show();
         }
@@ -244,7 +255,8 @@ public class ResultActivity extends AppCompatActivity {
         ImageView image = new ImageView(this);
         image.setAdjustViewBounds(true);
         image.setImageBitmap(bitmap);
-        image.setContentDescription(getString(R.string.result_preview_title));
+        image.setContentDescription(pendingSnapshotDescription == null
+                ? getString(R.string.result_preview_title) : pendingSnapshotDescription);
         int padding = (int) (16 * getResources().getDisplayMetrics().density);
         image.setPadding(padding, padding, padding, padding);
         ScrollView scroll = new ScrollView(this);
@@ -268,8 +280,7 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     private void cancelPreview(int message) {
-        if (pendingSnapshot != null) new File(getCacheDir(), pendingSnapshot).delete();
-        pendingSnapshot = null;
+        discardPendingSnapshot();
         if (saveImage != null) saveImage.setEnabled(true);
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
@@ -278,6 +289,7 @@ public class ResultActivity extends AppCompatActivity {
         if (pendingSnapshot == null) return;
         File snapshot = new File(getCacheDir(), pendingSnapshot);
         pendingSnapshot = null;
+        pendingSnapshotDescription = null;
         if (saveImage != null) saveImage.setEnabled(true);
         Context context = getApplicationContext();
         new Thread(() -> {
@@ -295,9 +307,18 @@ public class ResultActivity extends AppCompatActivity {
         }, "result-gallery-save").start();
     }
 
+    private void discardPendingSnapshot() {
+        if (pendingSnapshot != null) new File(getCacheDir(), pendingSnapshot).delete();
+        pendingSnapshot = null;
+        pendingSnapshotDescription = null;
+    }
+
     @Override
     protected void onDestroy() {
         if (previewDialog != null) previewDialog.dismiss();
+        // Retain the draft during rotation; final finish also covers invalid restored draws.
+        // A saving worker owns its file after saveToGallery clears pendingSnapshot.
+        if (isFinishing()) discardPendingSnapshot();
         super.onDestroy();
     }
 
