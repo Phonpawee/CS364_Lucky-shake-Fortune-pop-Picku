@@ -1,0 +1,10 @@
+<resources>
+    <string name="result_save_image">Save result image</string>
+    <string name="result_save_success">Image saved to Pictures/LuckyShake</string>
+    <string name="result_save_cancelled">Image save cancelled</string>
+    <string name="result_save_error">Could not save image. Please try again.</string>
+    <string name="result_gallery_save">Save to gallery</string>
+    <string name="result_preview_title">Result image preview</string>
+    <string name="result_preview_cancel">Cancel</string>
+    <string name="result_save_permission_denied">Allow storage permission to save images on this Android version.</string>
+</resources>
