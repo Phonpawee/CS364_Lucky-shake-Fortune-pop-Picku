@@ -26,6 +26,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import java.io.File;
 import java.io.IOException;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
+import androidx.core.view.OneShotPreDrawListener;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
@@ -63,7 +65,10 @@ public class ResultActivity extends AppCompatActivity {
     private static final String STATE_EXPORT_DESCRIPTION = "result_export_description";
     private String pendingSnapshotDescription;
     private View saveImage;
-    private View resultCard;
+    private View resultPage;
+    private static final String STATE_PREPARING_SNAPSHOT = "result_preparing_snapshot";
+    private boolean preparingSnapshot;
+    private boolean restartSnapshotAfterRecreation;
     private static final String STATE_PERMISSION = "result_gallery_permission";
     private boolean awaitingPermission;
     private androidx.appcompat.app.AlertDialog previewDialog;
@@ -106,7 +111,12 @@ public class ResultActivity extends AppCompatActivity {
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_result);
+        ViewGroup content = findViewById(android.R.id.content);
+        resultPage = content.getChildAt(0);
         View root = findViewById(R.id.result_root);
+        if (root == null) {
+            root = findViewById(R.id.result_landscape_content);
+        }
         ViewCompat.setOnApplyWindowInsetsListener(root, (view, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -134,11 +144,6 @@ public class ResultActivity extends AppCompatActivity {
         redraw.setOnClickListener(view -> viewModel.redraw());
         accept.setOnClickListener(view -> viewModel.accept());
         home.setOnClickListener(view -> BackNavigation.goHome(this));
-        resultCard = findViewById(R.id.result_card);
-        if (resultCard == null) {
-            // Also supports tablet variants added by #16 before they gain export IDs.
-            resultCard = (View) findViewById(R.id.result_label_stick).getParent();
-        }
         saveImage = findViewById(R.id.result_btn_save_image);
         if (saveImage == null) {
             android.widget.LinearLayout actions = (android.widget.LinearLayout) home.getParent();
@@ -154,7 +159,10 @@ public class ResultActivity extends AppCompatActivity {
             column.addView(button, column.indexOfChild(actionCard) + 1, params);
             saveImage = button;
         }
-        saveImage.setEnabled(pendingSnapshot == null);
+        boolean restartSnapshot = savedInstanceState != null
+                && savedInstanceState.getBoolean(STATE_PREPARING_SNAPSHOT)
+                && pendingSnapshot == null;
+        saveImage.setEnabled(pendingSnapshot == null && !restartSnapshot);
         saveImage.setOnClickListener(view -> chooseImageDestination());
         BackNavigation.register(this, () -> {
             if (viewModel.currentState().hasPendingResult()) {
@@ -168,12 +176,23 @@ public class ResultActivity extends AppCompatActivity {
             }
         });
         viewModel.getState().observe(this, this::render);
+        if (restartSnapshot) {
+            preparingSnapshot = true;
+            OneShotPreDrawListener.add(resultPage, () -> {
+                if (isFinishing() || isDestroyed()) return;
+                preparingSnapshot = false;
+                saveImage.setEnabled(true);
+                chooseImageDestination();
+            });
+        }
         if (pendingSnapshot != null && !awaitingPermission) showImagePreview();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
+        restartSnapshotAfterRecreation = preparingSnapshot;
+        state.putBoolean(STATE_PREPARING_SNAPSHOT, restartSnapshotAfterRecreation);
         state.putBoolean(STATE_PERMISSION, awaitingPermission);
         state.putString(STATE_EXPORT, pendingSnapshot);
         state.putString(STATE_EXPORT_DESCRIPTION, pendingSnapshotDescription);
@@ -184,6 +203,7 @@ public class ResultActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (pendingSnapshot != null && !awaitingPermission) showImagePreview();
         if (stick == null || stickLanded) {
             return;
         }
@@ -222,27 +242,55 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     private void chooseImageDestination() {
-        if (pendingSnapshot != null) return;
-        File snapshot = null;
+        if (pendingSnapshot != null || preparingSnapshot) return;
+        final Bitmap bitmap;
         try {
-            snapshot = File.createTempFile("fortune-", ".png", getCacheDir());
-            ResultCardImage.capture(resultCard, snapshot);
-            pendingSnapshot = snapshot.getName();
-            // Read the localized labels at capture time, not the potentially newer draw.
-            pendingSnapshotDescription = String.join("\n",
-                    ((TextView) findViewById(R.id.result_label_stick)).getText(),
-                    ((TextView) findViewById(R.id.result_label_menu)).getText(),
-                    ((TextView) findViewById(R.id.result_label_stars)).getText(),
-                    ((TextView) findViewById(R.id.result_label_fortune)).getText());
-            saveImage.setEnabled(false);
-            showImagePreview();
+            bitmap = ResultCardImage.render(resultPage);
         } catch (IOException | RuntimeException | OutOfMemoryError error) {
-            if (snapshot != null) snapshot.delete();
-            pendingSnapshot = null;
-            pendingSnapshotDescription = null;
-            saveImage.setEnabled(true);
             Toast.makeText(this, R.string.result_save_error, Toast.LENGTH_LONG).show();
+            return;
         }
+
+        String description = String.join("\n",
+                ((TextView) findViewById(R.id.result_label_stick)).getText(),
+                ((TextView) findViewById(R.id.result_label_menu)).getText(),
+                ((TextView) findViewById(R.id.result_label_stars)).getText(),
+                ((TextView) findViewById(R.id.result_label_fortune)).getText());
+        File cacheDir = getCacheDir();
+        preparingSnapshot = true;
+        saveImage.setEnabled(false);
+        new Thread(() -> {
+            File snapshot = null;
+            try {
+                snapshot = File.createTempFile("fortune-", ".png", cacheDir);
+                ResultCardImage.writePng(bitmap, snapshot);
+            } catch (IOException | RuntimeException | OutOfMemoryError error) {
+                if (snapshot != null) snapshot.delete();
+                snapshot = null;
+            } finally {
+                bitmap.recycle();
+            }
+
+            File prepared = snapshot;
+            runOnUiThread(() -> {
+                preparingSnapshot = false;
+                if (isFinishing() || isDestroyed()) {
+                    if (prepared != null) prepared.delete();
+                    return;
+                }
+                if (prepared == null) {
+                    saveImage.setEnabled(true);
+                    Toast.makeText(this, R.string.result_save_error, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                pendingSnapshot = prepared.getName();
+                pendingSnapshotDescription = description;
+                if (getLifecycle().getCurrentState().isAtLeast(
+                        androidx.lifecycle.Lifecycle.State.RESUMED)) {
+                    showImagePreview();
+                }
+            });
+        }, "result-preview-encode").start();
     }
 
     private void showImagePreview() {
@@ -318,7 +366,7 @@ public class ResultActivity extends AppCompatActivity {
         if (previewDialog != null) previewDialog.dismiss();
         // Retain the draft during rotation; final finish also covers invalid restored draws.
         // A saving worker owns its file after saveToGallery clears pendingSnapshot.
-        if (isFinishing()) discardPendingSnapshot();
+        if (isFinishing() || restartSnapshotAfterRecreation) discardPendingSnapshot();
         super.onDestroy();
     }
 

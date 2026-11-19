@@ -192,6 +192,13 @@
                             app:cornerRadius="26dp"
                             app:strokeColor="@color/home_outline"
                             app:strokeWidth="1dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/group_winner_btn_home"
+                            style="@style/Widget.LuckyShake.Button.Segment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/result_btn_home" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cs364.luckyshake.R;
@@ -75,14 +74,6 @@ public class FoodTypeAdapter extends RecyclerView.Adapter<FoodTypeAdapter.ViewHo
         holder.cardView.setCheckable(true);
         holder.cardView.setChecked(isSelected);
         holder.cardView.setSelected(isSelected);
-
-        if (isSelected) {
-            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.app_primary));
-            holder.typeNameText.setTextColor(ContextCompat.getColor(context, R.color.app_on_primary));
-        } else {
-            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, R.color.app_surface));
-            holder.typeNameText.setTextColor(ContextCompat.getColor(context, R.color.app_on_surface));
-        }
 
         String accessibleName = displayName != null ? displayName : key;
         String accessibilityDesc = isSelected

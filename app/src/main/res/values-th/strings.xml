@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">LuckyShake</string>
     <string name="home_title_main">เซียมซีกินอะไรดี</string>
-    <string name="home_btn_draw">สุ่มเลย</string>
+    <string name="home_btn_draw">หรือแตะเพื่อสุ่ม</string>
     <string name="home_btn_filter">กรองเมนู</string>
     <string name="result_title_fortune">คำทำนายของคุณ</string>
     <string name="result_label_menu">เมนูวันนี้: %1$s</string>
@@ -184,7 +184,7 @@
     <string name="result_btn_redraw">ขอใหม่</string>
     <string name="result_msg_accepted">ยอมรับแล้ว</string>
     <string name="result_msg_quota_empty">ใช้โควตาขอใหม่ครบแล้ว</string>
-    <string name="home_shake_hint">เขย่าเพื่อสุ่มเมนู</string>
+    <string name="home_shake_hint">เขย่ามือถือเพื่อสุ่มเมนู</string>
     <string name="reminder_settings_title">แจ้งเตือนตามมื้อ</string>
     <string name="reminder_meal_breakfast">มื้อเช้า</string>
     <string name="reminder_meal_lunch">มื้อกลางวัน</string>

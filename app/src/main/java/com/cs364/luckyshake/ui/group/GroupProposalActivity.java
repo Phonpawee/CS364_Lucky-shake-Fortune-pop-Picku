@@ -69,7 +69,6 @@ public class GroupProposalActivity extends AppCompatActivity {
     private View tallySection;
     private RecyclerView tallyList;
     private MaterialButton tallyBtnDraw;
-    private TextView tallyWinner;
     private GroupTallyAdapter tallyAdapter;
     private ShakeDetector shakeDetector;
 
@@ -145,7 +144,6 @@ public class GroupProposalActivity extends AppCompatActivity {
         tallySection = findViewById(R.id.group_tally_section);
         tallyList = findViewById(R.id.group_tally_list);
         tallyBtnDraw = findViewById(R.id.group_tally_btn_draw);
-        tallyWinner = findViewById(R.id.group_tally_winner);
 
         shakeDetector = ShakeDetector.create(this);
         shakeDetector.setOnShakeListener(() -> {
@@ -296,6 +294,7 @@ public class GroupProposalActivity extends AppCompatActivity {
         });
 
         viewModel.getPhase().observe(this, phase -> {
+            updateTitleHeader();
             if (phase == GroupPhase.FINAL || phase == GroupPhase.DONE) {
                 if (viewModel.isTallyEmpty()) {
                     Toast.makeText(this, R.string.group_tally_msg_all_skipped, Toast.LENGTH_LONG).show();
@@ -335,6 +334,12 @@ public class GroupProposalActivity extends AppCompatActivity {
     }
 
     private void updateTitleHeader() {
+        GroupPhase phase = viewModel.getPhase().getValue();
+        if (phase == GroupPhase.FINAL || phase == GroupPhase.DONE) {
+            titleTurn.setText(R.string.group_tally_title);
+            return;
+        }
+
         Integer turn = viewModel.getCurrentTurnNumber().getValue();
         Integer total = viewModel.getParticipantCount().getValue();
         if (turn != null && total != null) {

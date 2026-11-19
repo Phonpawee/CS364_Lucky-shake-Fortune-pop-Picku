@@ -54,16 +54,6 @@
                     android:layout_gravity="center_horizontal"
                     android:elevation="4dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:gravity="center"
-                    android:text="@string/home_shake_hint"
-                    android:textColor="@color/home_title"
-                    android:textSize="15sp"
-                    android:layout_gravity="center_horizontal" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -250,23 +240,30 @@
                         app:srcCompat="@drawable/home_stick" />
                 </FrameLayout>
 
-                <com.google.android.material.button.MaterialButton
-                    android:foreground="@drawable/button_depth_glaze"
-                    android:elevation="6dp"
-                    android:id="@+id/home_btn_draw"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:minHeight="52dp"
-                    android:fontFamily="serif"
-                    android:text="@string/home_btn_draw"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/result_title_background"
+                    android:gravity="center"
+                    android:paddingHorizontal="18dp"
+                    android:paddingVertical="8dp"
+                    android:text="@string/home_shake_hint"
                     android:textColor="@color/home_thumb"
-                    android:textSize="23sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="@color/home_draw_tint"
-                    app:cornerRadius="30dp"
-                    app:strokeColor="@color/home_outline"
-                    app:strokeWidth="2dp" />
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/home_btn_draw"
+                    style="@style/Widget.LuckyShake.Button.Segment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="4dp"
+                    android:minHeight="48dp"
+                    android:paddingHorizontal="16dp"
+                    android:text="@string/home_btn_draw" />
 
             </LinearLayout>
         </LinearLayout>

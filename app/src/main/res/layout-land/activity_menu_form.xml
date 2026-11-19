@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/ThemeOverlay.LuckyShake.Home">
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:importantForAccessibility="no"
-        android:scaleType="centerCrop"
-        android:src="@drawable/home_sky" />
+
+    <ImageView style="@style/Widget.LuckyShake.TabPage.Sky" />
 
     <ScrollView
         android:id="@+id/menu_form_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
         android:fillViewport="true"
         tools:context=".ui.menu.MenuFormActivity">
         <LinearLayout
@@ -23,6 +21,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/spacing_md">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/Widget.LuckyShake.TabBanner"
+                android:layout_marginBottom="@dimen/spacing_md">
+
+                <TextView
+                    android:id="@+id/menu_form_title"
+                    style="@style/Widget.LuckyShake.TabBanner.Title"
+                    tools:text="@string/menu_form_title_edit"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tab_banner_art"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.cs364.luckyshake.ui.home.ShadowImageView
+                    android:id="@+id/tab_banner_art"
+                    style="@style/Widget.LuckyShake.TabBanner.Art"
+                    android:layout_width="76dp"
+                    android:layout_height="66dp"
+                    app:srcCompat="@drawable/menu_rice_bowl"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,27 +66,16 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:padding="14dp">
-                            <TextView
-                                android:id="@+id/menu_form_title"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:gravity="center"
-                                android:paddingHorizontal="16dp"
-                                android:paddingVertical="5dp"
-                                android:textSize="23sp"
-                                android:textStyle="bold"
-                                android:background="@drawable/result_title_background"
-                                android:textColor="@color/home_thumb"
-                                android:accessibilityHeading="true" />
-
                             <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/menu_form_name_layout"
                                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/spacing_md"
-                                android:hint="@string/menu_form_hint_name">
+                                android:hint="@string/menu_form_hint_name"
+                                app:boxBackgroundColor="@color/home_field"
+                                app:boxStrokeColor="@color/home_outline"
+                                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.LuckyShake.MenuFormField">
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/menu_form_name"
                                     android:layout_width="match_parent"
@@ -85,6 +97,10 @@
 
                             <Spinner
                                 android:id="@+id/menu_form_type"
+                                android:background="@drawable/home_spinner_background"
+                                android:paddingStart="10dp"
+                                android:paddingEnd="30dp"
+                                android:popupBackground="@color/home_field"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:contentDescription="@string/menu_form_label_type"
@@ -145,7 +161,7 @@
                                 android:orientation="horizontal">
                                 <com.google.android.material.button.MaterialButton
                                     android:id="@+id/menu_form_cancel"
-                                    style="@style/Widget.Material3.Button.TextButton"
+                                    style="@style/Widget.LuckyShake.Button.Segment"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginEnd="@dimen/spacing_sm"
@@ -153,7 +169,7 @@
 
                                 <com.google.android.material.button.MaterialButton
                                     android:id="@+id/menu_form_save"
-                                    style="@style/Widget.LuckyShake.Button.Primary"
+                                    style="@style/Widget.LuckyShake.Button.Menu"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/common_btn_save" />
