@@ -107,27 +107,22 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/group_proposal_layout_restaurant_1"
-                            style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                            style="@style/Widget.LuckyShake.TextField.Tab"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_sm"
-                            app:hintEnabled="false"
-                            app:placeholderText="@string/group_proposal_hint_restaurant_example"
-                            app:boxBackgroundColor="@color/home_field"
-                            app:boxCornerRadiusTopStart="@dimen/corner_md"
-                            app:boxCornerRadiusTopEnd="@dimen/corner_md"
-                            app:boxCornerRadiusBottomStart="@dimen/corner_md"
-                            app:boxCornerRadiusBottomEnd="@dimen/corner_md"
-                            app:boxStrokeWidth="0dp"
-                            app:boxStrokeWidthFocused="0dp">
+                            android:layout_marginTop="@dimen/spacing_sm">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/group_proposal_edit_restaurant_1"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:hint="@string/group_proposal_hint_restaurant_example"
                                 android:inputType="text"
                                 android:maxLength="40"
-                                android:maxLines="1" />
+                                android:maxLines="1"
+                                android:minHeight="52dp"
+                                android:textColor="@color/home_ink"
+                                android:textSize="@dimen/text_body" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <!-- Field 2 Label & Box -->
@@ -141,27 +136,22 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/group_proposal_layout_restaurant_2"
-                            style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                            style="@style/Widget.LuckyShake.TextField.Tab"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_sm"
-                            app:hintEnabled="false"
-                            app:placeholderText="@string/group_proposal_hint_restaurant_example"
-                            app:boxBackgroundColor="@color/home_field"
-                            app:boxCornerRadiusTopStart="@dimen/corner_md"
-                            app:boxCornerRadiusTopEnd="@dimen/corner_md"
-                            app:boxCornerRadiusBottomStart="@dimen/corner_md"
-                            app:boxCornerRadiusBottomEnd="@dimen/corner_md"
-                            app:boxStrokeWidth="0dp"
-                            app:boxStrokeWidthFocused="0dp">
+                            android:layout_marginTop="@dimen/spacing_sm">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/group_proposal_edit_restaurant_2"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:hint="@string/group_proposal_hint_restaurant_example"
                                 android:inputType="text"
                                 android:maxLength="40"
-                                android:maxLines="1" />
+                                android:maxLines="1"
+                                android:minHeight="52dp"
+                                android:textColor="@color/home_ink"
+                                android:textSize="@dimen/text_body" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <!-- Field 3 Label & Box -->
@@ -175,27 +165,22 @@
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/group_proposal_layout_restaurant_3"
-                            style="@style/Widget.Material3.TextInputLayout.FilledBox"
+                            style="@style/Widget.LuckyShake.TextField.Tab"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/spacing_sm"
-                            app:hintEnabled="false"
-                            app:placeholderText="@string/group_proposal_hint_restaurant_example"
-                            app:boxBackgroundColor="@color/home_field"
-                            app:boxCornerRadiusTopStart="@dimen/corner_md"
-                            app:boxCornerRadiusTopEnd="@dimen/corner_md"
-                            app:boxCornerRadiusBottomStart="@dimen/corner_md"
-                            app:boxCornerRadiusBottomEnd="@dimen/corner_md"
-                            app:boxStrokeWidth="0dp"
-                            app:boxStrokeWidthFocused="0dp">
+                            android:layout_marginTop="@dimen/spacing_sm">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/group_proposal_edit_restaurant_3"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:hint="@string/group_proposal_hint_restaurant_example"
                                 android:inputType="text"
                                 android:maxLength="40"
-                                android:maxLines="1" />
+                                android:maxLines="1"
+                                android:minHeight="52dp"
+                                android:textColor="@color/home_ink"
+                                android:textSize="@dimen/text_body" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
                 </LinearLayout>
