@@ -181,8 +181,7 @@ public class MenuWeightsActivity extends AppCompatActivity {
         reloadSets();
         refreshList();
         if (isSimulationShowing) {
-            renderSimulationRows();
-            if (simulationCard != null) {
+            if (renderSimulationRows() && simulationCard != null) {
                 simulationCard.setVisibility(View.VISIBLE);
             }
         } else {
@@ -285,7 +284,9 @@ public class MenuWeightsActivity extends AppCompatActivity {
     }
 
     private void simulateDraws() {
-        renderSimulationRows();
+        if (!renderSimulationRows()) {
+            return;
+        }
 
         isSimulationShowing = true;
         if (simulationCard != null) {
@@ -299,12 +300,12 @@ public class MenuWeightsActivity extends AppCompatActivity {
         }
     }
 
-    private void renderSimulationRows() {
+    private boolean renderSimulationRows() {
         MenuFilter homeFilter = HomeViewModel.get(this).getFilter();
         List<Menu> filteredMenus = menuRepository.getMenus(setId, homeFilter, null);
         if (filteredMenus.isEmpty()) {
             hideSimulation();
-            return;
+            return false;
         }
 
         double totalWeight = 0;
@@ -357,6 +358,7 @@ public class MenuWeightsActivity extends AppCompatActivity {
                 simulationRowsContainer.addView(row);
             }
         }
+        return true;
     }
 
     private boolean isThai() {
