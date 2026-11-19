@@ -126,6 +126,7 @@ public class GroupProposalActivity extends AppCompatActivity {
         tallyList = findViewById(R.id.group_tally_list);
         tallyBtnDraw = findViewById(R.id.group_tally_btn_draw);
         tallyWinner = findViewById(R.id.group_tally_winner);
+        findViewById(R.id.group_tally_btn_home).setOnClickListener(v -> BackNavigation.goHome(this));
 
         shakeDetector = ShakeDetector.create(this);
         shakeDetector.setOnShakeListener(() -> {
@@ -218,6 +219,7 @@ public class GroupProposalActivity extends AppCompatActivity {
         });
 
         viewModel.getPhase().observe(this, phase -> {
+            updateTitleHeader();
             if (phase == GroupPhase.FINAL || phase == GroupPhase.DONE) {
                 if (viewModel.isTallyEmpty()) {
                     Toast.makeText(this, R.string.group_tally_msg_all_skipped, Toast.LENGTH_LONG).show();
@@ -250,6 +252,7 @@ public class GroupProposalActivity extends AppCompatActivity {
                 if (tallyBtnDraw != null) {
                     tallyBtnDraw.setVisibility(View.GONE);
                 }
+                findViewById(R.id.group_tally_hint).setVisibility(View.GONE);
 
                 String displayName = winner.label;
                 if (proposalMethod == ProposalMethod.FOOD_TYPE) {
@@ -263,6 +266,7 @@ public class GroupProposalActivity extends AppCompatActivity {
                     tallyWinner.setText(getString(R.string.group_tally_winner, displayName, winner.votes));
                     tallyWinner.setVisibility(View.VISIBLE);
                 }
+                findViewById(R.id.group_tally_btn_home).setVisibility(View.VISIBLE);
 
                 // TODO(#39): open the group winner screen (fortune, history log, play again)
             }
@@ -270,6 +274,12 @@ public class GroupProposalActivity extends AppCompatActivity {
     }
 
     private void updateTitleHeader() {
+        GroupPhase phase = viewModel.getPhase().getValue();
+        if (phase == GroupPhase.FINAL || phase == GroupPhase.DONE) {
+            titleTurn.setText(R.string.group_tally_title);
+            return;
+        }
+
         Integer turn = viewModel.getCurrentTurnNumber().getValue();
         Integer total = viewModel.getParticipantCount().getValue();
         if (turn != null && total != null) {

@@ -3,7 +3,7 @@
     android:layout_width="match_parent" android:layout_height="wrap_content"
     android:orientation="vertical" android:gravity="center_horizontal" android:paddingVertical="12dp">
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:text="@string/welcome_brand" android:textSize="68sp" android:textStyle="bold|italic"
+        android:text="@string/welcome_brand" android:textSize="@dimen/welcome_brand_size" android:textStyle="bold|italic"
         android:fontFamily="serif" android:gravity="center" android:lineSpacingExtra="-10sp"
         android:textColor="#FFF4D8" android:shadowColor="#B332140F"
         android:shadowDx="0" android:shadowDy="4" android:shadowRadius="10"
@@ -14,9 +14,9 @@
         android:textSize="16sp" android:textColor="#FFF4D8" android:gravity="center" />
     <androidx.appcompat.widget.AppCompatButton android:id="@+id/welcome_start"
         android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:minWidth="220dp" android:minHeight="64dp" android:layout_marginTop="16dp"
+        android:minWidth="220dp" android:minHeight="@dimen/welcome_start_height" android:layout_marginTop="16dp"
         android:paddingHorizontal="32dp" android:paddingTop="10dp" android:paddingBottom="14dp"
-        android:text="@string/welcome_start" android:textSize="26sp" android:textStyle="bold"
+        android:text="@string/welcome_start" android:textSize="@dimen/welcome_start_size" android:textStyle="bold"
         android:fontFamily="sans-serif" android:textAllCaps="false" android:gravity="center"
         android:textColor="#FFF4D8" android:background="@drawable/welcome_start_button"
         app:backgroundTint="@null" android:backgroundTint="@null"

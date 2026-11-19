@@ -14,7 +14,7 @@
     app:cardBackgroundColor="@color/food_type_card_bg"
     app:cardCornerRadius="@dimen/corner_md"
     app:cardElevation="0dp"
-    app:strokeColor="@color/app_accent"
+    app:strokeColor="@color/home_outline"
     app:strokeWidth="1dp">
 
     <TextView
@@ -22,13 +22,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:ellipsize="end"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
-        android:maxLines="2"
         android:padding="8dp"
         android:textColor="@color/food_type_card_text"
-        android:textSize="16sp"
+        android:textSize="15sp"
         android:textStyle="bold"
         tools:text="ปิ้งย่าง" />
 </com.google.android.material.card.MaterialCardView>

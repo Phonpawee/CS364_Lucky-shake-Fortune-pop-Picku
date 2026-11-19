@@ -6,17 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/ThemeOverlay.LuckyShake.Home">
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:importantForAccessibility="no"
-        android:scaleType="centerCrop"
-        android:src="@drawable/home_sky" />
+    <ImageView style="@style/Widget.LuckyShake.TabPage.Sky" />
 
     <ScrollView
         android:id="@+id/group_proposal_root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
         android:fillViewport="true"
         tools:context=".ui.group.GroupProposalActivity">
         <LinearLayout
@@ -24,6 +20,28 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/spacing_md">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                style="@style/Widget.LuckyShake.TabBanner"
+                android:layout_marginBottom="@dimen/spacing_md">
+
+                <TextView
+                    android:id="@+id/group_proposal_title_turn"
+                    style="@style/Widget.LuckyShake.TabBanner.Title"
+                    tools:text="Person 1 of 2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/tab_banner_art"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.cs364.luckyshake.ui.home.ShadowImageView
+                    android:id="@+id/tab_banner_art"
+                    style="@style/Widget.LuckyShake.TabBanner.Art"
+                    app:srcCompat="@drawable/home_fox"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/group_proposal_input_card"
                 style="@style/Widget.LuckyShake.Card.Tab"
@@ -36,22 +54,12 @@
                     android:orientation="vertical"
                     android:padding="@dimen/spacing_md">
                     <TextView
-                        android:id="@+id/group_proposal_title_turn"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                        android:textStyle="bold"
-                        android:textColor="@color/app_on_surface"
-                        android:layout_marginBottom="@dimen/spacing_sm"
-                        tools:text="ถึงตาคนที่ 1 จาก 2" />
-
-                    <TextView
                         android:id="@+id/group_proposal_instructions"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/spacing_sm"
                         android:text="@string/group_proposal_msg_restaurant_hint"
-                        android:textColor="@color/app_on_surface"
+                        android:textColor="@color/home_ink"
                         android:textSize="@dimen/text_body" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -68,7 +76,7 @@
                         android:layout_marginTop="@dimen/spacing_sm"
                         android:fontFamily="sans-serif-medium"
                         android:text="@string/group_proposal_error_food_empty"
-                        android:textColor="@color/app_primary"
+                        android:textColor="@color/home_accent"
                         android:textSize="14sp"
                         android:visibility="gone" />
 
@@ -90,7 +98,7 @@
                                 android:layout_marginTop="@dimen/spacing_md"
                                 android:labelFor="@+id/group_proposal_edit_restaurant_1"
                                 android:text="@string/group_proposal_hint_restaurant_1"
-                                android:textColor="@color/app_on_surface" />
+                                android:textColor="@color/home_ink" />
 
                             <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/group_proposal_layout_restaurant_1"
@@ -100,7 +108,7 @@
                                 android:layout_marginTop="@dimen/spacing_sm"
                                 app:hintEnabled="false"
                                 app:placeholderText="@string/group_proposal_hint_restaurant_example"
-                                app:boxBackgroundColor="@color/app_background"
+                                app:boxBackgroundColor="@color/home_field"
                                 app:boxCornerRadiusTopStart="@dimen/corner_md"
                                 app:boxCornerRadiusTopEnd="@dimen/corner_md"
                                 app:boxCornerRadiusBottomStart="@dimen/corner_md"
@@ -129,7 +137,7 @@
                                 android:layout_marginTop="@dimen/spacing_md"
                                 android:labelFor="@+id/group_proposal_edit_restaurant_2"
                                 android:text="@string/group_proposal_hint_restaurant_2"
-                                android:textColor="@color/app_on_surface" />
+                                android:textColor="@color/home_ink" />
 
                             <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/group_proposal_layout_restaurant_2"
@@ -139,7 +147,7 @@
                                 android:layout_marginTop="@dimen/spacing_sm"
                                 app:hintEnabled="false"
                                 app:placeholderText="@string/group_proposal_hint_restaurant_example"
-                                app:boxBackgroundColor="@color/app_background"
+                                app:boxBackgroundColor="@color/home_field"
                                 app:boxCornerRadiusTopStart="@dimen/corner_md"
                                 app:boxCornerRadiusTopEnd="@dimen/corner_md"
                                 app:boxCornerRadiusBottomStart="@dimen/corner_md"
@@ -167,7 +175,7 @@
                                 android:layout_marginTop="@dimen/spacing_md"
                                 android:labelFor="@+id/group_proposal_edit_restaurant_3"
                                 android:text="@string/group_proposal_hint_restaurant_3"
-                                android:textColor="@color/app_on_surface" />
+                                android:textColor="@color/home_ink" />
 
                             <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/group_proposal_layout_restaurant_3"
@@ -177,7 +185,7 @@
                                 android:layout_marginTop="@dimen/spacing_sm"
                                 app:hintEnabled="false"
                                 app:placeholderText="@string/group_proposal_hint_restaurant_example"
-                                app:boxBackgroundColor="@color/app_background"
+                                app:boxBackgroundColor="@color/home_field"
                                 app:boxCornerRadiusTopStart="@dimen/corner_md"
                                 app:boxCornerRadiusTopEnd="@dimen/corner_md"
                                 app:boxCornerRadiusBottomStart="@dimen/corner_md"
@@ -209,21 +217,10 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="@dimen/spacing_md">
-                    <TextView
-                        android:id="@+id/group_tally_title"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="sans-serif-medium"
-                        android:text="@string/group_tally_title"
-                        android:textColor="@color/app_on_surface"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/group_tally_list"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_sm"
                         android:nestedScrollingEnabled="false" />
 
                     <TextView
@@ -234,12 +231,12 @@
                         android:fontFamily="sans-serif-medium"
                         android:gravity="center"
                         android:text="@string/group_tally_hint"
-                        android:textColor="@color/journal_text_muted"
+                        android:textColor="@color/home_ink"
                         android:textSize="14sp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/group_tally_btn_draw"
-                        style="@style/Widget.LuckyShake.Button.Primary"
+                        style="@style/Widget.LuckyShake.Button.Menu"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_sm"
@@ -255,7 +252,10 @@
                         android:layout_marginTop="@dimen/spacing_md"
                         android:fontFamily="sans-serif-medium"
                         android:gravity="center"
-                        android:textColor="@color/app_primary"
+                        android:textColor="@color/home_accent"
+                        android:background="@drawable/home_select_field"
+                        android:padding="@dimen/spacing_md"
+                        android:accessibilityLiveRegion="polite"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:visibility="gone"
@@ -264,32 +264,39 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/group_tally_btn_home"
+                style="@style/Widget.LuckyShake.Button.Menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="56dp"
+                android:text="@string/result_btn_home"
+                android:visibility="gone"
+                app:cornerRadius="28dp" />
+
             <LinearLayout
                 android:id="@+id/group_proposal_button_pair"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_md"
                 android:orientation="horizontal"
                 android:baselineAligned="false"
                 android:layout_gravity="end">
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/group_proposal_btn_skip"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    style="@style/Widget.LuckyShake.Button.Segment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="@dimen/spacing_sm"
                     android:minHeight="56dp"
                     android:text="@string/group_proposal_btn_skip"
-                    android:textColor="@color/app_on_surface"
+                    android:textColor="@color/home_ink"
                     android:textStyle="bold"
-                    app:backgroundTint="@color/app_surface"
-                    app:cornerRadius="28dp"
-                    app:strokeColor="@color/app_accent" />
+                    app:cornerRadius="28dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/group_proposal_btn_confirm"
-                    style="@style/Widget.LuckyShake.Button.Primary"
+                    style="@style/Widget.LuckyShake.Button.Menu"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">LuckyShake</string>
     <string name="home_title_main">Lucky Shake</string>
-    <string name="home_btn_draw">Draw now</string>
+    <string name="home_btn_draw">Or tap to draw</string>
     <string name="home_btn_filter">Filter menus</string>
     <string name="result_title_fortune">Your fortune</string>
     <string name="result_label_menu">Menu for today: %1$s</string>
@@ -157,7 +157,7 @@
     <string name="result_btn_redraw">Draw again</string>
     <string name="result_msg_accepted">Accepted</string>
     <string name="result_msg_quota_empty">You have used all your redraws.</string>
-    <string name="home_shake_hint">Shake to pick a dish</string>
+    <string name="home_shake_hint">Shake for a dish</string>
     <string name="reminder_settings_title">Meal reminders</string>
     <string name="reminder_meal_breakfast">Breakfast</string>
     <string name="reminder_meal_lunch">Lunch</string>

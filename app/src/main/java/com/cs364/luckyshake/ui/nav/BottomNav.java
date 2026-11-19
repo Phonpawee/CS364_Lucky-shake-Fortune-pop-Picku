@@ -92,7 +92,9 @@ public final class BottomNav {
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         // The bar handles the bottom system inset itself. The screen keeps the other sides.
-        // While the keyboard is open the bar is hidden and the screen makes room for the keyboard.
+        // Keep the portrait menu tabs reachable while the search keyboard is open.
+        // Move the whole stack up so the list and the bar share the usable height.
+        final boolean keepMenuTabsVisible = selectedId == R.id.nav_menu && !sideRail;
         final int left = insetTarget.getPaddingLeft();
         final int top = insetTarget.getPaddingTop();
         final int right = insetTarget.getPaddingRight();
@@ -102,9 +104,15 @@ public final class BottomNav {
                     | WindowInsetsCompat.Type.displayCutout());
             boolean imeVisible = insets.isVisible(WindowInsetsCompat.Type.ime());
             int imeBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
-            nav.setVisibility(imeVisible ? View.GONE : View.VISIBLE);
-            v.setPadding(left + bars.left, top + bars.top, right + bars.right,
-                    bottom + (imeVisible ? imeBottom : sideRail ? bars.bottom : 0));
+            if (keepMenuTabsVisible) {
+                // Material already reserves the system navigation inset inside the tab bar.
+                container.setPadding(0, 0, 0, imeVisible ? Math.max(0, imeBottom - bars.bottom) : 0);
+                v.setPadding(left + bars.left, top + bars.top, right + bars.right, bottom);
+            } else {
+                nav.setVisibility(imeVisible ? View.GONE : View.VISIBLE);
+                v.setPadding(left + bars.left, top + bars.top, right + bars.right,
+                        bottom + (imeVisible ? imeBottom : sideRail ? bars.bottom : 0));
+            }
             return insets;
         });
         ViewCompat.requestApplyInsets(insetTarget);
