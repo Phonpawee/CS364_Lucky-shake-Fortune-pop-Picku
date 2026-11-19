@@ -3,4 +3,7 @@
     <color name="tab_card_outline">#D7B77D</color>
     <color name="tab_banner_start">#293658</color>
     <color name="tab_banner_end">#475E89</color>
+    <color name="tab_field_fill">#1B2742</color>
+    <color name="tab_field_stroke">#445885</color>
+    <color name="tab_field_hint">#94A8D1</color>
 </resources>

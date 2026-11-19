@@ -68,4 +68,16 @@
         <item name="cornerRadius">24dp</item>
         <item name="strokeColor">@color/home_outline</item>
     </style>
+    <style name="Widget.LuckyShake.TextField.Tab" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="hintEnabled">false</item>
+        <item name="boxBackgroundColor">@color/tab_field_fill</item>
+        <item name="boxStrokeColor">@color/tab_field_stroke_selector</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">2dp</item>
+        <item name="boxCornerRadiusTopStart">@dimen/corner_md</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/corner_md</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/corner_md</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/corner_md</item>
+        <item name="android:textColorHint">@color/tab_field_hint</item>
+    </style>
 </resources>
