@@ -2,6 +2,7 @@ package com.cs364.luckyshake.data;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -74,12 +75,15 @@ final class SeedData {
 
     /** Fills a brand-new database. */
     static void insertAll(SQLiteDatabase db) {
-        restoreMissing(db);
+        if (restoreMissing(db) < 0) {
+            throw new SQLException("Cannot insert the starter data");
+        }
     }
 
     /**
      * Adds the starter sets and dishes that are not there (matched by Thai name). Nothing is
-     * deleted or changed, so the user's own sets and dishes stay. Returns how many dishes were added.
+     * deleted or changed, so the user's own sets and dishes stay. Returns how many dishes were added,
+     * or -1 if an insert failed (everything is then rolled back).
      */
     static int restoreMissing(SQLiteDatabase db) {
         long now = System.currentTimeMillis();
@@ -90,10 +94,15 @@ final class SeedData {
                 long setId = findSet(db, g.nameTh);
                 if (setId < 0) {
                     setId = insertSet(db, g.nameTh, g.nameEn);
+                    if (setId < 0) {
+                        return -1;      // no setTransactionSuccessful(): the transaction rolls back
+                    }
                 }
                 for (Dish dish : g.dishes) {
                     if (!menuExists(db, setId, dish.nameTh)) {
-                        insertMenu(db, setId, dish, now);
+                        if (insertMenu(db, setId, dish, now) < 0) {
+                            return -1;
+                        }
                         added++;
                     }
                 }
@@ -127,7 +136,7 @@ final class SeedData {
         return db.insert(DbHelper.T_SET, null, v);
     }
 
-    private static void insertMenu(SQLiteDatabase db, long setId, Dish dish, long now) {
+    private static long insertMenu(SQLiteDatabase db, long setId, Dish dish, long now) {
         ContentValues v = new ContentValues();
         v.put(DbHelper.C_MENU_SET_ID, setId);
         v.put(DbHelper.C_MENU_NAME_TH, dish.nameTh);
@@ -137,6 +146,6 @@ final class SeedData {
         v.put(DbHelper.C_MENU_WEIGHT, DbHelper.DEFAULT_WEIGHT);
         v.put(DbHelper.C_MENU_LAST_TOUCHED, now);
         v.put(DbHelper.C_MENU_CREATED_AT, now);
-        db.insert(DbHelper.T_MENU, null, v);
+        return db.insert(DbHelper.T_MENU, null, v);
     }
 }

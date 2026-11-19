@@ -62,4 +62,5 @@
     <string name="menu_list_btn_restore">Restore starter dishes</string>
     <string name="menu_list_msg_restored">Restored %1$d starter dishes</string>
     <string name="menu_list_msg_restore_none">All starter dishes are already there</string>
+    <string name="menu_list_msg_restore_failed">Could not restore the starter dishes. Please try again.</string>
 </resources>

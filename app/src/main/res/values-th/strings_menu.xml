@@ -61,4 +61,5 @@
     <string name="menu_list_btn_restore">คืนเมนูตั้งต้น</string>
     <string name="menu_list_msg_restored">คืนเมนูตั้งต้นแล้ว %1$d รายการ</string>
     <string name="menu_list_msg_restore_none">เมนูตั้งต้นครบอยู่แล้ว</string>
+    <string name="menu_list_msg_restore_failed">คืนเมนูตั้งต้นไม่สำเร็จ กรุณาลองอีกครั้ง</string>
 </resources>

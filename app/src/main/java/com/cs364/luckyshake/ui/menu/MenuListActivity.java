@@ -274,6 +274,10 @@ public class MenuListActivity extends AppCompatActivity {
     /** Puts back the starter sets and dishes that are missing; the user's own ones stay. */
     private void restoreStarterMenus() {
         int added = menus.restoreStarterMenus();
+        if (added < 0) {
+            BottomNav.show(this, Snackbar.make(root, R.string.menu_list_msg_restore_failed, Snackbar.LENGTH_LONG));
+            return;
+        }
         searchInput.setText("");
         reloadSets();
         refreshList();
