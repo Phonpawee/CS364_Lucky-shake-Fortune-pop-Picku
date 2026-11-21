@@ -9,6 +9,9 @@
     <string name="journal_msg_clear_confirm">ประวัติทั้งหมด %1$d รายการจะถูกลบ และกู้คืนไม่ได้</string>
     <string name="journal_btn_clear_confirm">ล้าง</string>
     <string name="journal_btn_delete_desc">ลบรายการนี้</string>
+    <string name="journal_title_delete_confirm">ลบรายการนี้?</string>
+    <string name="journal_msg_delete_confirm">“%1$s” จะถูกลบออกจากสมุด และกู้คืนไม่ได้</string>
+    <string name="journal_btn_delete_confirm">ลบ</string>
     <string name="journal_msg_deleted">ลบรายการแล้ว</string>
     <string name="journal_label_meta">%1$s · %2$s %3$s · %4$s</string>
     <string name="journal_label_mode_solo">เดี่ยว</string>

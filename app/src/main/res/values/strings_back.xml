@@ -4,4 +4,5 @@
     <string name="back_draw_message">The current result will be lost.</string>
     <string name="back_group_title">Leave the group round?</string>
     <string name="back_group_message">Proposals from this round will be lost.</string>
+    <string name="back_press_again_to_exit">Press back again to exit</string>
 </resources>

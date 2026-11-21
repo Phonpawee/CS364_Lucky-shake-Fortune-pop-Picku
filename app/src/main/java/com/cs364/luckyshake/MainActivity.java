@@ -8,6 +8,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
@@ -69,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
     private long pendingMenuId;
     private AnimatorSet drawAnimation;
     private AlertDialog exitDialog;
+    private static final long EXIT_CONFIRM_WINDOW_MS = 2000;
+    private long lastBackAt = 0;
     private boolean openingResult;
 
     @Override
@@ -160,7 +163,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void requestExit() {
         if (!viewModel.currentState().hasPendingResult()) {
-            finish();
+            // No pending result: require a second Back press within 2 s to exit.
+            long now = SystemClock.elapsedRealtime();
+            if (now - lastBackAt < EXIT_CONFIRM_WINDOW_MS) {
+                finish();
+                return;
+            }
+            lastBackAt = now;
+            Toast.makeText(this, R.string.back_press_again_to_exit, Toast.LENGTH_SHORT).show();
             return;
         }
         cancelDrawAnimation();

@@ -106,11 +106,18 @@ public class JournalActivity extends AppCompatActivity {
             labelRatio = viewJournalStats.findViewById(R.id.stats_label_ratio);
         }
 
-        adapter = new JournalAdapter(this, thai, locale, entry -> {
-            viewModel.delete(entry.id);
-            BottomNav.show(this, Snackbar.make(root, R.string.journal_msg_deleted,
-                    Snackbar.LENGTH_SHORT));
-        });
+        adapter = new JournalAdapter(this, thai, locale, entry ->
+                new MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.journal_title_delete_confirm)
+                        .setMessage(getString(R.string.journal_msg_delete_confirm,
+                                entry.getName(thai)))
+                        .setNegativeButton(R.string.common_btn_cancel, null)
+                        .setPositiveButton(R.string.journal_btn_delete_confirm, (dialog, which) -> {
+                            viewModel.delete(entry.id);
+                            BottomNav.show(this, Snackbar.make(root, R.string.journal_msg_deleted,
+                                    Snackbar.LENGTH_SHORT));
+                        })
+                        .show());
 
         if (recycler != null) {
             recycler.setLayoutManager(new LinearLayoutManager(this));
