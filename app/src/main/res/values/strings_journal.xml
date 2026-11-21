@@ -9,6 +9,9 @@
     <string name="journal_msg_clear_confirm">All %1$d entries will be deleted. This can\'t be undone.</string>
     <string name="journal_btn_clear_confirm">Clear</string>
     <string name="journal_btn_delete_desc">Delete this entry</string>
+    <string name="journal_title_delete_confirm">Delete this entry?</string>
+    <string name="journal_msg_delete_confirm">“%1$s” will be removed from your journal. This can\'t be undone.</string>
+    <string name="journal_btn_delete_confirm">Delete</string>
     <string name="journal_msg_deleted">Entry deleted</string>
     <string name="journal_label_meta">%1$s · %2$s %3$s · %4$s</string>
     <string name="journal_label_mode_solo">Solo</string>

@@ -8,6 +8,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
@@ -65,10 +66,13 @@ public class MainActivity extends AppCompatActivity {
     private View drawButton;
     private View tube;
     private static final String STATE_PENDING_DRAW = "pending_draw";
+    private static final String STATE_LAST_BACK_AT = "last_back_at";
     private View stick;
     private long pendingMenuId;
     private AnimatorSet drawAnimation;
     private AlertDialog exitDialog;
+    private static final long EXIT_CONFIRM_WINDOW_MS = 2000;
+    private long lastBackAt = 0;
     private boolean openingResult;
 
     @Override
@@ -108,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         stick = findViewById(R.id.home_image_stick);
         if (savedInstanceState != null) {
             pendingMenuId = savedInstanceState.getLong(STATE_PENDING_DRAW);
+            lastBackAt = savedInstanceState.getLong(STATE_LAST_BACK_AT);
         }
         drawButton = findViewById(R.id.home_btn_draw);
         drawButton.setOnClickListener(view -> draw());
@@ -160,7 +165,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void requestExit() {
         if (!viewModel.currentState().hasPendingResult()) {
-            finish();
+            // No pending result: require a second Back press within 2 s to exit.
+            long now = SystemClock.elapsedRealtime();
+            if (now - lastBackAt < EXIT_CONFIRM_WINDOW_MS) {
+                finish();
+                return;
+            }
+            lastBackAt = now;
+            Toast.makeText(this, R.string.back_press_again_to_exit, Toast.LENGTH_SHORT).show();
             return;
         }
         cancelDrawAnimation();
@@ -182,6 +194,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
         state.putLong(STATE_PENDING_DRAW, pendingMenuId);
+        // elapsedRealtime() is monotonic since boot, so the 2 s window check stays valid after recreation.
+        state.putLong(STATE_LAST_BACK_AT, lastBackAt);
     }
 
     private void draw() {
