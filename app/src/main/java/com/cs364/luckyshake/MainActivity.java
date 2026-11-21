@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
     private View drawButton;
     private View tube;
     private static final String STATE_PENDING_DRAW = "pending_draw";
+    private static final String STATE_LAST_BACK_AT = "last_back_at";
     private View stick;
     private long pendingMenuId;
     private AnimatorSet drawAnimation;
@@ -111,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         stick = findViewById(R.id.home_image_stick);
         if (savedInstanceState != null) {
             pendingMenuId = savedInstanceState.getLong(STATE_PENDING_DRAW);
+            lastBackAt = savedInstanceState.getLong(STATE_LAST_BACK_AT);
         }
         drawButton = findViewById(R.id.home_btn_draw);
         drawButton.setOnClickListener(view -> draw());
@@ -192,6 +194,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
         state.putLong(STATE_PENDING_DRAW, pendingMenuId);
+        // elapsedRealtime() is monotonic since boot, so the 2 s window check stays valid after recreation.
+        state.putLong(STATE_LAST_BACK_AT, lastBackAt);
     }
 
     private void draw() {
